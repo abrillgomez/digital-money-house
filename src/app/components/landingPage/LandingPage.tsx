@@ -10,7 +10,7 @@ const LandingPage = () => {
       }}>
       <div className="flex flex-col justify-start h-full text-white px-8 pt-16">
         <div className="max-w-md">
-          <p className="text-[48px] text-left mb-4">
+          <p className="text-[48px] text-left mb-4 leading-[50px]">
             De ahora en adelante, hacés más con tu dinero
           </p>
           <p className="text-[34px] text-left text-custom-lime">

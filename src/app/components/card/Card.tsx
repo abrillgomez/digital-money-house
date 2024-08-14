@@ -11,7 +11,9 @@ const Card: React.FC<CardProps> = ({ title, content }) => {
       <div className="p-6">
         <h2 className="text-black text-[34px] font-bold mb-4">{title}</h2>
         <div className="h-1 bg-custom-lime mb-4"></div>
-        <p className="text-[20px] font-normal text-black">{content}</p>
+        <p className="text-[20px] font-normal text-black leading-[27.24px]">
+          {content}
+        </p>
       </div>
     </div>
   );

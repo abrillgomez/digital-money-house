@@ -14,10 +14,10 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="flex space-x-4">
-        <button className="bg-transparent text-custom-lime px-4 py-2 rounded border border-custom-lime font-bold">
+        <button className="text-[14px] bg-transparent text-custom-lime px-4 py-2 rounded border border-custom-lime font-bold">
           Ingresar
         </button>
-        <button className="bg-custom-lime text-black px-4 py-2 rounded font-bold">
+        <button className="text-[14px] bg-custom-lime text-black px-4 py-2 rounded font-bold">
           Crear cuenta
         </button>
       </div>
