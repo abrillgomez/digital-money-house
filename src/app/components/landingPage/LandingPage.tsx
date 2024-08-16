@@ -7,6 +7,8 @@ const LandingPage = () => {
       className="h-[795px] bg-cover bg-center relative"
       style={{
         backgroundImage: "url('/assets/fondo-home.png')",
+        backgroundPosition: "center top",
+        backgroundSize: "cover",
       }}>
       <div className="flex flex-col justify-start h-full text-white px-8 pt-[150px]">
         <div className="max-w-md">
@@ -23,7 +25,7 @@ const LandingPage = () => {
         style={{
           height: "246px",
           zIndex: 10,
-          bottom: "34px",
+          bottom: "50px",
           maxWidth: "calc(100% - 32px)",
         }}>
         <Card
@@ -36,7 +38,7 @@ const LandingPage = () => {
         />
       </div>
       <div
-        className="absolute bottom-0 left-0 w-full h-[148px] bg-custom-lime rounded-t-[30px] flex items-center justify-center"
+        className="absolute bottom-0 left-0 w-full h-[170px] bg-custom-lime rounded-t-[30px] flex items-center justify-center"
         style={{ zIndex: 1 }}></div>
     </div>
   );
