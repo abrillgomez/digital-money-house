@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 const Navbar = () => {
   const pathname = usePathname();
 
-  const bgColor = pathname === "/login" ? "bg-lime-500" : "bg-black";
+  const bgColor = pathname === "/login" ? "bg-custom-lime" : "bg-custom-dark";
   const logo =
     pathname === "/login" ? "/assets/logo-negro.png" : "/assets/logo-verde.png";
 
