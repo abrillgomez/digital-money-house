@@ -4,16 +4,16 @@ import Card from "../card/Card";
 const LandingPage = () => {
   return (
     <div
-      className="h-screen bg-cover bg-center relative"
+      className="h-[795px] bg-cover bg-center relative"
       style={{
         backgroundImage: "url('/assets/fondo-home.png')",
       }}>
-      <div className="flex flex-col justify-start h-full text-white px-8 pt-16">
+      <div className="flex flex-col justify-start h-full text-white px-8 pt-[150px]">
         <div className="max-w-md">
-          <p className="text-[48px] text-left mb-4 leading-[50px]">
+          <p className="text-[48px] text-left mb-4 leading-[50px] pl-[25px]">
             De ahora en adelante, hacés más con tu dinero
           </p>
-          <p className="text-[34px] text-left text-custom-lime">
+          <p className="text-[34px] text-left text-custom-lime pl-[25px]">
             Tu nueva <strong>billetera virtual</strong>
           </p>
         </div>
