@@ -25,7 +25,7 @@ const LandingPage = () => {
         style={{
           height: "246px",
           zIndex: 10,
-          bottom: "50px",
+          bottom: "34px",
           maxWidth: "calc(100% - 32px)",
         }}>
         <Card
@@ -38,7 +38,7 @@ const LandingPage = () => {
         />
       </div>
       <div
-        className="absolute bottom-0 left-0 w-full h-[170px] bg-custom-lime rounded-t-[30px] flex items-center justify-center"
+        className="absolute bottom-0 left-0 w-full h-[148px] bg-custom-lime rounded-t-[30px] flex items-center justify-center"
         style={{ zIndex: 1 }}></div>
     </div>
   );
