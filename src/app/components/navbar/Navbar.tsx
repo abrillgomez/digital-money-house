@@ -6,9 +6,27 @@ import { usePathname } from "next/navigation";
 const Navbar = () => {
   const pathname = usePathname();
 
-  const bgColor = pathname === "/login" ? "bg-custom-lime" : "bg-custom-dark";
-  const logo =
-    pathname === "/login" ? "/assets/logo-negro.png" : "/assets/logo-verde.png";
+  const routeStyles = {
+    "/login": {
+      bgColor: "bg-custom-lime",
+      logo: "/assets/logo-negro.png",
+    },
+    "/login-password": {
+      bgColor: "bg-custom-lime",
+      logo: "/assets/logo-negro.png",
+    },
+    "/create-account": {
+      bgColor: "bg-custom-lime",
+      logo: "/assets/logo-negro.png",
+    },
+  };
+
+  const defaultStyle = {
+    bgColor: "bg-custom-dark",
+    logo: "/assets/logo-verde.png",
+  };
+
+  const { bgColor, logo } = routeStyles[pathname] || defaultStyle;
 
   return (
     <div
@@ -22,17 +40,28 @@ const Navbar = () => {
           />
         </Link>
       </div>
-      {pathname !== "/login" && (
-        <div className="flex space-x-4">
-          <Link href="/login">
-            <div className="text-[14px] bg-transparent text-custom-lime px-4 py-2 rounded border border-custom-lime font-bold">
-              Ingresar
-            </div>
-          </Link>
-          <button className="text-[14px] bg-custom-lime text-black px-4 py-2 rounded font-bold">
-            Crear cuenta
-          </button>
-        </div>
+      {pathname !== "/login" &&
+        pathname !== "/login-password" &&
+        pathname !== "/create-account" && (
+          <div className="flex space-x-4">
+            <Link href="/login">
+              <div className="text-[14px] bg-transparent text-custom-lime px-4 py-2 rounded border border-custom-lime font-bold">
+                Ingresar
+              </div>
+            </Link>
+            <Link href="/create-account">
+              <button className="text-[14px] bg-custom-lime text-black px-4 py-2 rounded font-bold">
+                Crear cuenta
+              </button>
+            </Link>
+          </div>
+        )}
+      {pathname === "/create-account" && (
+        <Link href="/login">
+          <div className="bg-custom-dark text-white px-4 py-2 rounded-[5px] font-bold">
+            Iniciar sesión
+          </div>
+        </Link>
       )}
     </div>
   );
