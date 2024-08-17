@@ -3,17 +3,19 @@ import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputText from "@/app/components/inputs/InputText";
 import ContinueButton from "../../components/buttons/ContinueButton";
-import loginSchema from "@/schemes/login.scheme";
+import { passwordSchema } from "@/schemes/login.scheme";
 
 const LoginPasswordPage = () => {
   const methods = useForm({
-    resolver: yupResolver(loginSchema),
+    resolver: yupResolver(passwordSchema),
     mode: "onChange",
   });
 
   const { handleSubmit, formState, control } = methods;
+
   const passwordValue = useWatch({ control, name: "password" });
-  const isPasswordValid = passwordValue?.length >= 6;
+
+  const isPasswordValid = formState.isValid && passwordValue !== "";
 
   const onSubmit = (data) => {
     console.log(data);
@@ -32,7 +34,9 @@ const LoginPasswordPage = () => {
             fieldName="password"
           />
           {formState.errors.password && (
-            <p className="text-red-500">{formState.errors.password.message}</p>
+            <p className="text-red-500 text-[15px] w-[360px]">
+              {formState.errors.password.message}
+            </p>
           )}
         </form>
       </FormProvider>

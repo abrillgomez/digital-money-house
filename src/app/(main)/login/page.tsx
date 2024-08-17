@@ -5,11 +5,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import InputText from "@/app/components/inputs/InputText";
 import ContinueButton from "@/app/components/buttons/ContinueButton";
 import CreateAccountGrayButton from "@/app/components/buttons/CreateAccountGrayButton";
-import loginSchema from "@/schemes/login.scheme";
+import { emailSchema } from "@/schemes/login.scheme";
 
 const LoginPage = () => {
   const methods = useForm({
-    resolver: yupResolver(loginSchema),
+    resolver: yupResolver(emailSchema),
     mode: "onChange",
   });
 

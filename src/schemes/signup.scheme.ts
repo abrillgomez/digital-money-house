@@ -1,14 +1,14 @@
 import * as yup from "yup";
 
-const SignUpScheme = yup
+const signUpScheme = yup
   .object({
+    firstname: yup.string().required("Completá los campos requeridos."),
+    lastname: yup.string().required("Completá los campos requeridos."),
     dni: yup.number().required("Completá los campos requeridos."),
     email: yup
       .string()
-      .email("El formato del email es inválido. Ejemplo: email@gmail.com")
+      .email("El formato del email es inválido.")
       .required("Completá los campos requeridos."),
-    firstname: yup.string().required("Completá los campos requeridos."),
-    lastname: yup.string().required("Completá los campos requeridos."),
     password: yup
       .string()
       .required("Completá los campos requeridos.")
@@ -18,8 +18,8 @@ const SignUpScheme = yup
       .string()
       .oneOf([yup.ref("password")], "Las contraseñas no coinciden.")
       .required("Completá los campos requeridos."),
-    phone: yup.string().optional(),
+    phone: yup.string().required(),
   })
   .required();
 
-export default SignUpScheme;
+export default signUpScheme;
