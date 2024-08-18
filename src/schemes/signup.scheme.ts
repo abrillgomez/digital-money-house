@@ -13,12 +13,14 @@ const signUpScheme = yup
       .string()
       .required("Completá los campos requeridos.")
       .min(6, "La contraseña debe tener 6 caracteres como mínimo.")
-      .max(20),
+      .max(20, "La contraseña debe tener 20 caracteres como máximo."),
     passwordConfirmed: yup
       .string()
       .oneOf([yup.ref("password")], "Las contraseñas no coinciden.")
       .required("Completá los campos requeridos."),
-    phone: yup.string().required(),
+    phone: yup
+      .string()
+      .required("Completá los campos requeridos."),
   })
   .required();
 

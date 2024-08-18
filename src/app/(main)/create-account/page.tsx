@@ -13,6 +13,7 @@ const SignUpPage = () => {
   });
 
   const { handleSubmit, formState, control } = methods;
+
   const passwordValue = useWatch({ control, name: "password" });
 
   const onSubmit = (data) => {
@@ -24,62 +25,79 @@ const SignUpPage = () => {
       <h1 className="text-2xl font-bold">Crear cuenta</h1>
       <FormProvider {...methods}>
         <form
-          className="grid grid-cols-2 gap-4 py-4"
+          className="grid grid-cols-2 gap-4 py-4 w-[798px] h-[453px]"
           onSubmit={handleSubmit(onSubmit)}>
-          <InputText type="text" placeholder="Nombre*" fieldName="text" />
-          <InputText
-            type="text"
-            placeholder="Apellido*"
-            fieldName="last-name"
-          />
-          <InputNumber type="number" placeholder="DNI*" fieldName="dni" />
-          <InputText
-            type="email"
-            placeholder="Correo electrónico*"
-            fieldName="email"
-          />
+          <div className="grid grid-cols-2 gap-4 col-span-2">
+            <div>
+              <InputText type="text" placeholder="Nombre*" fieldName="text" />
+            </div>
+            <div>
+              <InputText
+                type="text"
+                placeholder="Apellido*"
+                fieldName="last-name"
+              />
+            </div>
+
+            <div>
+              <InputNumber type="number" placeholder="DNI*" fieldName="dni" />
+            </div>
+            <div>
+              <InputText
+                type="email"
+                placeholder="Correo electrónico*"
+                fieldName="email"
+              />
+              {formState.errors.email && (
+                <p className="text-red-500">{formState.errors.email.message}</p>
+              )}
+            </div>
+          </div>
           <div className="col-span-2">
             <p className="text-[15.2px]">
               Usa entre 6 y 20 caracteres (debe contener al menos al menos 1
               carácter especial, una mayúscula y un número)
             </p>
           </div>
-          <InputText
-            type="password"
-            placeholder="Contraseña*"
-            fieldName="password"
-          />
-          <InputText
-            type="password"
-            placeholder="Confirmar contraseña*"
-            fieldName="passwordConfirmed"
-          />
-          <InputNumber
-            type="number"
-            placeholder="Teléfono*"
-            fieldName="phone"
-          />
-          <CreateAccountButton />
-          {formState.errors.email && (
-            <p className="text-red-500 col-span-2">
-              {formState.errors.email.message}
-            </p>
-          )}
-          {formState.errors.password && (
-            <p className="text-red-500 col-span-2">
-              {formState.errors.password.message}
-            </p>
-          )}
-          {formState.errors.passwordConfirmed && (
-            <p className="text-red-500 col-span-2">
-              {formState.errors.passwordConfirmed.message}
-            </p>
-          )}
-          {formState.errors.phone && (
-            <p className="text-red-500 col-span-2">
-              {formState.errors.phone.message}
-            </p>
-          )}
+          <div className="grid grid-cols-2 gap-4 col-span-2">
+            <div>
+              <InputText
+                type="password"
+                placeholder="Contraseña*"
+                fieldName="password"
+              />
+              {formState.errors.password && (
+                <p className="text-red-500">
+                  {formState.errors.password.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <InputText
+                type="password"
+                placeholder="Confirmar contraseña*"
+                fieldName="passwordConfirmed"
+              />
+              {formState.errors.passwordConfirmed && (
+                <p className="text-red-500">
+                  {formState.errors.passwordConfirmed.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <InputNumber
+                type="number"
+                placeholder="Teléfono*"
+                fieldName="phone"
+              />
+              {formState.errors.phone && (
+                <p className="text-red-500">{formState.errors.phone.message}</p>
+              )}
+            </div>
+            <div className="flex">
+              <CreateAccountButton />
+            </div>
+          </div>
         </form>
       </FormProvider>
     </div>
