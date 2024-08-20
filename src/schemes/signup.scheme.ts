@@ -4,7 +4,10 @@ const signUpScheme = yup
   .object({
     firstname: yup.string().required("Completá los campos requeridos."),
     lastname: yup.string().required("Completá los campos requeridos."),
-    dni: yup.number().required("Completá los campos requeridos."),
+    dni: yup
+      .string()
+      .required("Completá los campos requeridos.")
+      .matches(/^\d+$/, "El DNI debe ser un número válido."),
     email: yup
       .string()
       .email("El formato del email es inválido.")
@@ -18,9 +21,7 @@ const signUpScheme = yup
       .string()
       .oneOf([yup.ref("password")], "Las contraseñas no coinciden.")
       .required("Completá los campos requeridos."),
-    phone: yup
-      .string()
-      .required("Completá los campos requeridos."),
+    phone: yup.string().required("Completá los campos requeridos."),
   })
   .required();
 

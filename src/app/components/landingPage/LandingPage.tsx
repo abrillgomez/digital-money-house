@@ -1,85 +1,37 @@
-"use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Card from "../card/Card";
 
 const LandingPage = () => {
-  const [backgroundImage, setBackgroundImage] = useState(
-    "/assets/fondo-home.png"
-  );
-
-  useEffect(() => {
-    const updateBackgroundImage = () => {
-      if (window.matchMedia("(max-width: 639px)").matches) {
-        setBackgroundImage("/assets/fondo-home-mobile.png");
-      } else if (window.matchMedia("(max-width: 834px)").matches) {
-        setBackgroundImage("/assets/fondo-home-tablet.png");
-      } else {
-        setBackgroundImage("/assets/fondo-home.png");
-      }
-    };
-
-    updateBackgroundImage();
-    window.addEventListener("resize", updateBackgroundImage);
-    return () => window.removeEventListener("resize", updateBackgroundImage);
-  }, []);
-
   return (
     <div
-      className="h-[795px] bg-cover bg-center relative"
+      className="h-screen bg-cover bg-center relative min-h-[795px]"
       style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundPosition: "center top",
-        backgroundSize: "cover",
+        backgroundImage: "url('/assets/fondo-home.png')",
       }}>
-      <div className="flex flex-col justify-start h-full text-white">
+      <div className="flex flex-col justify-start h-full text-white px-8 pt-16">
         <div className="max-w-md">
-          <p
-            className="text-[27px] font-[600]
-            leading-[32px]
-            text-left mb-4 pl-[25px] left-[50px]
-            pt-[20px]
-            w-[190px]
-            h-[93px]
-            sm:text-[48px]
-            sm:font-normal
-            sm:leading-[50px]
-            sm:pt-[50px]
-            sm:w-auto
-            sm:h-auto">
+          <p className="text-[48px] text-left mb-4">
             De ahora en adelante, hacés más con tu dinero
           </p>
-          <p
-            className="text-[21.5px] font-[400] leading-[30.5px]
-            text-left text-custom-lime pl-[25px] pb-4 pt-[60px]
-            w-[248px] h-[59px]
-            sm:text-[34px]
-            sm:font-normal
-            sm:leading-[40px]
-            sm:w-auto
-            sm:h-auto
-            sm:pt-0
-          ">
+          <p className="text-[34px] text-left text-custom-lime">
             Tu nueva <strong>billetera virtual</strong>
           </p>
         </div>
       </div>
       <div
-        className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex flex-col space-y-4 md:space-y-6 lg:flex-row lg:space-x-4 lg:justify-center"
+        className="absolute bottom-[60px] left-1/2 transform -translate-x-1/2 flex flex-col space-y-6 lg:flex-row lg:space-y-0 lg:space-x-4"
         style={{
-          height: "246px",
+          height: "auto",
           zIndex: 10,
-          bottom: "34px",
           maxWidth: "calc(100% - 32px)",
-          marginTop: 0,
-          margin: 0,
         }}>
         <Card
           title="Transferí dinero"
-          content="Desde Digital Money House vas a poder transferir dinero a otras cuentas, así como también recibir transferencias y nuclear tu capital en nuestra billetera virtual"
+          content="Desde Digital Money House vas a poder transferir dinero a otras cuentas, así como también recibir transferencias y nuclear tu capital en nuestra billetera virtual."
         />
         <Card
           title="Pago de servicios"
-          content="Pagá mensualmente los servicios en 3 simples clicks. Fácil, rápido y conveniente. Olvidate de las facturas en papel"
+          content="Pagá mensualmente los servicios en 3 simples clicks. Fácil, rápido y conveniente. Olvidate de las facturas en papel."
         />
       </div>
       <div
