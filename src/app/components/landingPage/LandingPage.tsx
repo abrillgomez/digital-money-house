@@ -45,8 +45,7 @@ const LandingPage = () => {
             sm:leading-[50px]
             sm:pt-[50px]
             sm:w-auto
-            sm:h-auto
-          ">
+            sm:h-auto">
             De ahora en adelante, hacés más con tu dinero
           </p>
           <p
@@ -83,7 +82,6 @@ const LandingPage = () => {
           content="Pagá mensualmente los servicios en 3 simples clicks. Fácil, rápido y conveniente. Olvidate de las facturas en papel"
         />
       </div>
-
       <div
         className="absolute bottom-0 left-0 w-full 
         h-[329px] 
