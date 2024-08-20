@@ -36,7 +36,7 @@ const Navbar = () => {
           <img
             src={logo}
             alt="Logo de Digital Money House"
-            className="h-7 w-auto mr-4"
+            className="h-7 w-auto mr-4 pl-0 sm:pl-0"
           />
         </Link>
       </div>
