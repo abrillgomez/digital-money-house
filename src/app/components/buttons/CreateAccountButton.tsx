@@ -1,14 +1,22 @@
 import React from "react";
-import Link from "next/link";
 
-const CreateAccountButton = () => {
+type SignUpButtonProps = {
+  isEnabled: boolean;
+};
+
+const SignUpButton = ({ isEnabled }: SignUpButtonProps) => {
   return (
-    <Link href="/login">
-      <div className="w-[300px] h-[50px] sm:w-[360px] sm:h-[64px] bg-custom-lime text-black text-center px-4 pt-[18px] rounded-[10px] font-bold">
-        Crear cuenta
-      </div>
-    </Link>
+    <button
+      type="submit"
+      disabled={!isEnabled}
+      className={`w-[300px] h-[50px] sm:w-[360px] sm:h-[64px] ${
+        isEnabled
+          ? "bg-lime-500 text-black"
+          : "bg-gray-400 text-gray-700 cursor-not-allowed"
+      } px-4 py-2 rounded-[10px] font-bold text-center pt-4 mb-2`}>
+      Crear cuenta
+    </button>
   );
 };
 
-export default CreateAccountButton;
+export default SignUpButton;
