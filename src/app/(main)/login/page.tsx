@@ -1,9 +1,8 @@
 "use client";
-import React from "react";
 import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputText from "@/app/components/inputs/InputText";
-import ContinueButton from "@/app/components/buttons/ContinueButton";
+import ContinueButton from "../../components/buttons/ContinueButton";
 import CreateAccountGrayButton from "@/app/components/buttons/CreateAccountGrayButton";
 import { emailSchema } from "@/schemes/login.scheme";
 
@@ -14,14 +13,13 @@ const LoginPage = () => {
   });
 
   const { handleSubmit, formState, control } = methods;
-
   const emailValue = useWatch({ control, name: "email" });
-
   const isEmailValid =
     !formState.errors.email && emailValue?.includes("@") && emailValue !== "";
 
   const onSubmit = (data) => {
-    console.log(data);
+    sessionStorage.setItem("email", data.email);
+    window.location.href = "/login/password";
   };
 
   return (
@@ -40,9 +38,9 @@ const LoginPage = () => {
             <p className="text-red-500">{formState.errors.email.message}</p>
           )}
         </form>
+        <ContinueButton isEnabled={isEmailValid} />
+        <CreateAccountGrayButton />
       </FormProvider>
-      <ContinueButton isEnabled={isEmailValid} />
-      <CreateAccountGrayButton />
     </div>
   );
 };

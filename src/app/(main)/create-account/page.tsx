@@ -7,8 +7,8 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import { signUpScheme } from "@/schemes/signup.scheme";
 import { UserType } from "@/types/users.types";
-import userApi from "@/services/auth/auth.service";
 import CreateAccountButton from "@/app/components/buttons/CreateAccountButton";
+import userApi from "@/services/users/users.service";
 
 const CreateAccountPage = () => {
   const methods = useForm({

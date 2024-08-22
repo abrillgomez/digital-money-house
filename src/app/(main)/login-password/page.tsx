@@ -1,9 +1,9 @@
 "use client";
 import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { passwordSchema } from "@/schemes/login.scheme";
 import InputText from "@/app/components/inputs/InputText";
 import ContinueButton from "../../components/buttons/ContinueButton";
-import { passwordSchema } from "@/schemes/login.scheme";
 
 const LoginPasswordPage = () => {
   const methods = useForm({
@@ -12,13 +12,27 @@ const LoginPasswordPage = () => {
   });
 
   const { handleSubmit, formState, control } = methods;
-
   const passwordValue = useWatch({ control, name: "password" });
-
   const isPasswordValid = formState.isValid && passwordValue !== "";
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    const email = sessionStorage.getItem("email");
+
+    if (email) {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password: data.password }),
+      });
+
+      if (response.ok) {
+        window.location.href = "/";
+      } else {
+        alert("Error: Verifique sus credenciales e intente de nuevo");
+      }
+    }
   };
 
   return (
@@ -39,8 +53,8 @@ const LoginPasswordPage = () => {
             </p>
           )}
         </form>
+        <ContinueButton isEnabled={isPasswordValid} />
       </FormProvider>
-      <ContinueButton isEnabled={isPasswordValid} />
     </div>
   );
 };
