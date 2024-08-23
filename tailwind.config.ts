@@ -17,6 +17,7 @@ const config: Config = {
         "custom-dark": "#201F22",
         "custom-gray": "#3A393E",
         "custom-lime": "#C1FD35",
+        "custom-red": "#FE4B39",
       },
       textColor: {
         "custom-lime": "#C1FD35",

@@ -1,10 +1,39 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
   const pathname = usePathname();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¿Quieres cerrar sesión?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, cerrar sesión",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (result.isConfirmed) {
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("email");
+      setIsLoggedIn(false);
+      window.location.replace("/");
+    }
+  };
 
   const routeStyles = {
     "/login": {
@@ -40,7 +69,8 @@ const Navbar = () => {
           />
         </Link>
       </div>
-      {pathname !== "/login" &&
+      {!isLoggedIn ? (
+        pathname !== "/login" &&
         pathname !== "/login-password" &&
         pathname !== "/create-account" && (
           <div className="flex space-x-4">
@@ -55,13 +85,13 @@ const Navbar = () => {
               </button>
             </Link>
           </div>
-        )}
-      {pathname === "/create-account" && (
-        <Link href="/login">
-          <div className="bg-custom-dark text-white px-4 py-2 rounded-[5px] font-bold">
-            Iniciar sesión
-          </div>
-        </Link>
+        )
+      ) : (
+        <button
+          onClick={handleLogout}
+          className="bg-custom-red text-white px-4 py-2 rounded-[5px] font-bold">
+          Cerrar sesión
+        </button>
       )}
     </div>
   );
