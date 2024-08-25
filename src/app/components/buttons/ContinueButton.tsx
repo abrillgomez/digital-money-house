@@ -47,7 +47,7 @@ const ContinueButton = ({ isEnabled }: ContinueButtonProps) => {
                 text: "Has sido redirigido a la página principal.",
                 confirmButtonText: "Aceptar",
               }).then(() => {
-                window.location.replace("/");
+                window.location.replace("/home");
               });
             }
           } catch (error) {

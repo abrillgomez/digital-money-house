@@ -3,15 +3,39 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Swal from "sweetalert2";
+import userApi from "../../../services/users/users.service"; // Asegúrate de ajustar el path correctamente
 
 const Navbar = () => {
   const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState({ firstname: "", lastname: "" });
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
+
+      try {
+        const payload = token.split(".")[1];
+        const decodedPayload = JSON.parse(
+          atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
+        );
+        const username = decodedPayload.username;
+
+        userApi
+          .getUserData(token, username)
+          .then((userData) => {
+            setUserInfo({
+              firstname: userData.firstname || "Usuario",
+              lastname: userData.lastname || "",
+            });
+          })
+          .catch((error) => {
+            console.error("Error al obtener los datos del usuario:", error);
+          });
+      } catch (error) {
+        console.error("Error al decodificar el token:", error);
+      }
     }
   }, []);
 
@@ -57,11 +81,16 @@ const Navbar = () => {
 
   const { bgColor, logo } = routeStyles[pathname] || defaultStyle;
 
+  const getInitials = (firstname, lastname) => {
+    if (!firstname && !lastname) return "NN"; // Valor por defecto si no existen iniciales
+    return (firstname.charAt(0) || "") + (lastname.charAt(0) || "");
+  };
+
   return (
     <div
       className={`${bgColor} h-[64px] w-full flex justify-between items-center px-4`}>
       <div className="text-white font-bold">
-        <Link href="/">
+        <Link href={isLoggedIn ? "/home" : "/"}>
           <img
             src={logo}
             alt="Logo de Digital Money House"
@@ -87,11 +116,12 @@ const Navbar = () => {
           </div>
         )
       ) : (
-        <button
-          onClick={handleLogout}
-          className="bg-custom-red text-white px-4 py-2 rounded-[5px] font-bold">
-          Cerrar sesión
-        </button>
+        <div className="flex items-center space-x-4">
+          <div className="bg-lime-500 text-black font-bold rounded-full w-10 h-10 flex items-center justify-center">
+            {getInitials(userInfo.firstname, userInfo.lastname)}
+          </div>
+          <span className="text-white">Hola, {userInfo.firstname}</span>
+        </div>
       )}
     </div>
   );
