@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Swal from "sweetalert2";
-import userApi from "../../../services/users/users.service"; // Asegúrate de ajustar el path correctamente
+import userApi from "../../../services/users/users.service";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -82,7 +82,7 @@ const Navbar = () => {
   const { bgColor, logo } = routeStyles[pathname] || defaultStyle;
 
   const getInitials = (firstname, lastname) => {
-    if (!firstname && !lastname) return "NN"; // Valor por defecto si no existen iniciales
+    if (!firstname && !lastname) return "NN";
     return (firstname.charAt(0) || "") + (lastname.charAt(0) || "");
   };
 
