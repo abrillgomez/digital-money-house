@@ -25,11 +25,11 @@ const Menu = () => {
 
   const menuLinks = [
     { href: "/home", name: "Inicio" },
-    { href: "/actividad", name: "Actividad" },
-    { href: "/perfil", name: "Tu perfil" },
-    { href: "/transacciones", name: "Cargar dinero" },
-    { href: "/servicios", name: "Pagar servicios" },
-    { href: "/tarjetas", name: "Tarjetas" },
+    { href: "/activity", name: "Actividad" },
+    { href: "/profile", name: "Tu perfil" },
+    { href: "/transactions", name: "Cargar dinero" },
+    { href: "/services", name: "Pagar servicios" },
+    { href: "/cards", name: "Tarjetas" },
   ];
 
   return (
