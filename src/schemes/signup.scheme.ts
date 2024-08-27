@@ -1,18 +1,21 @@
 import * as yup from "yup";
 
-const nameSchema = yup
-  .string()
-  .matches(/^[A-Za-z]+$/, "El campo debe contener solo letras.")
-  .required("Completá los campos requeridos.");
-
-const phoneSchema = yup
-  .string()
-  .required("Completá los campos requeridos.");
-
 export const signUpScheme = yup
   .object({
-    firstname: nameSchema,
-    lastname: nameSchema,
+    firstname: yup
+      .string()
+      .matches(
+        /^[A-Za-zÀ-ÖØ-Ýà-öø-ÿÑñ]*$/,
+        "El campo debe contener solo letras."
+      )
+      .required("Completá los campos requeridos."),
+    lastname: yup
+      .string()
+      .matches(
+        /^[A-Za-zÀ-ÖØ-Ýà-öø-ÿÑñ]*$/,
+        "El campo debe contener solo letras."
+      )
+      .required("Completá los campos requeridos."),
     dni: yup.number().required("Completá los campos requeridos."),
     email: yup
       .string()
@@ -31,7 +34,6 @@ export const signUpScheme = yup
       .string()
       .oneOf([yup.ref("password")], "Las contraseñas no coinciden.")
       .required("Completá los campos requeridos."),
-    phone: phoneSchema,
+    phone: yup.string().required("Completá los campos requeridos."),
   })
   .required();
-
