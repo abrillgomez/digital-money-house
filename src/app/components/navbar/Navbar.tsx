@@ -97,7 +97,7 @@ const Navbar = () => {
         )
       ) : (
         <div className="flex items-center space-x-4">
-          <div className="bg-lime-500 text-black font-bold rounded-full w-10 h-10 flex items-center justify-center">
+          <div className="bg-custom-lime text-black font-bold rounded-full w-10 h-10 flex items-center justify-center">
             {getInitials(userInfo.firstname, userInfo.lastname)}
           </div>
           <span className="text-white font-bold">
