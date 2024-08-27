@@ -11,14 +11,14 @@ const ActivityList: React.FC = () => {
       <div className="relative flex items-center mb-4">
         <FontAwesomeIcon
           icon={faSearch}
-          className="absolute left-3 text-gray-400"
+          className="absolute left-0 text-gray-400 pt-1"
         />
         <input
           type="text"
           placeholder="Buscar en tu actividad"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full border border-gray-300 rounded-[10px] pl-12 pr-4 text-custom-dark placeholder:text-[18px]"
+          className="w-full rounded-[10px] pl-6 pr-4 text-custom-dark placeholder:text-[18px] pt-1"
         />
       </div>
     </div>
