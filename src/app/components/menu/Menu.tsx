@@ -2,8 +2,11 @@
 import Link from "next/link";
 import React from "react";
 import Swal from "sweetalert2";
+import { usePathname } from "next/navigation";
 
 const Menu = () => {
+  const pathname = usePathname();
+
   const handleLogout = async () => {
     const result = await Swal.fire({
       title: "¿Estás seguro?",
@@ -33,14 +36,23 @@ const Menu = () => {
   ];
 
   return (
-    <div className="w-[276px] h-screen bg-lime-500 text-black">
+    <div className="w-[276px] h-screen bg-custom-lime text-custom-dark">
       <ul className="pl-10 py-10 space-y-4 w-full">
-        {menuLinks.map((link, index) => (
-          <li className="text-total-black" key={`option-menu-${index}`}>
-            <Link href={link.href}>{link.name}</Link>
-          </li>
-        ))}
-        <button className="text-total-black" onClick={() => handleLogout()}>
+        {menuLinks.map((link, index) => {
+          const isActive = pathname === link.href;
+          return (
+            <li
+              className={`${
+                isActive ? "font-bold" : "font-semibold"
+              } text-custom-dark`}
+              key={`option-menu-${index}`}>
+              <Link href={link.href}>{link.name}</Link>
+            </li>
+          );
+        })}
+        <button
+          className="text-custom-dark font-semibold"
+          onClick={handleLogout}>
           Cerrar sesión
         </button>
       </ul>

@@ -19,7 +19,7 @@ const LoginPage = () => {
 
   const onSubmit = (data) => {
     sessionStorage.setItem("email", data.email);
-    window.location.href = "/login/password";
+    window.location.href = "/login-password";
   };
 
   return (

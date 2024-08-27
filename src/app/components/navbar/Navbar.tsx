@@ -39,26 +39,6 @@ const Navbar = () => {
     }
   }, []);
 
-  const handleLogout = async () => {
-    const result = await Swal.fire({
-      title: "¿Estás seguro?",
-      text: "¿Quieres cerrar sesión?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, cerrar sesión",
-      cancelButtonText: "Cancelar",
-    });
-
-    if (result.isConfirmed) {
-      localStorage.removeItem("token");
-      sessionStorage.removeItem("email");
-      setIsLoggedIn(false);
-      window.location.replace("/");
-    }
-  };
-
   const routeStyles = {
     "/login": {
       bgColor: "bg-custom-lime",
@@ -120,7 +100,9 @@ const Navbar = () => {
           <div className="bg-lime-500 text-black font-bold rounded-full w-10 h-10 flex items-center justify-center">
             {getInitials(userInfo.firstname, userInfo.lastname)}
           </div>
-          <span className="text-white">Hola, {userInfo.firstname}</span>
+          <span className="text-white font-bold">
+            Hola, {userInfo.firstname} {userInfo.lastname}
+          </span>
         </div>
       )}
     </div>

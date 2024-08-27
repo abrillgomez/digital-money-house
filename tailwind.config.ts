@@ -19,9 +19,11 @@ const config: Config = {
         "custom-lime": "#C1FD35",
         "custom-red": "#FE4B39",
         "custom-gray-light": "#CECECE",
+        "custom-white": "#EEEAEA",
       },
       textColor: {
         "custom-lime": "#C1FD35",
+        "custom-dark": "#201F22",
       },
       borderColor: {
         "custom-lime": "#C1FD35",
