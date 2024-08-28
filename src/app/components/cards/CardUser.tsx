@@ -20,7 +20,6 @@ const AccountCard: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (token) {
       try {
         const payload = token.split(".")[1];
@@ -52,43 +51,47 @@ const AccountCard: React.FC = () => {
     }
   }, []);
 
-  if (loading) return <p>Cargando...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p className="text-custom-dark">Cargando...</p>;
+  if (error) return <p className="text-custom-dark">Error: {error}</p>;
 
   return (
-    <div className="mx-auto bg-white rounded-lg shadow-lg p-6 w-[1003px] rounded-[10px]">
+    <div className="mx-auto bg-white rounded-lg shadow-lg p-6 w-[1006px] rounded-[10px]">
       <h2 className="text-[20px] font-bold mb-4 text-black">Tus datos</h2>
-      <div className="space-y-2">
-        <div className="flex gap-x-2 items-center">
-          <label className="text-custom-dark">Email:</label>
-          <p className="text-black-opacity-50">{user?.email}</p>
+      <div className="space-y-4">
+        <div className="flex items-center">
+          <label className="text-custom-dark w-1/3">Email</label>
+          <p className="text-black-opacity-50 flex-1 ml-1">{user?.email}</p>
           <FontAwesomeIcon
             icon={faPen}
-            className="ml-2 text-custom-dark cursor-pointer"
+            className="text-custom-dark cursor-pointer"
           />
         </div>
-        <div className="flex gap-x-2 items-center">
-          <label className="text-custom-dark">Nombre y apellido:</label>
-          <p className="text-black-opacity-50">
+        <hr className="border-t border-custom-gray-light mx-auto" />
+        <div className="flex items-center">
+          <label className="text-custom-dark w-1/3">Nombre y apellido</label>
+          <p className="text-black-opacity-50 flex-1 ml-1">
             {user?.firstname} {user?.lastname}
           </p>
           <FontAwesomeIcon
             icon={faPen}
-            className="ml-2 text-custom-dark cursor-pointer"
+            className="text-custom-dark cursor-pointer"
           />
         </div>
-        <div className="flex gap-x-2 items-center">
-          <label className="text-custom-dark">Teléfono:</label>
-          <p className="text-black-opacity-50">{user?.phone}</p>
+        <hr className="border-t border-custom-gray-light mx-auto" />
+        <div className="flex items-center">
+          <label className="text-custom-dark w-1/3">Teléfono</label>
+          <p className="text-black-opacity-50 flex-1 ml-1">{user?.phone}</p>
           <FontAwesomeIcon
             icon={faPen}
-            className="ml-2 text-custom-dark cursor-pointer"
+            className="text-custom-dark cursor-pointer"
           />
         </div>
-        <div className="flex gap-x-2 items-center">
-          <label className="text-custom-dark">DNI:</label>
-          <p className="text-black-opacity-50">{user?.dni}</p>
+        <hr className="border-t border-custom-gray-light mx-auto" />
+        <div className="flex items-center">
+          <label className="text-custom-dark w-1/3">DNI</label>
+          <p className="text-black-opacity-50 flex-1 ml-1">{user?.dni}</p>
         </div>
+        <hr className="border-t border-custom-gray-light mx-auto" />
       </div>
     </div>
   );

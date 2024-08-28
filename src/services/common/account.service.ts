@@ -4,7 +4,7 @@ class AccountAPI {
   constructor() {
     this.baseUrl = "https://digitalmoney.digitalhouse.com";
   }
-
+  
   async getAccountInfo(token: string) {
     try {
       const response = await fetch(`${this.baseUrl}/api/account`, {
@@ -14,11 +14,9 @@ class AccountAPI {
           Authorization: `${token}`,
         },
       });
-
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
-
       const data = await response.json();
       return data;
     } catch (error) {

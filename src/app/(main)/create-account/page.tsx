@@ -22,8 +22,6 @@ const CreateAccountPage = () => {
 
   const onSubmit = async (data: UserType) => {
     try {
-      console.log("Enviando datos de registro:", data);
-
       const response = await userApi.newUser({
         dni: data.dni,
         email: data.email,
@@ -32,9 +30,6 @@ const CreateAccountPage = () => {
         password: data.password,
         phone: data.phone,
       });
-
-      console.log("Respuesta completa de la API:", response);
-
       if (response.user_id) {
         Swal.fire({
           icon: "success",
@@ -49,8 +44,6 @@ const CreateAccountPage = () => {
         throw new Error("Error inesperado en la creación del usuario");
       }
     } catch (error) {
-      console.error("Error capturado:", error);
-
       if (error.response && error.response.status === 409) {
         setApiError("El email ya está en uso.");
         Swal.fire({

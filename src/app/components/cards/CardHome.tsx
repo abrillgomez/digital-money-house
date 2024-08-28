@@ -8,12 +8,10 @@ const CardHome = () => {
   useEffect(() => {
     const fetchAccountInfo = async () => {
       const token = localStorage.getItem("token");
-
       if (!token) {
         console.error("No se encontró el token");
         return;
       }
-
       try {
         const accountService = new AccountAPI();
         const accountData = await accountService.getAccountInfo(token);
@@ -36,7 +34,6 @@ const CardHome = () => {
           Ver CVU
         </a>
       </div>
-
       <div className="mt-auto">
         <h1 className="text-white text-[16px] font-bold mb-4">
           Dinero disponible

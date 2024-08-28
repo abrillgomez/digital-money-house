@@ -18,7 +18,6 @@ const Menu = () => {
       confirmButtonText: "Sí, cerrar sesión",
       cancelButtonText: "Cancelar",
     });
-
     if (result.isConfirmed) {
       localStorage.removeItem("token");
       sessionStorage.removeItem("email");

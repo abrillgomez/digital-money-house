@@ -2,7 +2,6 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import Swal from "sweetalert2";
 import userApi from "../../../services/users/users.service";
 
 const Navbar = () => {

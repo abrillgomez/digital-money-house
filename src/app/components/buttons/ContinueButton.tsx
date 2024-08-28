@@ -25,7 +25,6 @@ const ContinueButton = ({ isEnabled }: ContinueButtonProps) => {
   const handleClick = async () => {
     if (typeof window !== "undefined") {
       const pathname = window.location.pathname;
-
       if (pathname === "/login") {
         const email = getValues("email");
         if (email) {
@@ -35,7 +34,6 @@ const ContinueButton = ({ isEnabled }: ContinueButtonProps) => {
       } else if (pathname === "/login-password") {
         const email = sessionStorage.getItem("email");
         const password = getValues("password");
-
         if (email && password) {
           try {
             const response = await AuthAPI.login({ email, password });
