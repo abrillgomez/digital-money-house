@@ -25,6 +25,7 @@ const config: Config = {
       textColor: {
         "custom-lime": "#C1FD35",
         "custom-dark": "#201F22",
+        "black-opacity-50": "rgba(0, 0, 0, 0.5)",
       },
       borderColor: {
         "custom-lime": "#C1FD35",

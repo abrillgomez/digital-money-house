@@ -14,14 +14,12 @@ const Navbar = () => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
-
       try {
         const payload = token.split(".")[1];
         const decodedPayload = JSON.parse(
           atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
         );
         const username = decodedPayload.username;
-
         userApi
           .getUserData(token, username)
           .then((userData) => {
