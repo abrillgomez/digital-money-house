@@ -40,7 +40,6 @@ const CreateAccountPage = () => {
           window.location.href = "/login";
         });
       } else {
-        console.log("No se pudo crear el usuario, pasando al else.");
         throw new Error("Error inesperado en la creación del usuario");
       }
     } catch (error) {

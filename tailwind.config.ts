@@ -26,6 +26,7 @@ const config: Config = {
         "custom-lime": "#C1FD35",
         "custom-dark": "#201F22",
         "black-opacity-50": "rgba(0, 0, 0, 0.5)",
+        "custom-gray-light": "#CECECE",
       },
       borderColor: {
         "custom-lime": "#C1FD35",

@@ -1,6 +1,6 @@
 "use client";
+import AccountAPI from "@/services/account/account.service";
 import React, { useEffect, useState } from "react";
-import AccountAPI from "@/services/common/account.service";
 
 const CardHome = () => {
   const [availableAmount, setAvailableAmount] = useState<number | null>(null);
@@ -9,7 +9,7 @@ const CardHome = () => {
     const fetchAccountInfo = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
-        console.error("No se encontró el token");
+        console.error("No se encontró el token.");
         return;
       }
       try {
