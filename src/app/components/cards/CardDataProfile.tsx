@@ -30,7 +30,7 @@ const CardDataProfile = () => {
   };
 
   return (
-    <div className="bg-custom-dark text-white p-6 rounded-lg shadow-md w-[1003px] h-[264px] mt-6">
+    <div className="bg-custom-dark text-white p-6 rounded-lg shadow-md w-[1006px] h-[264px] mt-6">
       <p className="font-bold text-white text-[16px] mb-6">
         Copia tu CVU o alias para ingresar o transferir dinero desde otra cuenta
       </p>
