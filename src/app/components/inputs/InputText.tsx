@@ -8,6 +8,7 @@ type InputTextProps = {
 
 const InputText = ({ type, fieldName, placeholder }: InputTextProps) => {
   const { register } = useFormContext();
+
   return (
     <input
       type={type}

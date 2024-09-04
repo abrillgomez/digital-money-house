@@ -10,11 +10,14 @@ type ContinueButtonProps = {
 const ContinueButton = ({ isEnabled }: ContinueButtonProps) => {
   const [targetUrl, setTargetUrl] = useState("/");
   const { getValues } = useFormContext();
+  const [isCardPage, setIsCardPage] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const pathname = window.location.pathname;
-      if (pathname === "/login-password") {
+      if (pathname === "/add-card") {
+        setIsCardPage(true);
+      } else if (pathname === "/login-password") {
         setTargetUrl("/");
       } else if (pathname === "/login") {
         setTargetUrl("/login-password");
@@ -57,6 +60,8 @@ const ContinueButton = ({ isEnabled }: ContinueButtonProps) => {
             });
           }
         }
+      } else if (pathname === "/add-card" && isEnabled) {
+        window.location.href = "/home";
       }
     }
   };
