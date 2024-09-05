@@ -5,9 +5,10 @@ import Swal from "sweetalert2";
 
 type ContinueButtonProps = {
   isEnabled: boolean;
+  handleSubmit: () => void;
 };
 
-const ContinueButton = ({ isEnabled }: ContinueButtonProps) => {
+const ContinueButton = ({ isEnabled, handleSubmit }: ContinueButtonProps) => {
   const [targetUrl, setTargetUrl] = useState("/");
   const { getValues } = useFormContext();
   const [isCardPage, setIsCardPage] = useState(false);
@@ -61,11 +62,11 @@ const ContinueButton = ({ isEnabled }: ContinueButtonProps) => {
           }
         }
       } else if (pathname === "/add-card" && isEnabled) {
-        window.location.href = "/home";
+        handleSubmit();
       }
     }
   };
-
+  
   return isEnabled ? (
     <div
       className="w-[300px] h-[50px] sm:w-[360px] sm:h-[64px] bg-custom-lime text-black px-4 py-4 rounded-[10px] font-bold text-center pt-4 cursor-pointer mb-4"

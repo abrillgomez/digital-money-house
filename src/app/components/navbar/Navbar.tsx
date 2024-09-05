@@ -93,14 +93,16 @@ const Navbar = () => {
           </div>
         )
       ) : (
-        <div className="flex items-center space-x-4">
-          <div className="bg-custom-lime text-black font-bold rounded-full w-10 h-10 flex items-center justify-center">
-            {getInitials(userInfo.firstname, userInfo.lastname)}
+        <Link href="/home">
+          <div className="flex items-center space-x-4">
+            <div className="bg-custom-lime text-black font-bold rounded-full w-10 h-10 flex items-center justify-center">
+              {getInitials(userInfo.firstname, userInfo.lastname)}
+            </div>
+            <span className="text-white font-bold">
+              Hola, {userInfo.firstname} {userInfo.lastname}
+            </span>
           </div>
-          <span className="text-white font-bold">
-            Hola, {userInfo.firstname} {userInfo.lastname}
-          </span>
-        </div>
+        </Link>
       )}
     </div>
   );

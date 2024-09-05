@@ -27,10 +27,10 @@ const CardHome = () => {
   return (
     <div className="bg-custom-dark w-[1006px] h-[230px] rounded-lg flex items-start justify-start p-6 relative">
       <div className="absolute top-6 right-6 flex space-x-3">
-        <a href="#" className="text-white underline">
+        <a href="/cards" className="text-white underline">
           Ver tarjetas
         </a>
-        <a href="#" className="text-white underline">
+        <a href="/profile" className="text-white underline">
           Ver CVU
         </a>
       </div>

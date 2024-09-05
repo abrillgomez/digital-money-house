@@ -177,6 +177,11 @@ const CardUser: React.FC = () => {
           <p className="text-black-opacity-50 flex-1 ml-1">{user?.dni}</p>
         </div>
         <hr className="border-t border-custom-gray-light mx-auto" />
+        <div className="flex items-center">
+          <label className="text-custom-dark w-1/3">Contraseña</label>
+          <p className="text-black-opacity-50 flex-1 ml-1">******</p>
+        </div>
+        <hr className="border-t border-custom-gray-light mx-auto" />
       </div>
     </div>
   );

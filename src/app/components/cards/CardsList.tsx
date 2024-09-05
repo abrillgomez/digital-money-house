@@ -2,8 +2,6 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import cardService from "../../../services/cards/cards.service";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import AccountAPI from "@/services/account/account.service";
 
 const CardsList = () => {
@@ -109,7 +107,9 @@ const CardsList = () => {
             </li>
           ))
         ) : (
-          <li className="text-custom-dark py-4">No hay tarjetas asociadas.</li>
+          <li className="text-custom-dark py-4">
+            No tienes tarjetas asociadas.
+          </li>
         )}
       </ul>
     </div>

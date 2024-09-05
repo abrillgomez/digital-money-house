@@ -3,11 +3,14 @@ import { useForm, FormProvider, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputText from "@/app/components/inputs/InputText";
 import InputNumber from "@/app/components/inputs/InputNumber";
+import Menu from "@/app/components/menu/Menu";
+import { cardScheme } from "@/schemes/card.scheme";
 import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
 import ContinueButton from "@/app/components/buttons/ContinueButton";
-import Menu from "@/app/components/menu/Menu";
-import { cardScheme } from "@/schemes/card.scheme";
+import AccountAPI from "../../../services/Account/account.service";
+import cardService from "../../../services/cards/cards.service";
+import Swal from "sweetalert2";
 
 const CardPage = () => {
   const methods = useForm({
@@ -29,6 +32,57 @@ const CardPage = () => {
       return cleanValue;
     }
     return `${cleanValue?.slice(0, 2)}/${cleanValue?.slice(2, 4)}`;
+  };
+
+  const convertExpiryToFullYear = (expiry: string) => {
+    const [month, year] = expiry.split("/");
+    return `${month}/20${year}`;
+  };
+
+  const onSubmit = async (data) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Token no encontrado");
+      const accountAPI = new AccountAPI();
+      const accountInfo = await accountAPI.getAccountInfo(token);
+      const accountId = accountInfo.id;
+      const existingCards = await cardService.getCardsByAccountId(
+        accountId,
+        token
+      );
+      if (existingCards.length >= 10) {
+        Swal.fire({
+          icon: "warning",
+          title: "Límite alcanzado",
+          text: "El máximo de tarjetas es 10. No puedes agregar más.",
+          confirmButtonText: "Aceptar",
+        });
+        return;
+      }
+      const cardData = {
+        cod: parseInt(data.cvc, 10),
+        expiration_date: convertExpiryToFullYear(data.expiry),
+        first_last_name: data.fullName,
+        number_id: parseInt(data.cardNumber),
+      };
+
+      await cardService.createCard(accountId, cardData, token);
+      Swal.fire({
+        icon: "success",
+        title: "Tarjeta creada con éxito",
+        confirmButtonText: "Aceptar",
+      }).then(() => {
+        window.location.href = "/card1";
+      });
+    } catch (error) {
+      console.error("Error al crear la tarjeta:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error al crear la tarjeta",
+        text: "Ocurrió un error. Inténtalo de nuevo.",
+        confirmButtonText: "Aceptar",
+      });
+    }
   };
 
   return (
@@ -61,7 +115,7 @@ const CardPage = () => {
                   return (
                     <input
                       type="text"
-                      placeholder="Fecha de vencimiento (MM/AA)*"
+                      placeholder="Fecha de vencimiento (MM/YY)*"
                       value={formattedValue}
                       onChange={(e) => {
                         const formattedInput = formatExpiry(e.target.value);
@@ -83,7 +137,10 @@ const CardPage = () => {
                 placeholder="Código de seguridad*"
               />
               <div className="col-span-2 flex justify-center mt-4">
-                <ContinueButton isEnabled={isValid} />
+                <ContinueButton
+                  isEnabled={isValid}
+                  handleSubmit={handleSubmit(onSubmit)}
+                />
               </div>
               {formState.errors.cardNumber && (
                 <p className="text-red-500 col-span-1 sm:col-span-2">

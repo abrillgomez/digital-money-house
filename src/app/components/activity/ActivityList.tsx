@@ -26,8 +26,8 @@ const ActivityList: React.FC = () => {
           (a, b) => new Date(b.dated) - new Date(a.dated)
         );
 
-        setActivities(transactions.slice(0, 4));
-        setFilteredActivities(transactions.slice(0, 4));
+        setActivities(transactions.slice(0, 10));
+        setFilteredActivities(transactions.slice(0, 10));
       } catch (error) {
         console.error("Error fetching activities:", error);
       }
