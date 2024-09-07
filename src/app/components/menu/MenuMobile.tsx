@@ -83,13 +83,15 @@ const MenuMobile = ({ userInfo, isLoggedIn }) => {
     <div className="block md:hidden">
       <div
         className={`h-16 flex justify-between items-center px-4 relative ${
-          isSpecialStyle ? "bg-lime-500" : "bg-black"
+          isSpecialStyle ? "bg-custom-lime-dark" : "bg-custom-dark"
         }`}>
-        <div className="text-white font-bold">
+        <div className="text-custom-white font-bold">
           <button onClick={handleLogoClick}>
             <img
               src={
-                isSpecialStyle ? "/assets/Logo-black.png" : "/assets/logo.png"
+                isSpecialStyle
+                  ? "/assets/logo-negro.png"
+                  : "/assets/logo-verde.png"
               }
               alt="Logo"
               className="h-7 w-auto"
@@ -98,7 +100,7 @@ const MenuMobile = ({ userInfo, isLoggedIn }) => {
         </div>
         <div className="flex items-center space-x-2">
           {isLoggedIn && (
-            <div className="bg-lime-500 text-black font-bold rounded-full w-10 h-10 flex items-center justify-center">
+            <div className="bg-custom-lime text-custom-dark font-bold rounded-full w-10 h-10 flex items-center justify-center">
               {getInitials(userInfo.firstname, userInfo.lastname)}
             </div>
           )}
@@ -106,17 +108,17 @@ const MenuMobile = ({ userInfo, isLoggedIn }) => {
             onClick={toggleMenu}
             className={`p-2 rounded-full focus:outline-none ${
               isSpecialStyle
-                ? "bg-lime-500 text-black"
-                : "bg-black text-lime-500"
+                ? "bg-custom-lime text-custom-dark"
+                : "bg-custom-dark text-custom-lime"
             }`}>
             <FaBars className="w-6 h-6" />
           </button>
         </div>
       </div>
       {isOpen && (
-        <div className="absolute top-16 left-0 w-full bg-black text-lime-500 z-10">
+        <div className="absolute left-0 w-full bg-custom-dark text-custom-lime z-10">
           <div className="flex justify-end p-4">
-            <button onClick={toggleMenu} className="text-lime-500">
+            <button onClick={toggleMenu} className="text-custom-lime">
               <FaTimes className="w-6 h-6" />
             </button>
           </div>
@@ -125,34 +127,34 @@ const MenuMobile = ({ userInfo, isLoggedIn }) => {
               <>
                 <a
                   href="/login"
-                  className="block px-4 py-2 text-lg hover:bg-lime-500 hover:text-black"
+                  className="block px-4 py-2 text-lg hover:bg-custom-lime hover:text-custom-dark"
                   onClick={() => handleNavigation("/login")}>
                   Ingresar
                 </a>
                 <a
                   href="/sign-up"
-                  className="block px-4 py-2 text-lg hover:bg-lime-500 hover:text-black"
+                  className="block px-4 py-2 text-lg hover:bg-custom-lime hover:text-custom-dark"
                   onClick={() => handleNavigation("/sign-up")}>
                   Crear cuenta
                 </a>
               </>
             ) : (
               <>
-                <div className="px-4 py-2 text-lg text-white font-bold">
+                <div className="px-4 text-lg text-custom-white font-bold">
                   Hola, {userInfo.firstname} {userInfo.lastname}
                 </div>
                 {menuLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="block px-4 py-2 text-lg hover:bg-lime-500 hover:text-black"
+                    className="block px-4 py-2 text-lg hover:bg-custom-lime hover:text-custom-dark"
                     onClick={() => setIsOpen(false)}>
                     {link.name}
                   </Link>
                 ))}
                 <button
                   onClick={handleLogout}
-                  className="block px-4 py-2 text-lg hover:bg-lime-500 hover:text-black">
+                  className="block px-4 py-2 text-lg hover:bg-custom-lime hover:text-custom-dark">
                   Cerrar sesión
                 </button>
               </>

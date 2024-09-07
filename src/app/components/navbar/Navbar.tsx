@@ -43,14 +43,14 @@ const Navbar = () => {
     pathname === "/login" ||
     pathname === "/login-password" ||
     pathname === "/sign-up"
-      ? "bg-lime-500"
-      : "bg-black";
+      ? "bg-custom-lime-dark"
+      : "bg-custom-dark";
   const logo =
     pathname === "/login" ||
     pathname === "/login-password" ||
     pathname === "/sign-up"
-      ? "/assets/logo-black.png"
-      : "/assets/logo.png";
+      ? "/assets/logo-negro.png"
+      : "/assets/logo-verde.png";
 
   const getInitials = (firstname, lastname) => {
     if (!firstname && !lastname) return "NN";
@@ -61,13 +61,9 @@ const Navbar = () => {
     <div>
       <div
         className={`${bgColor} h-16 w-full flex justify-between items-center px-4 hidden md:flex`}>
-        <div className="text-white font-bold">
+        <div className="text-custom-white font-bold">
           <Link href={isLoggedIn ? "/home" : "/"}>
-            <img
-              src={logo}
-              alt="Logo"
-              className="h-7 w-auto mr-4 pl-0 sm:pl-0"
-            />
+            <img src={logo} alt="Logo" className="h-7 w-auto" />
           </Link>
         </div>
         {!isLoggedIn ? (
@@ -76,12 +72,12 @@ const Navbar = () => {
           pathname !== "/sign-up" && (
             <div className="flex space-x-4">
               <Link href="/login">
-                <div className="bg-black text-lime-500 px-4 py-2 rounded border border-lime-500 font-bold">
+                <div className="bg-custom-dark text-custom-lime px-4 py-2 rounded border border-custom-lime font-bold">
                   Ingresar
                 </div>
               </Link>
               <Link href="/sign-up">
-                <button className="bg-lime-500 text-black px-4 py-2 rounded font-bold">
+                <button className="bg-custom-lime text-custom-dark px-4 py-2 rounded font-bold">
                   Crear cuenta
                 </button>
               </Link>
@@ -90,10 +86,10 @@ const Navbar = () => {
         ) : (
           <Link href="/home">
             <div className="flex items-center space-x-4">
-              <div className="bg-lime-500 text-black font-bold rounded-full w-10 h-10 flex items-center justify-center">
+              <div className="bg-custom-lime text-custom-dark font-bold rounded-full w-10 h-10 flex items-center justify-center">
                 {getInitials(userInfo.firstname, userInfo.lastname)}
               </div>
-              <span className="text-white font-bold">
+              <span className="text-custom-white font-bold">
                 Hola, {userInfo.firstname} {userInfo.lastname}
               </span>
             </div>

@@ -6,7 +6,7 @@ interface HomeButtonProps {
 
 const HomeButton: React.FC<HomeButtonProps> = ({ text }) => {
   return (
-    <button className="bg-lime-500 text-black w-full md:w-[511px] lg:w-[490px] h-[106px] rounded-md shadow-md hover:bg-lime-600 text-[24px]">
+    <button className="bg-custom-lime text-bold text-custom-dark w-full md:w-[511px] lg:w-[490px] h-[106px] rounded-md shadow-md hover:bg-custom-lime-dark text-[24px] font-bold">
       {text}
     </button>
   );

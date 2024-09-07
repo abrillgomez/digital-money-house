@@ -28,7 +28,6 @@ const CardsList = () => {
           console.error("Error fetching account info:", error);
         }
       };
-
       fetchAccountInfo();
     }
   }, [token]);
@@ -48,7 +47,6 @@ const CardsList = () => {
           setLoading(false);
         }
       };
-
       fetchCards();
     }
   }, [accountId, token]);
@@ -85,14 +83,14 @@ const CardsList = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg p-6 mt-4 w-[350px] sm:w-[511px] lg:w-[1006px]">
+    <div className="bg-white rounded-lg p-6 mt-4 w-full max-w-[350px] sm:max-w-[511px] lg:max-w-[1006px]">
       <h2 className="text-custom-dark font-bold mb-4">Tus tarjetas</h2>
       <ul>
         {cards.length > 0 ? (
           cards.map((card) => (
             <li
               key={card?.id}
-              className="flex justify-between items-center border-b border-gray-200 py-4">
+              className="flex justify-between items-center border-b border-custom-gray-light py-4">
               <div className="flex items-center">
                 <div className="w-[32px] h-[32px] bg-custom-lime rounded-full mr-4"></div>
                 <p className="text-custom-dark text-[16px]">

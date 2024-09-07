@@ -23,7 +23,7 @@ const CardUser: React.FC = () => {
   const [editedUser, setEditedUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");;
+    const token = localStorage.getItem("token");
     if (token) {
       try {
         const payload = token.split(".")[1];
@@ -69,13 +69,11 @@ const CardUser: React.FC = () => {
       );
       return;
     }
-
     const token = localStorage.getItem("token");
     if (!token) {
       Swal.fire("Error", "Token no encontrado", "error");
       return;
     }
-
     try {
       await UserAPI.updateUserData(token, user.id, editedUser);
       setUser(editedUser);
@@ -92,88 +90,106 @@ const CardUser: React.FC = () => {
     }
   };
 
-  if (loading) return <p>Cargando...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p className="text-custom-dark">Cargando...</p>;
+  if (error) return <p className="text-custom-dark">Error: {error}</p>;
 
   return (
-    <div className="mx-auto bg-white rounded-lg shadow-lg p-6 w-full max-w-[350px] sm:max-w-[511px] lg:max-w-[1003px] rounded-[10px] border border-gray-300">
-      <h2 className="text-xl font-bold mb-4">Tus datos</h2>
-      <div className="space-y-2">
-        <div className="flex gap-x-2 items-center">
-          <label className="text-gray-700">Email:</label>
-          {isEditing ? (
-            <input
-              type="text"
-              className="border p-1"
-              value={editedUser?.email}
-              onChange={(e) =>
-                setEditedUser({ ...editedUser!, email: e.target.value })
-              }
-            />
-          ) : (
-            <p>{user?.email}</p>
-          )}
+    <div className="mx-auto bg-white rounded-lg shadow-lg p-6 w-full max-w-[350px] sm:max-w-[511px] lg:max-w-[1006px] border border-custom-gray">
+      <h2 className="text-xl font-bold mb-4 text-custom-dark">Tus datos</h2>
+      <div className="space-y-4">
+        <div className="flex items-center gap-x-2">
+          <label className="text-custom-dark w-[150px]">Email</label>
+          <div className="flex-1">
+            {isEditing ? (
+              <input
+                type="text"
+                className="border border-custom-gray p-2 rounded-lg w-full"
+                value={editedUser?.email}
+                onChange={(e) =>
+                  setEditedUser({ ...editedUser!, email: e.target.value })
+                }
+              />
+            ) : (
+              <p className="text-black-opacity-50">{user?.email}</p>
+            )}
+          </div>
           <FontAwesomeIcon
             icon={isEditing ? faSave : faPen}
-            className="ml-2 text-gray-500 cursor-pointer"
+            className="text-custom-dark cursor-pointer"
             onClick={isEditing ? handleSave : handleEdit}
           />
         </div>
-        <div className="flex gap-x-2 items-center">
-          <label className="text-gray-700">Nombre y apellido:</label>
+        <div className="flex items-center gap-x-2">
+          <label className="text-custom-dark w-[150px]">
+            Nombre y apellido
+          </label>
+          <div className="flex-1">
+            {isEditing ? (
+              <div className="flex gap-x-2">
+                <input
+                  type="text"
+                  className="border border-custom-dark p-2 rounded-lg w-full"
+                  value={editedUser?.firstname}
+                  onChange={(e) =>
+                    setEditedUser({ ...editedUser!, firstname: e.target.value })
+                  }
+                />
+                <input
+                  type="text"
+                  className="border border-custom-dark p-2 rounded-lg w-full"
+                  value={editedUser?.lastname}
+                  onChange={(e) =>
+                    setEditedUser({ ...editedUser!, lastname: e.target.value })
+                  }
+                />
+              </div>
+            ) : (
+              <p className="text-black-opacity-50">
+                {user?.firstname} {user?.lastname}
+              </p>
+            )}
+          </div>
           {isEditing ? (
-            <input
-              type="text"
-              className="border p-1"
-              value={editedUser?.firstname}
-              onChange={(e) =>
-                setEditedUser({ ...editedUser!, firstname: e.target.value })
-              }
+            <FontAwesomeIcon
+              icon={faSave}
+              className="text-custom-dark cursor-pointer"
+              onClick={handleSave}
             />
           ) : (
-            <p>
-              {user?.firstname} {user?.lastname}
-            </p>
-          )}
-          {isEditing && (
-            <input
-              type="text"
-              className="border p-1"
-              value={editedUser?.lastname}
-              onChange={(e) =>
-                setEditedUser({ ...editedUser!, lastname: e.target.value })
-              }
+            <FontAwesomeIcon
+              icon={faPen}
+              className="text-custom-dark cursor-pointer"
+              onClick={handleEdit}
             />
           )}
+        </div>
+        <div className="flex items-center gap-x-2">
+          <label className="text-custom-dark w-[150px]">Teléfono</label>
+          <div className="flex-1">
+            {isEditing ? (
+              <input
+                type="text"
+                className="border border-custom-gray p-2 rounded-lg w-full"
+                value={editedUser?.phone}
+                onChange={(e) =>
+                  setEditedUser({ ...editedUser!, phone: e.target.value })
+                }
+              />
+            ) : (
+              <p className="text-black-opacity-50">{user?.phone}</p>
+            )}
+          </div>
           <FontAwesomeIcon
             icon={isEditing ? faSave : faPen}
-            className="ml-2 text-gray-500 cursor-pointer"
+            className="text-custom-dark cursor-pointer"
             onClick={isEditing ? handleSave : handleEdit}
           />
         </div>
-        <div className="flex gap-x-2 items-center">
-          <label className="text-gray-700">Teléfono:</label>
-          {isEditing ? (
-            <input
-              type="text"
-              className="border p-1"
-              value={editedUser?.phone}
-              onChange={(e) =>
-                setEditedUser({ ...editedUser!, phone: e.target.value })
-              }
-            />
-          ) : (
-            <p>{user?.phone}</p>
-          )}
-          <FontAwesomeIcon
-            icon={isEditing ? faSave : faPen}
-            className="ml-2 text-gray-500 cursor-pointer"
-            onClick={isEditing ? handleSave : handleEdit}
-          />
-        </div>
-        <div className="flex gap-x-2 items-center">
-          <label className="text-gray-700">DNI:</label>
-          <p>{user?.dni}</p>
+        <div className="flex items-center gap-x-2">
+          <label className="text-custom-dark w-[150px]">DNI</label>
+          <div className="flex-1">
+            <p className="text-black-opacity-50">{user?.dni}</p>
+          </div>
         </div>
       </div>
     </div>

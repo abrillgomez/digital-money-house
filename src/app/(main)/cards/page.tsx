@@ -8,7 +8,9 @@ const CardPage = () => {
     <div className="bg-custom-white flex">
       <Menu />
       <main className="flex-1 p-4 flex flex-col items-center mt-8 min-h-screen">
-        <h1 className="block text-2xl font-bold mb-4 sm:hidden">Tarjetas</h1>
+        <h1 className="block text-2xl text-custom-dark font-bold mb-4 sm:hidden">
+          Tarjetas
+        </h1>
         <AddCardButton />
         <CardsList />
       </main>

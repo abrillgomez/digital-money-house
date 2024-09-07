@@ -7,7 +7,7 @@ const AddCardButton = () => {
   return (
     <Link href="/add-card">
       <div
-        className="bg-black text-white p-6 rounded-lg flex justify-between items-center w-[350px] sm:w-[511px] lg:w-[1006px] h-[167px] mb-6"
+        className="bg-custom-dark text-custom-white p-6 rounded-lg flex justify-between items-center w-[350px] sm:w-[511px] lg:w-[1006px] h-[167px] mb-6 cursor-pointer"
         style={{ cursor: "pointer" }}>
         <div>
           <p className="text-[16px] font-bold">
@@ -16,7 +16,7 @@ const AddCardButton = () => {
           <div className="flex items-center mt-8">
             <FontAwesomeIcon
               icon={faPlus}
-              className="text-custom-lime text-s mr-2"
+              className="text-custom-lime mr-2"
               style={{ width: "34px", height: "34px" }}
             />
             <p className="text-[20px] font-bold text-custom-lime">
