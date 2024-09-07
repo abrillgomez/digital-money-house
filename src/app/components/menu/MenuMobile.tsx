@@ -25,7 +25,7 @@ const MenuMobile = ({ userInfo, isLoggedIn }) => {
     if (
       !token &&
       (currentPath === "/login" ||
-        currentPath === "/sign-up" ||
+        currentPath === "/create-account" ||
         currentPath === "/login-password")
     ) {
       setIsSpecialStyle(true);
@@ -62,7 +62,7 @@ const MenuMobile = ({ userInfo, isLoggedIn }) => {
     if (
       href === "/login" ||
       href === "/login-password" ||
-      href === "/sign-up"
+      href === "/create-account"
     ) {
       window.location.href = href;
     } else {
@@ -108,8 +108,8 @@ const MenuMobile = ({ userInfo, isLoggedIn }) => {
             onClick={toggleMenu}
             className={`p-2 rounded-full focus:outline-none ${
               isSpecialStyle
-                ? "bg-custom-lime text-custom-dark"
-                : "bg-custom-dark text-custom-lime"
+                ? "text-custom-dark"
+                : "text-custom-lime"
             }`}>
             <FaBars className="w-6 h-6" />
           </button>
@@ -127,34 +127,41 @@ const MenuMobile = ({ userInfo, isLoggedIn }) => {
               <>
                 <a
                   href="/login"
-                  className="block px-4 py-2 text-lg hover:bg-custom-lime hover:text-custom-dark"
+                  className="block px-4 py-2 text-lg hover:bg-custom-lime hover:text-custom-dark hover:font-bold"
                   onClick={() => handleNavigation("/login")}>
                   Ingresar
                 </a>
                 <a
-                  href="/sign-up"
-                  className="block px-4 py-2 text-lg hover:bg-custom-lime hover:text-custom-dark"
-                  onClick={() => handleNavigation("/sign-up")}>
+                  href="/create-account"
+                  className="block px-4 py-2 text-lg hover:bg-custom-lime hover:text-custom-dark hover:font-bold"
+                  onClick={() => handleNavigation("/create-account")}>
                   Crear cuenta
                 </a>
               </>
             ) : (
               <>
                 <div className="px-4 text-lg text-custom-white font-bold">
-                  Hola, {userInfo.firstname} {userInfo.lastname}
+                  <div className="flex flex-col items-start">
+                    <div className="text-lg text-custom-lime font-semibold">
+                      Hola,
+                    </div>
+                    <div className="text-lg text-custom-lime font-semibold">
+                      {userInfo.firstname} {userInfo.lastname}
+                    </div>
+                  </div>
                 </div>
                 {menuLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="block px-4 py-2 text-lg hover:bg-custom-lime hover:text-custom-dark"
+                    className="block px-4 py-2 mt-2 text-lg hover:bg-custom-lime hover:text-custom-dark hover:font-bold"
                     onClick={() => setIsOpen(false)}>
                     {link.name}
                   </Link>
                 ))}
                 <button
                   onClick={handleLogout}
-                  className="block px-4 py-2 text-lg hover:bg-custom-lime hover:text-custom-dark">
+                  className="w-[400px] text-left block px-4 py-2 mt-2 text-lg hover:bg-custom-lime hover:text-custom-dark hover:font-bold">
                   Cerrar sesión
                 </button>
               </>

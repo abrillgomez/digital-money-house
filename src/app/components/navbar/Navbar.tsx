@@ -42,13 +42,13 @@ const Navbar = () => {
   const bgColor =
     pathname === "/login" ||
     pathname === "/login-password" ||
-    pathname === "/sign-up"
+    pathname === "/create-account"
       ? "bg-custom-lime-dark"
       : "bg-custom-dark";
   const logo =
     pathname === "/login" ||
     pathname === "/login-password" ||
-    pathname === "/sign-up"
+    pathname === "/create-account"
       ? "/assets/logo-negro.png"
       : "/assets/logo-verde.png";
 
@@ -69,14 +69,14 @@ const Navbar = () => {
         {!isLoggedIn ? (
           pathname !== "/login" &&
           pathname !== "/login-password" &&
-          pathname !== "/sign-up" && (
+          pathname !== "/create-account" && (
             <div className="flex space-x-4">
               <Link href="/login">
                 <div className="bg-custom-dark text-custom-lime px-4 py-2 rounded border border-custom-lime font-bold">
                   Ingresar
                 </div>
               </Link>
-              <Link href="/sign-up">
+              <Link href="/create-account">
                 <button className="bg-custom-lime text-custom-dark px-4 py-2 rounded font-bold">
                   Crear cuenta
                 </button>
