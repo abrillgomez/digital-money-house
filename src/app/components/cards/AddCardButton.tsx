@@ -7,7 +7,7 @@ const AddCardButton = () => {
   return (
     <Link href="/add-card">
       <div
-        className="bg-custom-dark text-white p-6 rounded-lg flex justify-between items-center w-[1006px] h-[167px] mb-6"
+        className="bg-black text-white p-6 rounded-lg flex justify-between items-center w-[350px] sm:w-[511px] lg:w-[1006px] h-[167px] mb-6"
         style={{ cursor: "pointer" }}>
         <div>
           <p className="text-[16px] font-bold">

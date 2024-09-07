@@ -85,7 +85,7 @@ const CardsList = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg p-6 mt-4 w-[1006px]">
+    <div className="bg-white rounded-lg p-6 mt-4 w-[350px] sm:w-[511px] lg:w-[1006px]">
       <h2 className="text-custom-dark font-bold mb-4">Tus tarjetas</h2>
       <ul>
         {cards.length > 0 ? (

@@ -1,6 +1,6 @@
 "use client";
-import AccountAPI from "@/services/account/account.service";
 import React, { useEffect, useState } from "react";
+import AccountAPI from "@/services/Account/account.service";
 
 const CardHome = () => {
   const [availableAmount, setAvailableAmount] = useState<number | null>(null);
@@ -8,10 +8,12 @@ const CardHome = () => {
   useEffect(() => {
     const fetchAccountInfo = async () => {
       const token = localStorage.getItem("token");
+
       if (!token) {
-        console.error("No se encontró el token.");
+        console.error("No se encontró el token");
         return;
       }
+
       try {
         const accountService = new AccountAPI();
         const accountData = await accountService.getAccountInfo(token);
@@ -25,7 +27,7 @@ const CardHome = () => {
   }, []);
 
   return (
-    <div className="bg-custom-dark w-[1006px] h-[230px] rounded-lg flex items-start justify-start p-6 relative">
+    <div className="bg-black w-[350px] md:w-[511px] lg:w-[1006px] h-[230px] rounded-lg flex items-start justify-start p-6 relative">
       <div className="absolute top-6 right-6 flex space-x-3">
         <a href="/cards" className="text-white underline">
           Ver tarjetas
@@ -34,6 +36,7 @@ const CardHome = () => {
           Ver CVU
         </a>
       </div>
+
       <div className="mt-auto">
         <h1 className="text-white text-[16px] font-bold mb-4">
           Dinero disponible

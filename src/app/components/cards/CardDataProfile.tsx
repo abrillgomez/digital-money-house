@@ -1,7 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { MdContentCopy } from "react-icons/md";
-import AccountAPI from "@/services/account/account.service";
+import AccountAPI from "./../../../services/account/account.service";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCopy } from "@fortawesome/free-solid-svg-icons";
 
 const CardDataProfile = () => {
   const [accountInfo, setAccountInfo] = useState(null);
@@ -30,28 +31,28 @@ const CardDataProfile = () => {
   };
 
   return (
-    <div className="bg-custom-dark text-white p-6 rounded-lg shadow-md w-[1006px] h-[264px] mt-6">
-      <p className="font-bold text-white text-[16px] mb-6">
-        Copia tu CVU o alias para ingresar o transferir dinero desde otra cuenta
+    <div className="bg-black text-white p-6 rounded-lg shadow-md w-[350px] sm:w-[511px] lg:w-[1003px] mt-6">
+      <p className="font-bold text-gray-300 mb-4">
+        Copia tu cvu o alias para ingresar o transferir dinero desde otra cuenta
       </p>
-      <div className="mb-6">
-        <span className="text-[20px] font-bold text-custom-lime">CVU</span>
-        <div className="flex items-center justify-between mt-2">
+      <div className="mb-2">
+        <span className="text-gray-400 text-[20px] block">CVU</span>
+        <div className="flex items-center justify-between">
           <span>{accountInfo.cvu}</span>
-          <MdContentCopy
-            className="text-custom-lime cursor-pointer"
-            style={{ width: "38px", height: "32px" }}
+          <FontAwesomeIcon
+            icon={faCopy}
+            className="text-lime-500 cursor-pointer"
             onClick={() => handleCopy(accountInfo.cvu)}
           />
         </div>
       </div>
-      <div className="mt-6">
-        <span className="text-[20px] font-bold text-custom-lime">Alias</span>
-        <div className="flex items-center justify-between mt-2">
+      <div className="mt-4">
+        <span className="text-gray-400 text-[20px] block">Alias</span>
+        <div className="flex items-center justify-between">
           <span>{accountInfo.alias}</span>
-          <MdContentCopy
-            className="text-custom-lime cursor-pointer"
-            style={{ width: "38px", height: "32px" }}
+          <FontAwesomeIcon
+            icon={faCopy}
+            className="text-lime-500 cursor-pointer"
             onClick={() => handleCopy(accountInfo.alias)}
           />
         </div>

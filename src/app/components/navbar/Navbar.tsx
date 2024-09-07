@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import userApi from "../../../services/users/users.service";
+import MenuMobile from "../menu/MenuMobile";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -13,12 +14,14 @@ const Navbar = () => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
+
       try {
         const payload = token.split(".")[1];
         const decodedPayload = JSON.parse(
           atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
         );
         const username = decodedPayload.username;
+
         userApi
           .getUserData(token, username)
           .then((userData) => {
@@ -36,27 +39,18 @@ const Navbar = () => {
     }
   }, []);
 
-  const routeStyles = {
-    "/login": {
-      bgColor: "bg-custom-lime",
-      logo: "/assets/logo-negro.png",
-    },
-    "/login-password": {
-      bgColor: "bg-custom-lime",
-      logo: "/assets/logo-negro.png",
-    },
-    "/create-account": {
-      bgColor: "bg-custom-lime",
-      logo: "/assets/logo-negro.png",
-    },
-  };
-
-  const defaultStyle = {
-    bgColor: "bg-custom-dark",
-    logo: "/assets/logo-verde.png",
-  };
-
-  const { bgColor, logo } = routeStyles[pathname] || defaultStyle;
+  const bgColor =
+    pathname === "/login" ||
+    pathname === "/login-password" ||
+    pathname === "/sign-up"
+      ? "bg-lime-500"
+      : "bg-black";
+  const logo =
+    pathname === "/login" ||
+    pathname === "/login-password" ||
+    pathname === "/sign-up"
+      ? "/assets/logo-black.png"
+      : "/assets/logo.png";
 
   const getInitials = (firstname, lastname) => {
     if (!firstname && !lastname) return "NN";
@@ -64,46 +58,49 @@ const Navbar = () => {
   };
 
   return (
-    <div
-      className={`${bgColor} h-[64px] w-full flex justify-between items-center px-4`}>
-      <div className="text-white font-bold">
-        <Link href={isLoggedIn ? "/home" : "/"}>
-          <img
-            src={logo}
-            alt="Logo de Digital Money House"
-            className="h-7 w-auto mr-4 pl-0 sm:pl-0"
-          />
-        </Link>
-      </div>
-      {!isLoggedIn ? (
-        pathname !== "/login" &&
-        pathname !== "/login-password" &&
-        pathname !== "/create-account" && (
-          <div className="flex space-x-4">
-            <Link href="/login">
-              <div className="text-[14px] bg-transparent text-custom-lime px-4 py-2 rounded border border-custom-lime font-bold">
-                Ingresar
-              </div>
-            </Link>
-            <Link href="/create-account">
-              <button className="text-[14px] bg-custom-lime text-black px-4 py-2 rounded font-bold">
-                Crear cuenta
-              </button>
-            </Link>
-          </div>
-        )
-      ) : (
-        <Link href="/home">
-          <div className="flex items-center space-x-4">
-            <div className="bg-custom-lime text-black font-bold rounded-full w-10 h-10 flex items-center justify-center">
-              {getInitials(userInfo.firstname, userInfo.lastname)}
+    <div>
+      <div
+        className={`${bgColor} h-16 w-full flex justify-between items-center px-4 hidden md:flex`}>
+        <div className="text-white font-bold">
+          <Link href={isLoggedIn ? "/home" : "/"}>
+            <img
+              src={logo}
+              alt="Logo"
+              className="h-7 w-auto mr-4 pl-0 sm:pl-0"
+            />
+          </Link>
+        </div>
+        {!isLoggedIn ? (
+          pathname !== "/login" &&
+          pathname !== "/login-password" &&
+          pathname !== "/sign-up" && (
+            <div className="flex space-x-4">
+              <Link href="/login">
+                <div className="bg-black text-lime-500 px-4 py-2 rounded border border-lime-500 font-bold">
+                  Ingresar
+                </div>
+              </Link>
+              <Link href="/sign-up">
+                <button className="bg-lime-500 text-black px-4 py-2 rounded font-bold">
+                  Crear cuenta
+                </button>
+              </Link>
             </div>
-            <span className="text-white font-bold">
-              Hola, {userInfo.firstname} {userInfo.lastname}
-            </span>
-          </div>
-        </Link>
-      )}
+          )
+        ) : (
+          <Link href="/home">
+            <div className="flex items-center space-x-4">
+              <div className="bg-lime-500 text-black font-bold rounded-full w-10 h-10 flex items-center justify-center">
+                {getInitials(userInfo.firstname, userInfo.lastname)}
+              </div>
+              <span className="text-white font-bold">
+                Hola, {userInfo.firstname} {userInfo.lastname}
+              </span>
+            </div>
+          </Link>
+        )}
+      </div>
+      <MenuMobile userInfo={userInfo} isLoggedIn={isLoggedIn} />
     </div>
   );
 };

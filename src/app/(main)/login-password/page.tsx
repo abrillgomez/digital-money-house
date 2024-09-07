@@ -16,7 +16,7 @@ const LoginPasswordPage = () => {
   const isPasswordValid = formState.isValid && passwordValue !== "";
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[795px] py-2 bg-custom-dark text-white">
+    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-custom-dark text-white">
       <h1 className="text-2xl font-bold">Ingresá tu contraseña</h1>
       <FormProvider {...methods}>
         <form

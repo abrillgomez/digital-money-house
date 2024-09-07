@@ -72,7 +72,7 @@ const CardPage = () => {
         title: "Tarjeta creada con éxito",
         confirmButtonText: "Aceptar",
       }).then(() => {
-        window.location.href = "/card1";
+        window.location.href = "/cards";
       });
     } catch (error) {
       console.error("Error al crear la tarjeta:", error);
@@ -88,11 +88,16 @@ const CardPage = () => {
   return (
     <div className="flex">
       <Menu />
-      <main className="flex-1 p-4 flex justify-center items-center bg-custom-white min-h-screen">
-        <div className="bg-white rounded-lg shadow-lg p-8 w-[973px] h-[600px] max-w-4xl -mt-12">
+      <main className="flex-1 p-4 flex justify-center items-center bg-gray-100 min-h-screen">
+        <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-4xl">
+          <h1 className="block text-2xl text-black font-bold mb-4 flex justify-center sm:hidden">
+            Tarjetas
+          </h1>
           <FormProvider {...methods}>
-            <form className="grid grid-cols-1 gap-4 py-4 sm:grid-cols-2">
-              <div className="col-span-2 flex justify-center mb-8">
+            <form
+              className="flex flex-wrap gap-4 py-4 justify-center"
+              onSubmit={handleSubmit(onSubmit)}>
+              <div className="w-full flex justify-center mb-8">
                 <Cards
                   cvc={cvc || ""}
                   expiry={expiry || ""}
@@ -136,7 +141,7 @@ const CardPage = () => {
                 fieldName="cvc"
                 placeholder="Código de seguridad*"
               />
-              <div className="col-span-2 flex justify-center mt-4">
+              <div className="w-full flex justify-center mt-4">
                 <ContinueButton
                   isEnabled={isValid}
                   handleSubmit={handleSubmit(onSubmit)}

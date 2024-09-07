@@ -23,7 +23,7 @@ const CardUser: React.FC = () => {
   const [editedUser, setEditedUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");;
     if (token) {
       try {
         const payload = token.split(".")[1];
@@ -69,11 +69,13 @@ const CardUser: React.FC = () => {
       );
       return;
     }
+
     const token = localStorage.getItem("token");
     if (!token) {
       Swal.fire("Error", "Token no encontrado", "error");
       return;
     }
+
     try {
       await UserAPI.updateUserData(token, user.id, editedUser);
       setUser(editedUser);
@@ -90,98 +92,89 @@ const CardUser: React.FC = () => {
     }
   };
 
-  if (loading) return <p className="text-custom-dark">Cargando...</p>;
-  if (error) return <p className="text-custom-dark">Error: {error}</p>;
+  if (loading) return <p>Cargando...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="mx-auto bg-white rounded-lg shadow-lg p-6 w-[1006px] rounded-[10px]">
-      <h2 className="text-[20px] font-bold mb-4 text-black">Tus datos</h2>
-      <div className="space-y-4">
-        <div className="flex items-center">
-          <label className="text-custom-dark w-1/3">Email</label>
+    <div className="mx-auto bg-white rounded-lg shadow-lg p-6 w-full max-w-[350px] sm:max-w-[511px] lg:max-w-[1003px] rounded-[10px] border border-gray-300">
+      <h2 className="text-xl font-bold mb-4">Tus datos</h2>
+      <div className="space-y-2">
+        <div className="flex gap-x-2 items-center">
+          <label className="text-gray-700">Email:</label>
           {isEditing ? (
             <input
               type="text"
-              className="text-black-opacity-50 flex-1 ml-1 border p-1 text-sm w-2/3"
+              className="border p-1"
               value={editedUser?.email}
               onChange={(e) =>
                 setEditedUser({ ...editedUser!, email: e.target.value })
               }
             />
           ) : (
-            <p className="text-black-opacity-50 flex-1 ml-1">{user?.email}</p>
+            <p>{user?.email}</p>
           )}
           <FontAwesomeIcon
             icon={isEditing ? faSave : faPen}
-            className="ml-2 text-custom-dark cursor-pointer"
+            className="ml-2 text-gray-500 cursor-pointer"
             onClick={isEditing ? handleSave : handleEdit}
           />
         </div>
-        <hr className="border-t border-custom-gray-light mx-auto" />
-        <div className="flex items-center">
-          <label className="text-custom-dark w-1/3">Nombre y apellido</label>
-          {isEditing ? (
-            <>
-              <input
-                type="text"
-                className="text-black-opacity-50 flex-1 ml-1 border p-1 text-sm w-1/3"
-                value={editedUser?.firstname}
-                onChange={(e) =>
-                  setEditedUser({ ...editedUser!, firstname: e.target.value })
-                }
-              />
-              <input
-                type="text"
-                className="text-black-opacity-50 flex-1 ml-1 border p-1 text-sm w-1/3"
-                value={editedUser?.lastname}
-                onChange={(e) =>
-                  setEditedUser({ ...editedUser!, lastname: e.target.value })
-                }
-              />
-            </>
-          ) : (
-            <p className="text-black-opacity-50 flex-1 ml-1">
-              {user?.firstname} {user?.lastname}
-            </p>
-          )}
-          <FontAwesomeIcon
-            icon={isEditing ? faSave : faPen}
-            className="ml-2 text-custom-dark cursor-pointer"
-            onClick={isEditing ? handleSave : handleEdit}
-          />
-        </div>
-        <hr className="border-t border-custom-gray-light mx-auto" />
-        <div className="flex items-center">
-          <label className="text-custom-dark w-1/3">Teléfono</label>
+        <div className="flex gap-x-2 items-center">
+          <label className="text-gray-700">Nombre y apellido:</label>
           {isEditing ? (
             <input
               type="text"
-              className="text-black-opacity-50 flex-1 ml-1 border p-1 text-sm w-2/3"
+              className="border p-1"
+              value={editedUser?.firstname}
+              onChange={(e) =>
+                setEditedUser({ ...editedUser!, firstname: e.target.value })
+              }
+            />
+          ) : (
+            <p>
+              {user?.firstname} {user?.lastname}
+            </p>
+          )}
+          {isEditing && (
+            <input
+              type="text"
+              className="border p-1"
+              value={editedUser?.lastname}
+              onChange={(e) =>
+                setEditedUser({ ...editedUser!, lastname: e.target.value })
+              }
+            />
+          )}
+          <FontAwesomeIcon
+            icon={isEditing ? faSave : faPen}
+            className="ml-2 text-gray-500 cursor-pointer"
+            onClick={isEditing ? handleSave : handleEdit}
+          />
+        </div>
+        <div className="flex gap-x-2 items-center">
+          <label className="text-gray-700">Teléfono:</label>
+          {isEditing ? (
+            <input
+              type="text"
+              className="border p-1"
               value={editedUser?.phone}
               onChange={(e) =>
                 setEditedUser({ ...editedUser!, phone: e.target.value })
               }
             />
           ) : (
-            <p className="text-black-opacity-50 flex-1 ml-1">{user?.phone}</p>
+            <p>{user?.phone}</p>
           )}
           <FontAwesomeIcon
             icon={isEditing ? faSave : faPen}
-            className="ml-2 text-custom-dark cursor-pointer"
+            className="ml-2 text-gray-500 cursor-pointer"
             onClick={isEditing ? handleSave : handleEdit}
           />
         </div>
-        <hr className="border-t border-custom-gray-light mx-auto" />
-        <div className="flex items-center">
-          <label className="text-custom-dark w-1/3">DNI</label>
-          <p className="text-black-opacity-50 flex-1 ml-1">{user?.dni}</p>
+        <div className="flex gap-x-2 items-center">
+          <label className="text-gray-700">DNI:</label>
+          <p>{user?.dni}</p>
         </div>
-        <hr className="border-t border-custom-gray-light mx-auto" />
-        <div className="flex items-center">
-          <label className="text-custom-dark w-1/3">Contraseña</label>
-          <p className="text-black-opacity-50 flex-1 ml-1">******</p>
-        </div>
-        <hr className="border-t border-custom-gray-light mx-auto" />
       </div>
     </div>
   );
