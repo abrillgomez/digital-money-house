@@ -98,12 +98,12 @@ const CardUser: React.FC = () => {
       <h2 className="text-xl font-bold mb-4 text-custom-dark">Tus datos</h2>
       <div className="space-y-4">
         <div className="flex items-center gap-x-2">
-          <label className="text-custom-dark w-[150px]">Email</label>
+          <label className="text-custom-dark w-[150px]">E-mail</label>
           <div className="flex-1">
             {isEditing ? (
               <input
                 type="text"
-                className="border border-custom-gray p-2 rounded-lg w-full"
+                className="border border-custom-gray p-2 rounded-lg w-full text-black-opacity-50"
                 value={editedUser?.email}
                 onChange={(e) =>
                   setEditedUser({ ...editedUser!, email: e.target.value })
@@ -120,48 +120,48 @@ const CardUser: React.FC = () => {
           />
         </div>
         <div className="flex items-center gap-x-2">
-          <label className="text-custom-dark w-[150px]">
-            Nombre y apellido
-          </label>
+          <label className="text-custom-dark w-[150px]">Nombre</label>
           <div className="flex-1">
             {isEditing ? (
-              <div className="flex gap-x-2">
-                <input
-                  type="text"
-                  className="border border-custom-dark p-2 rounded-lg w-full"
-                  value={editedUser?.firstname}
-                  onChange={(e) =>
-                    setEditedUser({ ...editedUser!, firstname: e.target.value })
-                  }
-                />
-                <input
-                  type="text"
-                  className="border border-custom-dark p-2 rounded-lg w-full"
-                  value={editedUser?.lastname}
-                  onChange={(e) =>
-                    setEditedUser({ ...editedUser!, lastname: e.target.value })
-                  }
-                />
-              </div>
+              <input
+                type="text"
+                className="border border-custom-dark p-2 rounded-lg w-full text-black-opacity-50"
+                value={editedUser?.firstname}
+                onChange={(e) =>
+                  setEditedUser({ ...editedUser!, firstname: e.target.value })
+                }
+              />
             ) : (
-              <p className="text-black-opacity-50">
-                {user?.firstname} {user?.lastname}
-              </p>
+              <p className="text-black-opacity-50">{user?.firstname}</p>
             )}
           </div>
-          {isEditing ? (
-            <FontAwesomeIcon
-              icon={faSave}
-              className="text-custom-dark cursor-pointer"
-              onClick={handleSave}
-            />
-          ) : (
-            <FontAwesomeIcon
-              icon={faPen}
-              className="text-custom-dark cursor-pointer"
-              onClick={handleEdit}
-            />
-          )}
+          <FontAwesomeIcon
+            icon={isEditing ? faSave : faPen}
+            className="text-custom-dark cursor-pointer"
+            onClick={isEditing ? handleSave : handleEdit}
+          />
+        </div>
+        <div className="flex items-center gap-x-2">
+          <label className="text-custom-dark w-[150px]">Apellido</label>
+          <div className="flex-1">
+            {isEditing ? (
+              <input
+                type="text"
+                className="border border-custom-dark p-2 rounded-lg w-full text-black-opacity-50"
+                value={editedUser?.lastname}
+                onChange={(e) =>
+                  setEditedUser({ ...editedUser!, lastname: e.target.value })
+                }
+              />
+            ) : (
+              <p className="text-black-opacity-50">{user?.lastname}</p>
+            )}
+          </div>
+          <FontAwesomeIcon
+            icon={isEditing ? faSave : faPen}
+            className="text-custom-dark cursor-pointer"
+            onClick={isEditing ? handleSave : handleEdit}
+          />
         </div>
         <div className="flex items-center gap-x-2">
           <label className="text-custom-dark w-[150px]">Teléfono</label>
@@ -169,7 +169,7 @@ const CardUser: React.FC = () => {
             {isEditing ? (
               <input
                 type="text"
-                className="border border-custom-gray p-2 rounded-lg w-full"
+                className="border border-custom-gray p-2 rounded-lg w-full text-black-opacity-50"
                 value={editedUser?.phone}
                 onChange={(e) =>
                   setEditedUser({ ...editedUser!, phone: e.target.value })
@@ -189,6 +189,12 @@ const CardUser: React.FC = () => {
           <label className="text-custom-dark w-[150px]">DNI</label>
           <div className="flex-1">
             <p className="text-black-opacity-50">{user?.dni}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-x-2">
+          <label className="text-custom-dark w-[150px]">Contraseña</label>
+          <div className="flex-1">
+            <p className="text-black-opacity-50">******</p>
           </div>
         </div>
       </div>
