@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import AccountAPI from "../../../services/account/account.service";
@@ -13,7 +12,6 @@ const CardTransactionCard = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerPage = 5;
-
   const accountService = new AccountAPI();
 
   useEffect(() => {
@@ -37,7 +35,7 @@ const CardTransactionCard = () => {
   };
 
   const handleNewCardClick = () => {
-    window.location.href = "/card1";
+    window.location.href = "/add-card";
   };
 
   const handleContinueClick = () => {
@@ -74,7 +72,6 @@ const CardTransactionCard = () => {
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   const currentCards = cards.slice(indexOfFirstCard, indexOfLastCard);
-
   const totalPages = Math.ceil(cards.length / cardsPerPage);
 
   const goToNextPage = () => {

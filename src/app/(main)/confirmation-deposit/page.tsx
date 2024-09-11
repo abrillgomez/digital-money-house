@@ -44,7 +44,7 @@ const ConfirmationDepositPage: React.FC = () => {
 
       setTransactionData({
         amount,
-        date: `${formattedDate}, ${formattedTime} hs.`,
+        date: `${formattedDate}, ${formattedTime}hs.`,
         lastFourDigits,
       });
     }

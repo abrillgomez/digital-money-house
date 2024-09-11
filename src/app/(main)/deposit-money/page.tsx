@@ -4,6 +4,7 @@ import AccountAPI from "../../../services/account/account.service";
 import { TransferencesService } from "../../../services/transferences/transferences.service";
 import Swal from "sweetalert2";
 import Menu from "@/app/components/menu/Menu";
+import { format, toZonedTime } from "date-fns-tz";
 
 interface DepositMoneyProps {
   cardInfo: {
@@ -49,10 +50,10 @@ const DepositMoney: React.FC = () => {
   }, []);
 
   const getArgentinaDate = () => {
+    const timeZone = "America/Argentina/Buenos_Aires";
     const currentDate = new Date();
-    const offset = -3 * 60;
-    const argentinaDate = new Date(currentDate.getTime() + offset * 60000);
-    return argentinaDate.toISOString();
+    const zonedDate = toZonedTime(currentDate, timeZone);
+    return format(zonedDate, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", { timeZone });
   };
 
   const handleDeposit = async () => {
@@ -112,7 +113,7 @@ const DepositMoney: React.FC = () => {
     <div className="flex bg-custom-white min-h-screen">
       <Menu />
       <main className="flex-1 p-6 flex flex-col items-center mt-8">
-        <div className="bg-custom-gray p-6 rounded-lg shadow-lg w-full max-w-[1006px] h-[306px] relative">
+        <div className="bg-custom-dark p-6 rounded-lg shadow-lg w-full max-w-[1006px] h-[306px] relative">
           <h2 className="text-custom-lime font-bold text-[24px] absolute top-8 left-9">
             ¿Cuánto querés ingresar a la cuenta?
           </h2>
