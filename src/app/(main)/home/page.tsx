@@ -14,8 +14,8 @@ const HomePage = () => {
         </h1>
         <CardHome />
         <div className="w-full max-w-[350px] md:max-w-[511px] lg:max-w-[1006px] flex flex-col lg:flex-row lg:space-x-4 mt-4 space-y-4 lg:space-y-0">
-          <HomeButton text="Cargar dinero" />
-          <HomeButton text="Pago de servicios" />
+          <HomeButton text="Cargar dinero" href="/transactions" />
+          <HomeButton text="Pago de servicios" href="/services" />
         </div>
         <ActivityList />
       </main>
