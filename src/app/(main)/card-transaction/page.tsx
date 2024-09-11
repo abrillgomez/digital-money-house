@@ -1,4 +1,3 @@
-"use client";
 import CardTransactionCard from "@/app/components/cards/CardTransactionCard";
 import Menu from "@/app/components/menu/Menu";
 import React from "react";
