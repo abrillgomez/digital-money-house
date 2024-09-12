@@ -1,15 +1,37 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSearch,
+  faArrowRight,
+  faFilter,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
+import AccountAPI from "../../../services/account/account.service";
 import { transactionsAPI } from "../../../services/transactions/transactions.service";
-import AccountAPI from "@/services/account/account.service";
+
+interface Activity {
+  id: number;
+  description: string;
+  dated: string;
+  amount: number;
+}
 
 const ActivityList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [activities, setActivities] = useState([]);
-  const [filteredActivities, setFilteredActivities] = useState([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [filteredActivities, setFilteredActivities] = useState<Activity[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const [isClient, setIsClient] = useState(false);
+  const [path, setPath] = useState("");
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("");
+
+  useEffect(() => {
+    setIsClient(true);
+    setPath(window.location.pathname);
+  }, []);
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -23,22 +45,107 @@ const ActivityList: React.FC = () => {
         transactions = transactions.sort(
           (a, b) => new Date(b.dated) - new Date(a.dated)
         );
-        setActivities(transactions.slice(0, 10));
-        setFilteredActivities(transactions.slice(0, 10));
+        if (selectedFilter) {
+          const now = new Date();
+          let startDate;
+          switch (selectedFilter) {
+            case "hoy":
+              startDate = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate()
+              );
+              break;
+            case "ayer":
+              startDate = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate() - 1
+              );
+              break;
+            case "ultima-semana":
+              startDate = new Date(now.setDate(now.getDate() - 7));
+              break;
+            case "ultimos-dias":
+              startDate = new Date(now.setDate(now.getDate() - 15));
+              break;
+            case "ultimo-mes":
+              startDate = new Date(
+                now.getFullYear(),
+                now.getMonth() - 1,
+                now.getDate()
+              );
+              break;
+            case "ultimo-ano":
+              startDate = new Date(
+                now.getFullYear() - 1,
+                now.getMonth(),
+                now.getDate()
+              );
+              break;
+            default:
+              startDate = new Date(0);
+          }
+          transactions = transactions.filter(
+            (activity: Activity) => new Date(activity.dated) >= startDate
+          );
+        }
+        setActivities(transactions);
+        setFilteredActivities(transactions);
       } catch (error) {
         console.error("Error fetching activities:", error);
       }
     };
 
     fetchActivities();
-  }, []);
+  }, [selectedFilter]);
 
   useEffect(() => {
     const filtered = activities.filter((activity) =>
-      activity.description.toLowerCase().includes(searchTerm.toLowerCase())
+      activity?.description?.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredActivities(filtered);
+    setCurrentPage(1);
   }, [searchTerm, activities]);
+
+  const indexOfLastActivity = currentPage * itemsPerPage;
+  const indexOfFirstActivity = indexOfLastActivity - itemsPerPage;
+  const currentActivities =
+    path === "/home"
+      ? filteredActivities.slice(0, itemsPerPage)
+      : filteredActivities.slice(indexOfFirstActivity, indexOfLastActivity);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const totalPages = Math.ceil(filteredActivities.length / itemsPerPage);
+
+  const goToActivityPage = () => {
+    window.location.href = "/activity";
+  };
+
+  const toggleFilterMenu = () => {
+    setShowFilterMenu(!showFilterMenu);
+  };
+
+  const applyFilter = () => {
+    const selectedOption = document.querySelector(
+      'input[name="filter"]:checked'
+    )?.id;
+    setSelectedFilter(selectedOption);
+    setShowFilterMenu(false);
+  };
+
+  const clearFilters = () => {
+    setSelectedFilter("");
+    setFilteredActivities(activities);
+    setSearchTerm("");
+    setShowFilterMenu(false);
+  };
+
+  const handleActivityClick = (activityId) => {
+    localStorage.setItem("selectedTransactionId", activityId);
+    window.location.href = "/detail-activity";
+  };
 
   return (
     <div className="w-[350px] md:w-[511px] lg:w-[1006px]">
@@ -46,7 +153,7 @@ const ActivityList: React.FC = () => {
         <div className="relative flex items-center">
           <FontAwesomeIcon
             icon={faSearch}
-            className="absolute left-0 text-gray-400 pt-1"
+            className="absolute left-0 text-custom-gray"
           />
           <input
             type="text"
@@ -55,32 +162,106 @@ const ActivityList: React.FC = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full rounded-[10px] pl-6 pr-4 text-custom-dark placeholder:text-[18px] pt-1"
           />
+          {isClient && path === "/activity" && (
+            <button
+              onClick={toggleFilterMenu}
+              className="ml-4 px-4 py-2 bg-custom-lime text-custom-dark rounded-[10px] flex items-center hover:bg-custom-lime-dark">
+              <span className="mr-2 font-bold">Filtrar</span>
+              <FontAwesomeIcon icon={faFilter} />
+            </button>
+          )}
         </div>
       </div>
-
-      <div className="bg-white rounded-lg shadow p-6 mt-6">
-        <h2 className="text-[16px] font-bold mb-4 text-black">Tu actividad</h2>
+      {showFilterMenu && (
+        <div className="bg-white p-4 rounded-lg shadow-lg mt-4">
+          <h3 className="text-lg font-bold ml-2 mb-2 text-custom-dark">
+            Filtrar por período
+          </h3>
+          <ul className="space-y-2 ml-2">
+            <li>
+              <input type="radio" id="hoy" name="filter" />
+              <label htmlFor="hoy" className="ml-2 text-black-opacity-50">
+                Hoy
+              </label>
+            </li>
+            <li>
+              <input type="radio" id="ayer" name="filter" />
+              <label htmlFor="ayer" className="ml-2 text-black-opacity-50">
+                Ayer
+              </label>
+            </li>
+            <li>
+              <input type="radio" id="ultima-semana" name="filter" />
+              <label
+                htmlFor="ultima-semana"
+                className="ml-2 text-black-opacity-50">
+                Última semana
+              </label>
+            </li>
+            <li>
+              <input type="radio" id="ultimos-dias" name="filter" />
+              <label
+                htmlFor="ultimos-dias"
+                className="ml-2 text-black-opacity-50">
+                Últimos 15 días
+              </label>
+            </li>
+            <li>
+              <input type="radio" id="ultimo-mes" name="filter" />
+              <label
+                htmlFor="ultimo-mes"
+                className="ml-2 text-black-opacity-50">
+                Último mes
+              </label>
+            </li>
+            <li>
+              <input type="radio" id="ultimo-ano" name="filter" />
+              <label
+                htmlFor="ultimo-ano"
+                className="ml-2 text-black-opacity-50">
+                Último año
+              </label>
+            </li>
+          </ul>
+          <button
+            className="mt-4 px-4 py-2 ml-2 bg-custom-lime text-custom-dark text-bold rounded-[10px] hover:bg-custom-lime-dark"
+            onClick={applyFilter}>
+            Aplicar
+          </button>
+          <button
+            className="mt-2 ml-4 px-4 py-2 ml-2 bg-custom-red text-custom-dark text-bold rounded-[10px] hover:bg-red-600"
+            onClick={clearFilters}>
+            <FontAwesomeIcon icon={faTimes} className="mr-2" />
+            Borrar filtros
+          </button>
+        </div>
+      )}
+      <div className="bg-white rounded-lg p-4 w-full mt-6">
+        <h2 className="text-lg font-bold mb-4 text-custom-dark ml-2">
+          Tu actividad
+        </h2>
         {filteredActivities.length === 0 ? (
-          <p className="text-center text-custom-gray">
-            Todavía no tienes actividad.
+          <p className="text-center text-custom-gray ml-2">
+            No se encontró ninguna actividad
           </p>
         ) : (
-          <ul className="space-y-4 relative pr-[30px]">
-            {filteredActivities.map((activity, index) => (
+          <ul className="space-y-4">
+            {currentActivities.map((activity, index) => (
               <li
                 key={index}
-                className="relative flex justify-between items-center h-[55px]">
-                <div className="flex items-center z-10">
-                  <span className="w-[32px] h-[32px] bg-custom-lime rounded-full mr-2"></span>
-                  <span className="text-custom-dark text-[16px]">
+                className="flex justify-between items-center cursor-pointer ml-2"
+                onClick={() => handleActivityClick(activity.id)}>
+                <div className="flex items-center">
+                  <span className="w-4 h-4 bg-custom-lime rounded-full mr-2"></span>
+                  <span className="text-custom-dark">
                     {activity.description}
                   </span>
                 </div>
-                <div className="z-10 flex flex-col items-end flex-grow text-right">
+                <div className="text-right">
                   <span className="text-custom-dark">
                     ${activity.amount.toFixed(2)}
                   </span>
-                  <div className="text-[16px] text-custom-gray-light">
+                  <div className="text-sm text-custom-gray">
                     {new Date(activity.dated).toLocaleDateString()}
                   </div>
                 </div>
@@ -88,17 +269,37 @@ const ActivityList: React.FC = () => {
             ))}
           </ul>
         )}
-
-        <div className="flex justify-between items-center w-full sm:w-[300px] md:w-[480px] lg:w-[926px]">
-          <button className="mt-4 text-black font-bold hover:underline">
-            Ver toda tu actividad
-          </button>
-          <FontAwesomeIcon
-            className="text-black"
-            icon={faArrowRight}
-            style={{ width: "18px" }}
-          />
-        </div>
+        {isClient && path === "/activity" && totalPages > 1 && (
+          <div className="flex justify-center mt-4">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                className={`mx-1 px-3 py-1 rounded-md ${
+                  i + 1 === currentPage
+                    ? "bg-custom-lime text-custom-dark"
+                    : "bg-custom-gray-light text-custom-gray"
+                }`}
+                onClick={() => paginate(i + 1)}>
+                {i + 1}
+              </button>
+            ))}
+          </div>
+        )}
+        {isClient && path !== "/activity" && (
+          <div className="flex justify-between items-center w-full sm:w-[300px] md:w-[480px] lg:w-[974px]">
+            <button
+              className="mt-4 ml-2 text-custom-dark font-bold hover:underline"
+              onClick={goToActivityPage}>
+              Ver más
+            </button>
+            <FontAwesomeIcon
+              className="text-black mt-4 hover:cursor-pointer"
+              icon={faArrowRight}
+              style={{ width: "18px" }}
+              onClick={goToActivityPage}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
