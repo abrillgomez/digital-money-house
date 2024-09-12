@@ -5,7 +5,6 @@ import { transactionsAPI } from "../../../services/transactions/transactions.ser
 import AccountAPI from "../../../services/account/account.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-
 interface Transaction {
   id: number;
   dated: string;
@@ -44,6 +43,10 @@ const DetailActivityPage = () => {
     fetchTransactionDetails();
   }, []);
 
+  const handleGoHome = () => {
+    window.location.href = "/home";
+  };
+
   return (
     <div className="flex min-h-screen bg-custom-white">
       <Menu />
@@ -53,120 +56,134 @@ const DetailActivityPage = () => {
             Cargando detalles de la transacción...
           </p>
         ) : transaction ? (
-          <div className="bg-custom-dark rounded-lg shadow-lg p-6 w-full max-w-lg">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-semibold flex items-center">
-                <FontAwesomeIcon
-                  icon={faCheckCircle}
-                  className="text-custom-lime mr-2"
-                />
-                Aprobada
-              </h2>
-              <span className="text-custom-gray">
-                Creada el{" "}
-                {new Intl.DateTimeFormat("es-ES", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                }).format(new Date(transaction.dated))}{" "}
-                a las{" "}
-                {new Intl.DateTimeFormat("es-ES", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                  hour12: false,
-                }).format(new Date(transaction.dated))}{" "}
-                hs
-              </span>
-            </div>
-            {transaction.type === "Deposit" ? (
-              <>
-                <p>
-                  <strong>Descripción:</strong> {transaction.description}
-                </p>
-                <p>
-                  <strong>El monto de:</strong>
-                </p>
-                <p className="text-lg font-semibold">
-                  ${transaction.amount.toFixed(2)}
-                </p>
-                <p>
-                  <strong>Desde una cuenta propia.</strong>
-                </p>
-                <p>
-                  <strong>Número de transacción:</strong>
-                </p>
-                <p className="text-lg font-semibold">{transaction.id}</p>
-              </>
-            ) : transaction.type === "Transfer" ? (
-              <>
-                <p>
-                  <strong>Descripción:</strong> {transaction.description}
-                </p>
-                <p>
-                  <strong>El monto de:</strong>
-                </p>
-                <p className="text-lg font-semibold">
-                  ${transaction.amount.toFixed(2)}
-                </p>
-                {transaction.amount < 0 ? (
-                  <>
-                    <p>
-                      <strong>Hacia:</strong>
-                    </p>
-                    <p className="text-lg font-semibold">
+          <>
+            <div className="bg-custom-dark rounded-lg shadow-lg p-6 w-[1006px]">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-semibold flex items-center">
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-custom-lime mr-2"
+                  />
+                  Aprobada
+                </h2>
+                <span className="text-custom-gray">
+                  Creada el{" "}
+                  {new Intl.DateTimeFormat("es-ES", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  }).format(new Date(transaction.dated))}{" "}
+                  a las{" "}
+                  {new Intl.DateTimeFormat("es-ES", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: false,
+                  }).format(new Date(transaction.dated))}{" "}
+                  hs
+                </span>
+              </div>
+
+              {transaction.type === "Deposit" ? (
+                <>
+                  <p className="mb-4">
+                    <strong className="text-lime-500">Descripción:</strong>{" "}
+                    {transaction.description}
+                  </p>
+                  <p className="mb-4">
+                    <strong className="text-lime-500">El monto de:</strong> $
+                    {transaction.amount.toFixed(2)}
+                  </p>
+                  <p className="mb-4">
+                    <strong className="text-lime-500">
+                      Desde una cuenta propia.
+                    </strong>
+                  </p>
+                  <p className="mb-4">
+                    <strong className="text-lime-500">
+                      Número de transacción:
+                    </strong>{" "}
+                    {transaction.id}
+                  </p>
+                </>
+              ) : transaction.type === "Transfer" ? (
+                <>
+                  <p className="mb-4">
+                    <strong className="text-lime-500">Descripción:</strong>{" "}
+                    {transaction.description}
+                  </p>
+                  <p className="mb-4">
+                    <strong className="text-lime-500">El monto de:</strong> $
+                    {transaction.amount.toFixed(2)}
+                  </p>
+                  {transaction.amount < 0 ? (
+                    <p className="mb-4">
+                      <strong className="text-lime-500">Hacia:</strong>{" "}
                       {transaction.destination}
                     </p>
-                  </>
-                ) : (
-                  <>
-                    <p>
-                      <strong>Desde:</strong>
-                    </p>
-                    <p className="text-lg font-semibold">
+                  ) : (
+                    <p className="mb-4">
+                      <strong className="text-lime-500">Desde:</strong>{" "}
                       {transaction.origin}
                     </p>
-                  </>
-                )}
-                <p>
-                  <strong>Número de transacción:</strong>
-                </p>
-                <p className="text-lg font-semibold">{transaction.id}</p>
-              </>
-            ) : (
-              <>
-                <p>
-                  <strong>Descripción:</strong> {transaction.description}
-                </p>
-                <p>
-                  <strong>Monto:</strong> ${transaction.amount.toFixed(2)}
-                </p>
-                <p>
-                  <strong>Fecha:</strong>
-                  {new Date(transaction.dated).toLocaleDateString()}
-                </p>
-                {transaction.type !== "Deposit" && (
-                  <>
-                    {transaction.type !== "Transfer" ||
-                    transaction.amount >= 0 ? (
-                      <p>
-                        <strong>Origen:</strong> {transaction.origin}
-                      </p>
-                    ) : null}
-                    {(transaction.type !== "Transfer" ||
-                      transaction.amount <= 0) && (
-                      <p>
-                        <strong>Destino:</strong> {transaction.destination}
-                      </p>
-                    )}
-                  </>
-                )}
-                <p>
-                  <strong>Tipo:</strong> {transaction.type}
-                </p>
-              </>
-            )}
-          </div>
+                  )}
+                  <p className="mb-4">
+                    <strong className="text-lime-500">
+                      Número de transacción:
+                    </strong>{" "}
+                    {transaction.id}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="mb-4">
+                    <strong className="text-lime-500">Descripción:</strong>{" "}
+                    {transaction.description}
+                  </p>
+                  <p className="mb-4">
+                    <strong className="text-lime-500">Monto:</strong> $
+                    {transaction.amount.toFixed(2)}
+                  </p>
+                  <p className="mb-4">
+                    <strong className="text-lime-500">Fecha:</strong>{" "}
+                    {new Date(transaction.dated).toLocaleDateString()}
+                  </p>
+                  {transaction.type !== "Deposit" && (
+                    <>
+                      {transaction.type !== "Transfer" ||
+                      transaction.amount >= 0 ? (
+                        <p className="mb-4">
+                          <strong className="text-lime-500">Origen:</strong>{" "}
+                          {transaction.origin}
+                        </p>
+                      ) : null}
+                      {transaction.type !== "Transfer" ||
+                      transaction.amount <= 0 ? (
+                        <p className="mb-4">
+                          <strong className="text-lime-500">Destino:</strong>{" "}
+                          {transaction.destination}
+                        </p>
+                      ) : null}
+                    </>
+                  )}
+                  <p className="mb-4">
+                    <strong className="text-lime-500">Tipo:</strong>{" "}
+                    {transaction.type}
+                  </p>
+                </>
+              )}
+            </div>
+            <div className="flex justify-end w-[1006px] mt-4">
+              <button
+                className="font-bold bg-gray-500 text-black px-4 py-2 rounded mr-2"
+                onClick={handleGoHome}>
+                Ir al inicio
+              </button>
+              <button className="bg-lime-500 text-black px-4 py-2 rounded font-bold">
+                Descargar comprobante
+              </button>
+            </div>
+          </>
         ) : (
           <p className="text-custom-dark mt-2">
             No se encontró la transacción.

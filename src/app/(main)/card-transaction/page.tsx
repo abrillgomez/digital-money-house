@@ -6,7 +6,10 @@ const CardTransactionPage = () => {
   return (
     <div className="flex bg-custom-white">
       <Menu />
-      <main className="flex-1 flex flex-col items-center min-h-screen">
+      <main className="flex-1 p-4 flex flex-col items-center mt-8 min-h-screen">
+        <h1 className="block text-2xl text-custom-dark font-bold sm:hidden">
+          Cargar dinero
+        </h1>
         <CardTransactionCard />
       </main>
     </div>

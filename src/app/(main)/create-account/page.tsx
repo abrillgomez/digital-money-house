@@ -64,7 +64,9 @@ const CreateAccountPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[795px] py-2 bg-custom-dark text-white">
-      <h1 className="text-2xl font-bold">Crear Cuenta</h1>
+      <h1 className="block text-2xl text-custom-dark font-bold mb-4 sm:hidden">
+        Crear cuenta
+      </h1>
       <FormProvider {...methods}>
         <form
           className="grid grid-cols-1 gap-4 py-4 sm:grid-cols-2 pl-[3%] sm:pl-0"

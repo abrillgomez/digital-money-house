@@ -224,12 +224,12 @@ const ActivityList: React.FC = () => {
             </li>
           </ul>
           <button
-            className="mt-4 px-4 py-2 ml-2 bg-custom-lime text-custom-dark text-bold rounded-[10px] hover:bg-custom-lime-dark"
+            className="mt-4 px-4 py-2 ml-2 bg-custom-lime text-custom-dark font-bold rounded-[10px] hover:bg-custom-lime-dark"
             onClick={applyFilter}>
             Aplicar
           </button>
           <button
-            className="mt-2 ml-4 px-4 py-2 ml-2 bg-custom-red text-custom-dark text-bold rounded-[10px] hover:bg-red-600"
+            className="mt-2 ml-4 px-4 py-2 ml-2 bg-custom-red text-custom-dark font-bold rounded-[10px] hover:bg-red-600"
             onClick={clearFilters}>
             <FontAwesomeIcon icon={faTimes} className="mr-2" />
             Borrar filtros

@@ -88,11 +88,11 @@ const CardPage = () => {
   return (
     <div className="flex">
       <Menu />
-      <main className="flex-1 p-4 flex justify-center items-center bg-gray-100 min-h-screen">
+      <main className="flex-1 p-4 flex flex-col justify-center items-center bg-gray-100 min-h-screen">
+        <h1 className="block text-2xl text-custom-dark font-bold mb-4 sm:hidden">
+          Tarjetas
+        </h1>
         <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-4xl">
-          <h1 className="block text-2xl text-black font-bold mb-4 flex justify-center sm:hidden">
-            Tarjetas
-          </h1>
           <FormProvider {...methods}>
             <form
               className="flex flex-wrap gap-4 py-4 justify-center"

@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Menu from "@/app/components/menu/Menu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
-import Menu from "@/app/components/menu/Menu";
 
 interface TransactionData {
   amount: string;
@@ -49,13 +49,14 @@ const ConfirmationDepositPage: React.FC = () => {
       });
     }
   }, []);
-
-  console.log(transactionData.date);
   return (
     <div className="flex bg-custom-white min-h-screen">
       <Menu />
-      <main className="flex-1 p-6 flex flex-col items-center justify-center relative">
-        <div className="flex flex-col items-center w-full max-w-[1006px]">
+      <main className="flex-1 p-4 flex flex-col justify-center items-center min-h-screen relative">
+        <h1 className="block text-2xl text-custom-dark font-bold mb-4 sm:hidden">
+          Cargar dinero
+        </h1>
+        <div className="flex flex-col items-center w-full max-w-[350px] md:max-w-[1006px]">
           <div className="bg-custom-lime w-full h-[148px] p-6 rounded-lg text-center">
             <div className="text-4xl mb-4 text-custom-dark">
               <FontAwesomeIcon icon={faCircleCheck} />
@@ -64,7 +65,7 @@ const ConfirmationDepositPage: React.FC = () => {
               Ya cargamos el dinero en tu cuenta
             </h2>
           </div>
-          <div className="bg-custom-dark w-full h-[365px] p-6 rounded-lg text-custom-white mt-4">
+          <div className="bg-custom-dark w-full p-6 rounded-lg text-white mt-4">
             <h2 className="text-custom-lime font-bold text-[24px] mb-4">
               Revisá que esté todo bien
             </h2>
@@ -82,13 +83,13 @@ const ConfirmationDepositPage: React.FC = () => {
               {transactionData.lastFourDigits}
             </p>
           </div>
-          <div className="flex justify-end space-x-4 mt-6 w-full">
+          <div className="flex justify-between md:justify-end space-x-4 mt-6 w-full">
             <button
-              className="bg-custom-gray-light font-bold text-custom-dark w-[233px] h-[64px] px-4 py-2 rounded-md"
+              className="bg-custom-gray-light font-bold text-custom-dark w-full max-w-[350px] md:max-w-[233px] h-[64px] px-4 py-2 rounded-md"
               onClick={() => (window.location.href = "/home")}>
               Ir al inicio
             </button>
-            <button className="bg-custom-lime font-bold text-custom-dark w-[233px] h-[64px] px-4 py-2 rounded-md">
+            <button className="bg-custom-lime font-bold text-custom-dark w-full max-w-[350px] md:max-w-[233px] h-[64px] px-4 py-2 rounded-md">
               Descargar comprobante
             </button>
           </div>

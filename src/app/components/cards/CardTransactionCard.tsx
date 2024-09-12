@@ -83,8 +83,8 @@ const CardTransactionCard = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="bg-custom-dark p-8 rounded-lg shadow-lg w-[1006px]">
+    <div className="flex justify-center items-center p-4">
+      <div className="bg-custom-dark p-8 rounded-lg shadow-lg w-full sm:w-[350px] md:w-[511px] lg:w-[1006px]">
         <h2 className="text-3xl text-custom-lime font-semibold mb-6">
           Seleccionar tarjeta
         </h2>
@@ -133,7 +133,7 @@ const CardTransactionCard = () => {
                   </button>
                 )}
                 <p className="text-custom-dark mx-4 flex-grow text-center">
-                  Página {currentPage} de {totalPages}
+                  {currentPage} de {totalPages}
                 </p>
                 {totalPages > 1 && currentPage < totalPages && (
                   <button

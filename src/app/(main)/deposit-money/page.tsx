@@ -108,28 +108,30 @@ const DepositMoney: React.FC = () => {
       });
     }
   };
-
   return (
-    <div className="flex bg-custom-white min-h-screen">
+    <div className="bg-custom-white flex">
       <Menu />
-      <main className="flex-1 p-6 flex flex-col items-center mt-8">
-        <div className="bg-custom-dark p-6 rounded-lg shadow-lg w-full max-w-[1006px] h-[306px] relative">
-          <h2 className="text-custom-lime font-bold text-[24px] absolute top-8 left-9">
+      <main className="flex-1 p-4 flex flex-col items-center mt-8 min-h-screen">
+        <h1 className="block text-2xl text-custom-dark font-bold mb-4 sm:hidden">
+          Cargar dinero
+        </h1>
+        <div className="bg-custom-dark p-6 rounded-lg shadow-lg w-full max-w-screen-md sm:max-w-[350px] md:max-w-[513px] lg:max-w-[1006px] h-[306px] relative">
+          <h2 className="text-custom-lime font-bold text-xl absolute top-6">
             ¿Cuánto querés ingresar a la cuenta?
           </h2>
           {cardInfo ? (
-            <div className="mt-12 ml-4">
+            <div className="mt-12">
               <input
                 type="number"
                 placeholder="$0"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-[360px] h-[64px] p-2 mt-8 text-black bg-custom-white rounded-md mb-4"
+                className="w-full max-w-[360px] h-[64px] p-2 mt-4 text-black bg-custom-white rounded-md mb-4"
               />
               <button
                 onClick={handleDeposit}
                 disabled={!amount}
-                className={`absolute font-bold bottom-8 right-6 w-[233px] h-[64px] rounded-md ${
+                className={`absolute font-bold bottom-8 right-6 w-full max-w-[233px] h-[64px] rounded-[10px] ${
                   amount ? "bg-custom-lime" : "bg-custom-gray-light"
                 } text-custom-dark`}>
                 Continuar

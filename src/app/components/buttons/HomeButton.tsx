@@ -9,7 +9,7 @@ const HomeButton: React.FC<HomeButtonProps> = ({ text, href }) => {
   return (
     <a
       href={href}
-      className="bg-custom-lime text-bold text-custom-dark w-full md:w-[511px] lg:w-[490px] h-[106px] rounded-md shadow-md hover:bg-custom-lime-dark text-[24px] font-bold flex items-center justify-center">
+      className="bg-custom-lime font-bold text-custom-dark w-full md:w-[511px] lg:w-[490px] h-[106px] rounded-md shadow-md hover:bg-custom-lime-dark text-[24px] font-bold flex items-center justify-center">
       {text}
     </a>
   );
