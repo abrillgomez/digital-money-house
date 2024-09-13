@@ -51,22 +51,25 @@ const DetailActivityPage = () => {
     <div className="flex min-h-screen bg-custom-white">
       <Menu />
       <main className="flex-1 p-4 flex flex-col items-center mt-8 rounded-lg shadow-lg">
+        <h1 className="block text-2xl text-custom-dark font-bold mb-4 sm:hidden">
+          Actividad
+        </h1>
         {loading ? (
           <p className="text-custom-dark mt-2">
             Cargando detalles de la transacción...
           </p>
         ) : transaction ? (
           <>
-            <div className="bg-custom-dark rounded-lg shadow-lg p-6 w-[1006px]">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-semibold flex items-center">
+            <div className="bg-custom-dark rounded-lg shadow-lg p-6 sm:w-[350px] md:w-[511px] lg:w-[1006px]">
+              <div className="flex items-center justify-between mb-4 flex-wrap">
+                <h2 className="flex-start text-2xl font-semibold flex items-center">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
                     className="text-custom-lime mr-2"
                   />
                   Aprobada
                 </h2>
-                <span className="text-custom-gray">
+                <span className="text-custom-gray w-[302px] mt-4 md:mt-0 flex-end">
                   Creada el{" "}
                   {new Intl.DateTimeFormat("es-ES", {
                     year: "numeric",
@@ -83,24 +86,23 @@ const DetailActivityPage = () => {
                   hs
                 </span>
               </div>
-
               {transaction.type === "Deposit" ? (
                 <>
                   <p className="mb-4">
-                    <strong className="text-lime-500">Descripción:</strong>{" "}
+                    <strong className="text-custom-lime">Descripción:</strong>{" "}
                     {transaction.description}
                   </p>
                   <p className="mb-4">
-                    <strong className="text-lime-500">El monto de:</strong> $
+                    <strong className="text-custom-lime">El monto de:</strong> $
                     {transaction.amount.toFixed(2)}
                   </p>
                   <p className="mb-4">
-                    <strong className="text-lime-500">
+                    <strong className="text-custom-lime">
                       Desde una cuenta propia.
                     </strong>
                   </p>
                   <p className="mb-4">
-                    <strong className="text-lime-500">
+                    <strong className="text-custom-lime">
                       Número de transacción:
                     </strong>{" "}
                     {transaction.id}
@@ -109,26 +111,26 @@ const DetailActivityPage = () => {
               ) : transaction.type === "Transfer" ? (
                 <>
                   <p className="mb-4">
-                    <strong className="text-lime-500">Descripción:</strong>{" "}
+                    <strong className="text-custom-lime">Descripción:</strong>{" "}
                     {transaction.description}
                   </p>
                   <p className="mb-4">
-                    <strong className="text-lime-500">El monto de:</strong> $
+                    <strong className="text-custom-lime">El monto de:</strong> $
                     {transaction.amount.toFixed(2)}
                   </p>
                   {transaction.amount < 0 ? (
                     <p className="mb-4">
-                      <strong className="text-lime-500">Hacia:</strong>{" "}
+                      <strong className="text-custom-lime">Hacia:</strong>{" "}
                       {transaction.destination}
                     </p>
                   ) : (
                     <p className="mb-4">
-                      <strong className="text-lime-500">Desde:</strong>{" "}
+                      <strong className="text-custom-lime">Desde:</strong>{" "}
                       {transaction.origin}
                     </p>
                   )}
                   <p className="mb-4">
-                    <strong className="text-lime-500">
+                    <strong className="text-custom-lime">
                       Número de transacción:
                     </strong>{" "}
                     {transaction.id}
@@ -137,15 +139,15 @@ const DetailActivityPage = () => {
               ) : (
                 <>
                   <p className="mb-4">
-                    <strong className="text-lime-500">Descripción:</strong>{" "}
+                    <strong className="text-custom-lime">Descripción:</strong>{" "}
                     {transaction.description}
                   </p>
                   <p className="mb-4">
-                    <strong className="text-lime-500">Monto:</strong> $
+                    <strong className="text-custom-lime">Monto:</strong> $
                     {transaction.amount.toFixed(2)}
                   </p>
                   <p className="mb-4">
-                    <strong className="text-lime-500">Fecha:</strong>{" "}
+                    <strong className="text-custom-lime">Fecha:</strong>{" "}
                     {new Date(transaction.dated).toLocaleDateString()}
                   </p>
                   {transaction.type !== "Deposit" && (
@@ -153,33 +155,33 @@ const DetailActivityPage = () => {
                       {transaction.type !== "Transfer" ||
                       transaction.amount >= 0 ? (
                         <p className="mb-4">
-                          <strong className="text-lime-500">Origen:</strong>{" "}
+                          <strong className="text-custom-lime">Origen:</strong>{" "}
                           {transaction.origin}
                         </p>
                       ) : null}
                       {transaction.type !== "Transfer" ||
                       transaction.amount <= 0 ? (
                         <p className="mb-4">
-                          <strong className="text-lime-500">Destino:</strong>{" "}
+                          <strong className="text-custom-lime">Destino:</strong>{" "}
                           {transaction.destination}
                         </p>
                       ) : null}
                     </>
                   )}
                   <p className="mb-4">
-                    <strong className="text-lime-500">Tipo:</strong>{" "}
+                    <strong className="text-custom-lime">Tipo:</strong>{" "}
                     {transaction.type}
                   </p>
                 </>
               )}
             </div>
-            <div className="flex justify-end w-[1006px] mt-4">
+            <div className="flex justify-end sm:w-[350px] md:w-[511px] lg:w-[1006px] mt-4">
               <button
-                className="font-bold bg-gray-500 text-black px-4 py-2 rounded mr-2"
+                className="font-bold bg-custom-gray-light text-custom-dark px-4 py-2 rounded mr-2"
                 onClick={handleGoHome}>
                 Ir al inicio
               </button>
-              <button className="bg-lime-500 text-black px-4 py-2 rounded font-bold">
+              <button className="bg-custom-lime text-custom-dark px-4 py-2 rounded font-bold">
                 Descargar comprobante
               </button>
             </div>
