@@ -8,7 +8,7 @@ import { cardScheme } from "@/schemes/card.scheme";
 import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
 import ContinueButton from "@/app/components/buttons/ContinueButton";
-import AccountAPI from "../../../services/Account/account.service";
+import AccountAPI from "../../../services/account/account.service";
 import cardService from "../../../services/cards/cards.service";
 import Swal from "sweetalert2";
 
