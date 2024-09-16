@@ -14,7 +14,7 @@ const CardDataProfile = () => {
   const [accountInfo, setAccountInfo] = useState<AccountInfo | null>(null);
   const [newAlias, setNewAlias] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
-  const [showInput, setShowInput] = useState(false);
+  const [isEditingAlias, setIsEditingAlias] = useState(false);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const CardDataProfile = () => {
         await accountAPI.updateAccountAlias(token!, accountInfo.id, newAlias);
         setAccountInfo({ ...accountInfo, alias: newAlias });
         setNewAlias("");
-        setShowInput(false);
+        setIsEditingAlias(false);
 
         Swal.fire({
           icon: "success",
@@ -108,12 +108,25 @@ const CardDataProfile = () => {
       <div className="mt-6">
         <span className="text-[20px] font-bold text-custom-lime">Alias</span>
         <div className="flex items-center justify-between mt-2">
-          <span>{accountInfo.alias}</span>
+          {isEditingAlias ? (
+            <input
+              type="text"
+              value={newAlias}
+              onChange={(e) => setNewAlias(e.target.value)}
+              placeholder={accountInfo.alias}
+              className="w-full text-black p-2 pr-4 rounded"
+            />
+          ) : (
+            <span>{accountInfo.alias}</span>
+          )}
           <div className="flex items-center">
             <MdEdit
-              className="text-custom-lime cursor-pointer mr-2"
+              className="text-custom-lime cursor-pointer ml-2 mr-2"
               style={{ width: "24px", height: "24px" }}
-              onClick={() => setShowInput(!showInput)}
+              onClick={() => {
+                setIsEditingAlias(!isEditingAlias);
+                setNewAlias(accountInfo.alias);
+              }}
             />
             <MdContentCopy
               className="text-custom-lime cursor-pointer"
@@ -123,30 +136,19 @@ const CardDataProfile = () => {
           </div>
         </div>
       </div>
-      {showInput && (
-        <>
-          <div className="mt-4">
-            <input
-              type="text"
-              value={newAlias}
-              onChange={(e) => setNewAlias(e.target.value)}
-              placeholder="Nuevo alias (e.g., palabra1.palabra2.palabra3)"
-              className="text-black p-2 rounded w-full"
-            />
-          </div>
-          <div className="mt-4">
-            <button
-              onClick={handleUpdateAlias}
-              disabled={isUpdating || !newAlias.trim()}
-              className={`bg-custom-lime text-white font-bold px-4 py-2 rounded ${
-                isUpdating
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-custom-lime-dark"
-              }`}>
-              {isUpdating ? "Actualizando..." : "Actualizar Alias"}
-            </button>
-          </div>
-        </>
+      {isEditingAlias && (
+        <div className="mt-4">
+          <button
+            onClick={handleUpdateAlias}
+            disabled={isUpdating || !newAlias.trim()}
+            className={`bg-custom-lime text-custom-dark font-bold px-4 py-2 rounded ${
+              isUpdating
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-custom-lime-dark"
+            }`}>
+            {isUpdating ? "Actualizando..." : "Actualizar alias"}
+          </button>
+        </div>
       )}
     </div>
   );

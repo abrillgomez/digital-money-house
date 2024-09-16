@@ -18,15 +18,15 @@ interface Activity {
 }
 
 const ActivityList: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [activities, setActivities] = useState<Activity[]>([]);
   const [filteredActivities, setFilteredActivities] = useState<Activity[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
-  const [isClient, setIsClient] = useState(false);
-  const [path, setPath] = useState("");
-  const [showFilterMenu, setShowFilterMenu] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(10);
+  const [isClient, setIsClient] = useState<boolean>(false);
+  const [path, setPath] = useState<string>("");
+  const [showFilterMenu, setShowFilterMenu] = useState<boolean>(false);
+  const [selectedFilter, setSelectedFilter] = useState<string>("");
 
   useEffect(() => {
     setIsClient(true);
@@ -43,11 +43,11 @@ const ActivityList: React.FC = () => {
         const accountId = accountData.id;
         let transactions = await transactionsAPI.getAllTransactions(accountId);
         transactions = transactions.sort(
-          (a, b) => new Date(b.dated) - new Date(a.dated)
+          (a, b) => new Date(b.dated).getTime() - new Date(a.dated).getTime()
         );
         if (selectedFilter) {
           const now = new Date();
-          let startDate;
+          let startDate: Date;
           switch (selectedFilter) {
             case "hoy":
               startDate = new Date(
@@ -115,7 +115,7 @@ const ActivityList: React.FC = () => {
       ? filteredActivities.slice(0, itemsPerPage)
       : filteredActivities.slice(indexOfFirstActivity, indexOfLastActivity);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const totalPages = Math.ceil(filteredActivities.length / itemsPerPage);
 
@@ -128,10 +128,10 @@ const ActivityList: React.FC = () => {
   };
 
   const applyFilter = () => {
-    const selectedOption = document.querySelector(
-      'input[name="filter"]:checked'
+    const selectedOption = (
+      document.querySelector('input[name="filter"]:checked') as HTMLInputElement
     )?.id;
-    setSelectedFilter(selectedOption);
+    setSelectedFilter(selectedOption || "");
     setShowFilterMenu(false);
   };
 
@@ -142,8 +142,8 @@ const ActivityList: React.FC = () => {
     setShowFilterMenu(false);
   };
 
-  const handleActivityClick = (activityId) => {
-    localStorage.setItem("selectedTransactionId", activityId);
+  const handleActivityClick = (activityId: number) => {
+    localStorage.setItem("selectedTransactionId", activityId.toString());
     window.location.href = "/detail-activity";
   };
 

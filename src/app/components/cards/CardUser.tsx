@@ -91,7 +91,7 @@ const CardUser: React.FC = () => {
   };
 
   if (loading) return <p className="text-custom-dark">Cargando...</p>;
-  if (error) return <p className="text-custom-dark">Error: {error}</p>;
+  if (error) return <p className="text-custom-dark">Error: {error}.</p>;
 
   return (
     <div className="mx-auto bg-white rounded-lg shadow-lg p-6 w-full max-w-[350px] sm:max-w-[511px] lg:max-w-[1006px] border border-custom-gray">

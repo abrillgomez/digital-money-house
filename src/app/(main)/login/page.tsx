@@ -6,6 +6,11 @@ import ContinueButton from "../../components/buttons/ContinueButton";
 import CreateAccountGrayButton from "@/app/components/buttons/CreateAccountGrayButton";
 import { emailSchema } from "@/schemes/login.scheme";
 
+type FormData = {
+  email: string;
+};
+
+
 const LoginPage = () => {
   const methods = useForm({
     resolver: yupResolver(emailSchema),
@@ -17,7 +22,7 @@ const LoginPage = () => {
   const isEmailValid =
     !formState.errors.email && emailValue?.includes("@") && emailValue !== "";
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: FormData) => {
     sessionStorage.setItem("email", data.email);
     window.location.href = "/login-password";
   };

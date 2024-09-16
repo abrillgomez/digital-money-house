@@ -17,14 +17,19 @@ const CardTransactionCard = () => {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const accountInfo = await accountService.getAccountInfo(token);
-        const accountId = accountInfo.id;
-        const cards = await cardService.getCardsByAccountId(accountId, token);
-        setCards(cards);
-        setLoading(false);
+        const token: string | null = localStorage.getItem("token");
+        if (token) {
+          const accountInfo = await accountService.getAccountInfo(token);
+          const accountId = accountInfo.id;
+          const cards = await cardService.getCardsByAccountId(accountId, token);
+          setCards(cards);
+        } else {
+          console.error("No se encontró el token en localStorage.");
+        }
       } catch (error) {
         console.error("Error fetching cards:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchCards();
@@ -94,6 +99,10 @@ const CardTransactionCard = () => {
           </h3>
           {loading ? (
             <p className="text-custom-dark">Cargando tarjetas...</p>
+          ) : cards.length === 0 ? (
+            <p className="text-custom-dark">
+              Aún no tienes tarjetas asociadas.
+            </p>
           ) : (
             <div>
               {currentCards.map((card) => (

@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 
 type ContinueButtonProps = {
   isEnabled: boolean;
-  handleSubmit: () => void;
+  handleSubmit?: () => void;
 };
 
 const ContinueButton = ({ isEnabled, handleSubmit }: ContinueButtonProps) => {

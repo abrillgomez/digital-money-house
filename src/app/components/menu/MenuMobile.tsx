@@ -1,8 +1,20 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { FaBars, FaTimes } from "react-icons/fa";
 import Swal from "sweetalert2";
+
+interface UserInfo {
+  firstname: string;
+  lastname: string;
+}
+
+interface MenuMobileProps {
+  userInfo: UserInfo;
+  isLoggedIn: boolean;
+  href: string;
+}
 
 const menuLinks = [
   { href: "/home", name: "Inicio" },
@@ -142,10 +154,10 @@ const MenuMobile = ({ userInfo, isLoggedIn }) => {
               <>
                 <div className="px-4 text-lg text-custom-white font-bold">
                   <div className="flex flex-col items-start">
-                    <div className="text-lg text-custom-lime font-semibold">
+                    <div className="text-lg text-custom-lime font-bold">
                       Hola,
                     </div>
-                    <div className="text-lg text-custom-lime font-semibold">
+                    <div className="text-lg text-custom-lime font-bold">
                       {userInfo.firstname} {userInfo.lastname}
                     </div>
                   </div>

@@ -19,9 +19,9 @@ const ConfirmationDepositPage: React.FC = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
-      const dateString = urlParams.get("date") || "";
-      const amount = urlParams.get("amount") || "";
-      const lastFourDigits = urlParams.get("lastFourDigits") || "";
+      const dateString = urlParams.get("date") ?? "";
+      const amount = urlParams.get("amount") ?? "";
+      const lastFourDigits = urlParams.get("lastFourDigits") ?? "";
       const utcDate = dateString ? new Date(dateString) : new Date();
       const localDate = new Date(
         utcDate.toLocaleString("en-US", {

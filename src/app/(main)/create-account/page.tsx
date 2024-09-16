@@ -43,7 +43,13 @@ const CreateAccountPage = () => {
         throw new Error("Error inesperado en la creación del usuario");
       }
     } catch (error) {
-      if (error.response && error.response.status === 409) {
+      let errorMessage = "Hubo un error inesperado.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === "string") {
+        errorMessage = error;
+      }
+      if (errorMessage.includes("409")) {
         setApiError("El email ya está en uso.");
         Swal.fire({
           icon: "error",
@@ -55,7 +61,7 @@ const CreateAccountPage = () => {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Hubo un error al crear el usuario: " + error.message,
+          text: "Hubo un error al crear el usuario: " + errorMessage,
           confirmButtonColor: "#d33",
         });
       }

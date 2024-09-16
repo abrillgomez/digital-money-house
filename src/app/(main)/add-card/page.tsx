@@ -12,6 +12,13 @@ import AccountAPI from "../../../services/account/account.service";
 import cardService from "../../../services/cards/cards.service";
 import Swal from "sweetalert2";
 
+interface CardFormData {
+  cardNumber: string;
+  expiry: string;
+  fullName: string;
+  cvc: string;
+}
+
 const CardPage = () => {
   const methods = useForm({
     resolver: yupResolver(cardScheme),
@@ -39,7 +46,7 @@ const CardPage = () => {
     return `${month}/20${year}`;
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: CardFormData) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token no encontrado");
@@ -65,7 +72,6 @@ const CardPage = () => {
         first_last_name: data.fullName,
         number_id: parseInt(data.cardNumber),
       };
-
       await cardService.createCard(accountId, cardData, token);
       Swal.fire({
         icon: "success",

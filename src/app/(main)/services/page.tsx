@@ -11,13 +11,10 @@ const ServicePage = () => {
   >([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  // Obtener los servicios cuando se carga el componente
   useEffect(() => {
     const fetchServices = async () => {
       try {
         const response = await ServiceAPI.getAllServiceIds();
-        console.log("Response from API: ", response);
-        // Ordena los servicios por fecha de manera descendente
         const sortedServices = response.sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
@@ -29,14 +26,11 @@ const ServicePage = () => {
     fetchServices();
   }, []);
 
-  // Filtrar los servicios según la búsqueda
   const filteredServices = services.filter((service) =>
     service?.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Función para redirigir al usuario
   const handleSelectService = (serviceName: string) => {
-    // Reemplaza los espacios en el nombre del servicio con guiones bajos o %20 si prefieres
     const encodedServiceName = encodeURIComponent(serviceName);
     window.location.href = `/account-number?name=${encodedServiceName}`;
   };
@@ -44,52 +38,51 @@ const ServicePage = () => {
   return (
     <div className="flex">
       <Menu />
-      <main className="flex-1 p-4 flex flex-col items-center mt-8 min-h-screen">
-        <h1 className="block text-2xl font-bold mb-4 sm:hidden">
+      <main className="flex-1 p-6 flex flex-col items-center min-h-screen bg-custom-white">
+        <h1 className="text-2xl font-bold mb-6 sm:hidden text-custom-dark">
           Pagar servicios
         </h1>
-
-        {/* Barra de búsqueda con ícono de lupa */}
         <div className="w-full max-w-xl mb-6 relative">
           <FontAwesomeIcon
             icon={faSearch}
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-custom-gray"
           />
           <input
             type="text"
-            className="w-full px-10 py-2 border border-gray-300 rounded-lg shadow-sm"
+            className="w-full px-12 py-2 text-custom-dark border border-custom-gray rounded-lg shadow-sm"
             placeholder="Buscá entre más de 5,000 empresas"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-
-        {/* Lista de servicios filtrados */}
         <div className="w-full max-w-xl bg-white shadow-md rounded-lg p-4">
-          <h2 className="text-lg font-bold mb-4">Más recientes</h2>
-          <ul>
-            {filteredServices.map((service) => (
-              <li
-                key={service.id}
-                className="flex justify-between items-center py-2 border-b">
-                <div className="flex items-center space-x-3">
-                  {/* Icono de FontAwesome */}
-                  <FontAwesomeIcon
-                    icon={faBuilding}
-                    className="text-gray-500"
-                  />
-                  <span>{service.name}</span>
-                </div>
-                {/* Botón para seleccionar el servicio */}
-                <button
-                  className="text-blue-600"
-                  onClick={() => handleSelectService(service.name)} // Llama a la función con el nombre del servicio
-                >
-                  Seleccionar
-                </button>
-              </li>
-            ))}
-          </ul>
+          <h2 className="text-lg font-bold mb-4 text-custom-dark">
+            Más recientes
+          </h2>
+          {filteredServices.length === 0 ? (
+            <p className="text-center text-custom-gray">No hay coincidencias.</p>
+          ) : (
+            <ul>
+              {filteredServices.map((service) => (
+                <li
+                  key={service.id}
+                  className="flex justify-between items-center py-3 border-b border-custom-gray-light">
+                  <div className="flex items-center space-x-3">
+                    <FontAwesomeIcon
+                      icon={faBuilding}
+                      className="text-custom-gray"
+                    />
+                    <span className="text-custom-dark">{service.name}</span>
+                  </div>
+                  <button
+                    className="text-custom-dark font-bold"
+                    onClick={() => handleSelectService(service.name)}>
+                    Seleccionar
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </main>
     </div>

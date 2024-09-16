@@ -4,14 +4,19 @@ import Swal from "sweetalert2";
 import cardService from "../../../services/cards/cards.service";
 import AccountAPI from "@/services/account/account.service";
 
+interface Card {
+  id: number;
+  number_id: number;
+}
+
 const CardsList = () => {
-  const [cards, setCards] = useState([]);
-  const [accountId, setAccountId] = useState(null);
+  const [cards, setCards] = useState<Card[]>([]);
+  const [accountId, setAccountId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+    const storedToken: string | null = localStorage.getItem("token");
     if (storedToken) {
       setToken(storedToken);
     }
@@ -23,7 +28,7 @@ const CardsList = () => {
         const accountAPI = new AccountAPI();
         try {
           const accountData = await accountAPI.getAccountInfo(token);
-          setAccountId(accountData.id);
+          setAccountId(accountData.id as number);
         } catch (error) {
           console.error("Error fetching account info:", error);
         }
@@ -38,7 +43,7 @@ const CardsList = () => {
         try {
           const response = await cardService.getCardsByAccountId(
             accountId,
-            token
+            token as string
           );
           setCards(response);
         } catch (error) {
@@ -51,7 +56,11 @@ const CardsList = () => {
     }
   }, [accountId, token]);
 
-  const handleDelete = async (accountId, cardId, token) => {
+  const handleDelete = async (
+    accountId: number,
+    cardId: number,
+    token: string
+  ) => {
     try {
       await cardService.deleteCard(accountId, cardId, token);
       setCards(cards.filter((card) => card.id !== cardId));
@@ -60,7 +69,7 @@ const CardsList = () => {
     }
   };
 
-  const confirmDelete = (accountId, cardId, token) => {
+  const confirmDelete = (accountId: number, cardId: number, token: string) => {
     Swal.fire({
       title: "¿Estás seguro?",
       text: "No podrás revertir esto",
@@ -84,9 +93,7 @@ const CardsList = () => {
 
   return (
     <div className="bg-white rounded-lg p-6 mt-4 w-full max-w-[350px] sm:max-w-[511px] lg:max-w-[1006px]">
-      <h3 className="text-xl font-bold text-custom-dark mb-4">
-        Tus tarjetas
-      </h3>
+      <h3 className="text-xl font-bold text-custom-dark mb-4">Tus tarjetas</h3>
       <ul>
         {cards.length > 0 ? (
           cards.map((card) => (
@@ -100,7 +107,9 @@ const CardsList = () => {
                 </p>
               </div>
               <button
-                onClick={() => confirmDelete(accountId, card.id, token)}
+                onClick={() =>
+                  confirmDelete(accountId as number, card.id, token as string)
+                }
                 className="font-bold text-custom-dark hover:text-black">
                 <span className="ml-2">Eliminar</span>
               </button>

@@ -5,16 +5,23 @@ import { usePathname } from "next/navigation";
 import userApi from "../../../services/users/users.service";
 import MenuMobile from "../menu/MenuMobile";
 
+interface UserInfo {
+  firstname: string;
+  lastname: string;
+}
+
 const Navbar = () => {
   const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userInfo, setUserInfo] = useState({ firstname: "", lastname: "" });
+  const [userInfo, setUserInfo] = useState<UserInfo>({
+    firstname: "",
+    lastname: "",
+  });
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
-
       try {
         const payload = token.split(".")[1];
         const decodedPayload = JSON.parse(
@@ -52,7 +59,7 @@ const Navbar = () => {
       ? "/assets/logo-negro.png"
       : "/assets/logo-verde.png";
 
-  const getInitials = (firstname, lastname) => {
+  const getInitials = (firstname: string, lastname: string) => {
     if (!firstname && !lastname) return "NN";
     return (firstname.charAt(0) || "") + (lastname.charAt(0) || "");
   };
