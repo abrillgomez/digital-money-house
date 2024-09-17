@@ -108,6 +108,17 @@ const DetailActivityPage = () => {
                     {transaction.id}
                   </p>
                 </>
+              ) : transaction.type === "Transaction" ? (
+                <>
+                  <p className="mb-4">
+                    <strong className="text-custom-lime">Descripción:</strong>{" "}
+                    {transaction.description}
+                  </p>
+                  <p className="mb-4">
+                    <strong className="text-custom-lime">Monto:</strong> $
+                    {transaction.amount.toFixed(2)}
+                  </p>
+                </>
               ) : transaction.type === "Transfer" ? (
                 <>
                   <p className="mb-4">

@@ -19,14 +19,19 @@ const AccountNumberPage = () => {
   } = methods;
 
   const onSubmit = (data: any) => {
-    console.log("Número de cuenta válido:", data.accountNumber);
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get("name");
+    window.location.href = `/pay-service?name=${name}&accountNumber=${data.accountNumber}`;
   };
 
   return (
     <div className="flex bg-custom-white">
       <Menu />
       <main className="flex-1 p-4 flex flex-col items-center mt-8 min-h-screen">
-        <div className="bg-custom-dark text-white p-8 rounded-lg shadow-lg w-[1006px] w-full">
+        <h1 className="block text-custom-dark text-2xl font-bold mb-4 sm:hidden">
+          Pagar servicios
+        </h1>
+        <div className="bg-custom-dark text-white p-8 rounded-lg shadow-lg w-full max-w-screen-md sm:max-w-[350px] md:max-w-[513px] lg:max-w-[1006px]">
           <h2 className="text-left text-custom-lime text-2xl font-bold mb-6">
             Número de cuenta sin el primer 2
           </h2>

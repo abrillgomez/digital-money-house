@@ -5,6 +5,7 @@ import AccountAPI from "../../../services/account/account.service";
 import cardService from "../../../services/cards/cards.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { transactionsAPI } from "@/services/transactions/transactions.service";
 
 const CardTransactionCard = () => {
   const [cards, setCards] = useState<any[]>([]);
@@ -13,6 +14,7 @@ const CardTransactionCard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerPage = 5;
   const accountService = new AccountAPI();
+  const isServicesPage = window.location.pathname === "/pay-service";
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -43,7 +45,7 @@ const CardTransactionCard = () => {
     window.location.href = "/add-card";
   };
 
-  const handleContinueClick = () => {
+  const handleContinueClick = async () => {
     if (selectedCard) {
       const selectedCardInfo = selectedCard;
       if (
@@ -51,9 +53,54 @@ const CardTransactionCard = () => {
         selectedCardInfo.id &&
         selectedCardInfo.number_id
       ) {
-        window.location.href = `/deposit-money?cardId=${
-          selectedCardInfo.id
-        }&lastFourDigits=${selectedCardInfo.number_id.toString().slice(-4)}`;
+        if (isServicesPage) {
+          const params = new URLSearchParams(window.location.search);
+          const serviceName = params.get("name") || "Servicio";
+          try {
+            const token = localStorage.getItem("token");
+            const accountInfo = await accountService.getAccountInfo(token);
+            const accountId = accountInfo.id;
+            const transactionData = {
+              amount: -5547.25,
+              dated: new Date().toISOString(),
+              description: `Pagaste a ${serviceName}`,
+            };
+            const response = await transactionsAPI.createTransaction(
+              accountId,
+              transactionData
+            );
+            if (response && response.id) {
+              Swal.fire({
+                title: "Éxito",
+                text: "El pago del servicio se realizó correctamente",
+                icon: "success",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#4caf50",
+              }).then(() => {
+                const lastFourDigits = selectedCardInfo.number_id
+                  .toString()
+                  .slice(-4);
+                window.location.href = `/payment-confirmation?serviceName=${serviceName}&lastFourDigits=${lastFourDigits}`;
+              });
+            } else {
+              throw new Error("Error en la respuesta de la API");
+            }
+          } catch (error) {
+            console.error("Hubo un problema con tu pago");
+            Swal.fire({
+              title: "Error",
+              text: "Puede deberse a fondos insuficientes. Comunicate con la entidad emisora de la tarjeta",
+              icon: "error",
+              confirmButtonText: "OK",
+              confirmButtonColor: "#4caf50",
+            });
+          }
+        } else {
+          const url = `/deposit-money?cardId=${
+            selectedCardInfo.id
+          }&lastFourDigits=${selectedCardInfo.number_id.toString().slice(-4)}`;
+          window.location.href = url;
+        }
       } else {
         Swal.fire({
           title: "Error",
@@ -89,7 +136,7 @@ const CardTransactionCard = () => {
 
   return (
     <div className="flex justify-center items-center p-4">
-      <div className="bg-custom-dark p-8 rounded-lg shadow-lg w-full sm:w-[350px] md:w-[511px] lg:w-[1006px]">
+      <div className="bg-custom-dark p-8 rounded-lg shadow-lg w-[350px] sm:w-[350px] md:w-[511px] lg:w-[1006px]">
         <h2 className="text-3xl text-custom-lime font-semibold mb-6">
           Seleccionar tarjeta
         </h2>
@@ -156,17 +203,22 @@ const CardTransactionCard = () => {
             </div>
           )}
         </div>
-        <div className="flex justify-between items-center">
-          <button
-            onClick={handleNewCardClick}
-            className="flex items-center bg-custom-dark text-custom-lime px-4 py-2 rounded-lg font-semibold">
-            <FontAwesomeIcon icon={faCirclePlus} className="mr-2" />
-            Nueva tarjeta
-          </button>
+        <div
+          className={`flex items-center ${
+            isServicesPage ? "justify-end" : "justify-between"
+          }`}>
+          {!isServicesPage && (
+            <button
+              onClick={handleNewCardClick}
+              className="flex items-center bg-custom-dark text-custom-lime px-4 py-2 rounded-lg font-semibold">
+              <FontAwesomeIcon icon={faCirclePlus} className="mr-2" />
+              Nueva tarjeta
+            </button>
+          )}
           <button
             onClick={handleContinueClick}
             className="bg-custom-lime text-custom-dark px-8 py-2 rounded-lg font-semibold">
-            Continuar
+            {isServicesPage ? "Pagar" : "Continuar"}
           </button>
         </div>
       </div>
