@@ -1,4 +1,6 @@
 "use client";
+import React, { useState, useEffect } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputText from "@/app/components/inputs/InputText";
@@ -9,7 +11,6 @@ import { emailSchema } from "@/schemes/login.scheme";
 type FormData = {
   email: string;
 };
-
 
 const LoginPage = () => {
   const methods = useForm({
@@ -26,6 +27,22 @@ const LoginPage = () => {
     sessionStorage.setItem("email", data.email);
     window.location.href = "/login-password";
   };
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex bg-custom-dark justify-center items-center min-h-screen">
+        <ClipLoader size={50} color={"#C1FD35"} loading={loading} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-custom-dark text-white">

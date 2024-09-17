@@ -1,10 +1,28 @@
+"use client";
+import React, { useState, useEffect } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 import MeansOfPaymentButton from "@/app/components/buttons/MeansOfPaymentButton";
 import CardDataProfile from "@/app/components/cards/CardDataProfile";
 import CardUser from "@/app/components/cards/CardUser";
 import Menu from "@/app/components/menu/Menu";
-import React from "react";
 
 const ProfilePage = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex bg-custom-dark justify-center items-center min-h-screen">
+        <ClipLoader size={50} color={"#C1FD35"} loading={loading} />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-custom-white flex">
       <Menu />

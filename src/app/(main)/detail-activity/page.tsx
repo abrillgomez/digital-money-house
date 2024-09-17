@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 import Menu from "@/app/components/menu/Menu";
 import { transactionsAPI } from "../../../services/transactions/transactions.service";
 import AccountAPI from "../../../services/account/account.service";
@@ -46,6 +47,20 @@ const DetailActivityPage = () => {
   const handleGoHome = () => {
     window.location.href = "/home";
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex bg-custom-dark justify-center items-center min-h-screen">
+        <ClipLoader size={50} color={"#C1FD35"} loading={loading} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-custom-white">

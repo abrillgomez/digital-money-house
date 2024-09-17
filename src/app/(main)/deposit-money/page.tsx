@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 import AccountAPI from "../../../services/account/account.service";
 import { TransferencesService } from "../../../services/transferences/transferences.service";
 import Swal from "sweetalert2";
@@ -108,6 +109,23 @@ const DepositMoney: React.FC = () => {
       });
     }
   };
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex bg-custom-dark justify-center items-center min-h-screen">
+        <ClipLoader size={50} color={"#C1FD35"} loading={loading} />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-custom-white flex">
       <Menu />

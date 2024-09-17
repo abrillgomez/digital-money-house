@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 import Menu from "@/app/components/menu/Menu";
 import CardTransactionCard from "@/app/components/cards/CardTransactionCard";
 
@@ -13,6 +14,22 @@ const PayServicePage = () => {
     const name = urlParams.get("name");
     setServiceName(name);
   }, []);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex bg-custom-dark justify-center items-center min-h-screen">
+        <ClipLoader size={50} color={"#C1FD35"} loading={loading} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex bg-custom-white">

@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 import {
   faMoneyBillTransfer,
   faCreditCard,
@@ -8,6 +9,22 @@ import Menu from "@/app/components/menu/Menu";
 import TransactionCard from "@/app/components/cards/TransactionCard";
 
 const Page = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex bg-custom-dark justify-center items-center min-h-screen">
+        <ClipLoader size={50} color={"#C1FD35"} loading={loading} />
+      </div>
+    );
+  }
+
   const handleBankTransferBancariaClick = () => {
     window.location.href = "/bank-transfer";
   };
