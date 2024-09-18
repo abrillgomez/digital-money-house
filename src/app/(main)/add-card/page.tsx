@@ -7,8 +7,6 @@ import InputText from "@/app/components/inputs/InputText";
 import InputNumber from "@/app/components/inputs/InputNumber";
 import Menu from "@/app/components/menu/Menu";
 import { cardScheme } from "@/schemes/card.scheme";
-import Cards from "react-credit-cards";
-import "react-credit-cards/es/styles-compiled.css";
 import ContinueButton from "@/app/components/buttons/ContinueButton";
 import AccountAPI from "../../../services/account/account.service";
 import cardService from "../../../services/cards/cards.service";
@@ -22,17 +20,17 @@ interface CardFormData {
 }
 
 const CardPage = () => {
-  const methods = useForm({
+  const methods = useForm<CardFormData>({
     resolver: yupResolver(cardScheme),
     mode: "onChange",
   });
 
-  const { handleSubmit, watch, formState, control } = methods;
+  const { handleSubmit, formState, control, watch } = methods;
   const { isValid } = formState;
 
   const cardNumber = watch("cardNumber", "");
   const expiry = watch("expiry", "");
-  const name = watch("fullName", "");
+  const fullName = watch("fullName", "");
   const cvc = watch("cvc", "");
 
   const formatExpiry = (value: string) => {
@@ -55,10 +53,7 @@ const CardPage = () => {
       const accountAPI = new AccountAPI();
       const accountInfo = await accountAPI.getAccountInfo(token);
       const accountId = accountInfo.id;
-      const existingCards = await cardService.getCardsByAccountId(
-        accountId,
-        token
-      );
+      const existingCards = await cardService.getCardsByAccountId(accountId, token);
       if (existingCards.length >= 10) {
         Swal.fire({
           icon: "warning",
@@ -116,54 +111,83 @@ const CardPage = () => {
         <h1 className="block text-2xl text-custom-dark font-bold mb-4 sm:hidden">
           Tarjetas
         </h1>
-        <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-4xl">
+        <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl">
+          <div className="mb-8 p-6 rounded-lg">
+            <div className="flex flex-col items-center">
+              <div className="relative w-full max-w-[330px] h-[180px] p-4 bg-custom-dark text-white rounded-lg shadow-md">
+                <div className="text-2xl text-white font-bold">{cardNumber}</div>
+                <div className="flex justify-between wrap">
+                  <div className="text-lg text-white font-semibold mb-2 mt-2">{fullName}</div>
+                  <div className="text-xl text-white font-semibold mb-2 mt-2">{formatExpiry(expiry)}</div>
+                </div>
+                <div className="absolute text-white bottom-4 right-4 text-sm font-light">
+                  {cvc}
+                </div>
+              </div>
+            </div>
+          </div>
           <FormProvider {...methods}>
             <form
               className="flex flex-wrap gap-4 py-4 justify-center"
-              onSubmit={handleSubmit(onSubmit)}>
-              <div className="w-full flex justify-center mb-8">
-                <Cards
-                  cvc={cvc || ""}
-                  expiry={expiry || ""}
-                  name={name || ""}
-                  number={cardNumber || ""}
-                />
-              </div>
-              <InputNumber
-                type="number"
-                fieldName="cardNumber"
-                placeholder="Número de tarjeta*"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <Controller
+                name="cardNumber"
+                control={control}
+                render={({ field }) => (
+                  <InputNumber
+                    type="text"
+                    fieldName="cardNumber"
+                    placeholder="Número de tarjeta*"
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                )}
               />
               <Controller
                 name="expiry"
                 control={control}
                 render={({ field }) => {
-                  const formattedValue = field.value
-                    ? formatExpiry(field.value)
-                    : "";
+                  const formattedValue = field.value ? formatExpiry(field.value) : "";
                   return (
-                    <input
+                    <InputText
                       type="text"
+                      fieldName="expiry"
                       placeholder="Fecha de vencimiento (MM/YY)*"
                       value={formattedValue}
                       onChange={(e) => {
                         const formattedInput = formatExpiry(e.target.value);
                         field.onChange(formattedInput);
                       }}
-                      className="w-[300px] h-[50px] sm:w-[360px] sm:h-[64px] bg-white border border-gray-300 px-4 py-2 rounded-[10px] text-black text-[18px] mb-2"
                     />
                   );
                 }}
               />
-              <InputText
-                type="text"
-                fieldName="fullName"
-                placeholder="Nombre y apellido*"
+              <Controller
+                name="fullName"
+                control={control}
+                render={({ field }) => (
+                  <InputText
+                    type="text"
+                    fieldName="fullName"
+                    placeholder="Nombre y apellido*"
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                )}
               />
-              <InputNumber
-                type="number"
-                fieldName="cvc"
-                placeholder="Código de seguridad*"
+              <Controller
+                name="cvc"
+                control={control}
+                render={({ field }) => (
+                  <InputText
+                    type="text"
+                    fieldName="cvc"
+                    placeholder="Código de seguridad*"
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                )}
               />
               <div className="w-full flex justify-center mt-4">
                 <ContinueButton
