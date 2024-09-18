@@ -42,18 +42,25 @@ const ActivityList: React.FC = () => {
         const accountData = await accountAPI.getAccountInfo(token);
         const accountId = accountData.id;
         let transactions = await transactionsAPI.getAllTransactions(accountId);
-        transactions = transactions.sort((a: Activity, b: Activity) =>
-          new Date(b.dated).getTime() - new Date(a.dated).getTime()
+        transactions = transactions.sort(
+          (a: Activity, b: Activity) =>
+            new Date(b.dated).getTime() - new Date(a.dated).getTime()
         );
         if (selectedFilter) {
           const now = new Date();
           let startDate: Date;
+          let endDate: Date;
           switch (selectedFilter) {
             case "hoy":
               startDate = new Date(
                 now.getFullYear(),
                 now.getMonth(),
                 now.getDate()
+              );
+              endDate = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate() + 1
               );
               break;
             case "ayer":
@@ -62,12 +69,19 @@ const ActivityList: React.FC = () => {
                 now.getMonth(),
                 now.getDate() - 1
               );
+              endDate = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate()
+              );
               break;
             case "ultima-semana":
               startDate = new Date(now.setDate(now.getDate() - 7));
+              endDate = new Date();
               break;
             case "ultimos-dias":
               startDate = new Date(now.setDate(now.getDate() - 15));
+              endDate = new Date();
               break;
             case "ultimo-mes":
               startDate = new Date(
@@ -75,6 +89,7 @@ const ActivityList: React.FC = () => {
                 now.getMonth() - 1,
                 now.getDate()
               );
+              endDate = new Date();
               break;
             case "ultimo-ano":
               startDate = new Date(
@@ -82,12 +97,16 @@ const ActivityList: React.FC = () => {
                 now.getMonth(),
                 now.getDate()
               );
+              endDate = new Date();
               break;
             default:
               startDate = new Date(0);
+              endDate = new Date();
           }
           transactions = transactions.filter(
-            (activity: Activity) => new Date(activity.dated) >= startDate
+            (activity: Activity) =>
+              new Date(activity.dated) >= startDate &&
+              new Date(activity.dated) < endDate
           );
         }
         setActivities(transactions);
@@ -96,7 +115,6 @@ const ActivityList: React.FC = () => {
         console.error("Error fetching activities:", error);
       }
     };
-
     fetchActivities();
   }, [selectedFilter]);
 
