@@ -1,11 +1,11 @@
 class TransactionsAPI {
-  baseUrl: string;
+  baseURL: string;
 
-  constructor(baseURL) {
-    this.baseURL = baseURL || "https://digitalmoney.digitalhouse.com";
+  constructor(baseURL: string = "https://digitalmoney.digitalhouse.com") {
+    this.baseURL = baseURL;
   }
 
-  async getAllTransactions(accountId) {
+  async getAllTransactions(accountId: number) {
     const response = await fetch(
       `${this.baseURL}/api/accounts/${accountId}/activity`,
       {
@@ -19,7 +19,7 @@ class TransactionsAPI {
     return response.json();
   }
 
-  async createTransaction(accountId, transactionData) {
+  async createTransaction(accountId: string, transactionData: object) {
     const response = await fetch(
       `${this.baseURL}/api/accounts/${accountId}/transactions`,
       {
@@ -34,14 +34,14 @@ class TransactionsAPI {
     return response.json();
   }
 
-  async getTransaction(accountId, transactionId) {
+  async getTransaction(accountId: string, transactionId: string) {
     const response = await fetch(
       `${this.baseURL}/api/accounts/${accountId}/transactions/${transactionId}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${localStorage.getItem("token")}`, 
+          Authorization: `${localStorage.getItem("token")}`,
         },
       }
     );

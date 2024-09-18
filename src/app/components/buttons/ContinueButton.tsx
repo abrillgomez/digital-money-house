@@ -61,7 +61,7 @@ const ContinueButton = ({ isEnabled, handleSubmit }: ContinueButtonProps) => {
             });
           }
         }
-      } else if (pathname === "/add-card" && isEnabled) {
+      } else if (pathname === "/add-card" && isEnabled && handleSubmit) {
         handleSubmit();
       }
     }

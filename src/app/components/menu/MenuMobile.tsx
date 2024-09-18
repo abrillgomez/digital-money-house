@@ -13,7 +13,6 @@ interface UserInfo {
 interface MenuMobileProps {
   userInfo: UserInfo;
   isLoggedIn: boolean;
-  href: string;
 }
 
 const menuLinks = [
@@ -25,7 +24,7 @@ const menuLinks = [
   { href: "/cards", name: "Tarjetas" },
 ];
 
-const MenuMobile = ({ userInfo, isLoggedIn }) => {
+const MenuMobile = ({ userInfo, isLoggedIn }: MenuMobileProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSpecialStyle, setIsSpecialStyle] = useState(false);
 
@@ -46,7 +45,7 @@ const MenuMobile = ({ userInfo, isLoggedIn }) => {
     }
   }, []);
 
-  const getInitials = (firstname, lastname) => {
+  const getInitials = (firstname: string, lastname: string) => {
     if (!firstname && !lastname) return "NN";
     return (firstname.charAt(0) || "") + (lastname.charAt(0) || "");
   };
@@ -70,7 +69,7 @@ const MenuMobile = ({ userInfo, isLoggedIn }) => {
     }
   };
 
-  const handleNavigation = (href) => {
+  const handleNavigation = (href: string) => {
     if (
       href === "/login" ||
       href === "/login-password" ||

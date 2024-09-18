@@ -1,21 +1,20 @@
-"use client";
+"use client"
 import React, { useState, useEffect } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ServiceAPI } from "../../../services/service/service.service";
 import Menu from "@/app/components/menu/Menu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBuilding, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { Service } from "@/types/service.types";
 
 const ServicePage = () => {
-  const [services, setServices] = useState<
-    { id: number; name: string; date: string }[]
-  >([]);
+  const [services, setServices] = useState<Service[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await ServiceAPI.getAllServiceIds();
+        const response = await ServiceAPI.getAllServiceIds() as Service[];
         const sortedServices = response.sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );

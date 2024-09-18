@@ -58,6 +58,9 @@ const CardTransactionCard = () => {
           const serviceName = params.get("name") || "Servicio";
           try {
             const token = localStorage.getItem("token");
+            if (!token) {
+              throw new Error("No se encontró el token en localStorage.");
+            }
             const accountInfo = await accountService.getAccountInfo(token);
             const accountId = accountInfo.id;
             const transactionData = {

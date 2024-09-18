@@ -42,8 +42,8 @@ const ActivityList: React.FC = () => {
         const accountData = await accountAPI.getAccountInfo(token);
         const accountId = accountData.id;
         let transactions = await transactionsAPI.getAllTransactions(accountId);
-        transactions = transactions.sort(
-          (a, b) => new Date(b.dated).getTime() - new Date(a.dated).getTime()
+        transactions = transactions.sort((a: Activity, b: Activity) =>
+          new Date(b.dated).getTime() - new Date(a.dated).getTime()
         );
         if (selectedFilter) {
           const now = new Date();

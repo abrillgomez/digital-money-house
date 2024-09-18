@@ -1,9 +1,11 @@
 class CardService {
-  constructor(apiBaseUrl) {
+  private apiBaseUrl: string;
+
+  constructor(apiBaseUrl: string) {
     this.apiBaseUrl = apiBaseUrl;
   }
 
-  async getCardsByAccountId(accountId, token) {
+  async getCardsByAccountId(accountId: number, token: string) {
     try {
       const response = await fetch(
         `${this.apiBaseUrl}/api/accounts/${accountId}/cards`,
@@ -23,7 +25,7 @@ class CardService {
     }
   }
 
-  async createCard(accountId, cardData, token) {
+  async createCard(accountId: number, cardData: object, token: string) {
     try {
       const response = await fetch(
         `${this.apiBaseUrl}/api/accounts/${accountId}/cards`,
@@ -44,7 +46,7 @@ class CardService {
     }
   }
 
-  async getCardById(accountId, cardId, token) {
+  async getCardById(accountId: number, cardId: number, token: string) {
     try {
       const response = await fetch(
         `${this.apiBaseUrl}/api/accounts/${accountId}/cards/${cardId}`,
@@ -64,7 +66,7 @@ class CardService {
     }
   }
 
-  async deleteCard(accountId, cardId, token) {
+  async deleteCard(accountId: number, cardId: number, token: string) {
     try {
       const response = await fetch(
         `${this.apiBaseUrl}/api/accounts/${accountId}/cards/${cardId}`,
