@@ -1,18 +1,21 @@
 import { UserData, UserType } from "@/types/users.types";
 
 class UserAPI {
+  private baseURL: string;
+
+  constructor(baseURL: string = process.env.NEXT_PUBLIC_BASE_URL!) {
+    this.baseURL = baseURL;
+  }
+
   newUser = async (data: UserType): Promise<UserData> => {
     try {
-      const res = await fetch(
-        `https://digitalmoney.digitalhouse.com/api/users`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const res = await fetch(`${this.baseURL}/api/users`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
       if (!res.ok) {
         const errorDetails = await res.json();
@@ -28,16 +31,13 @@ class UserAPI {
 
   getUserData = async (token: string, id: number): Promise<UserType> => {
     try {
-      const res = await fetch(
-        `https://digitalmoney.digitalhouse.com/api/users/${id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${this.baseURL}/api/users/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      });
 
       if (!res.ok) {
         const errorDetails = await res.json();
@@ -57,17 +57,14 @@ class UserAPI {
     data: object
   ): Promise<UserType> => {
     try {
-      const res = await fetch(
-        `https://digitalmoney.digitalhouse.com/api/users/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const res = await fetch(`${this.baseURL}/api/users/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify(data),
+      });
 
       if (!res.ok) {
         const errorDetails = await res.json();

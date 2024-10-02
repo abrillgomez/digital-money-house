@@ -169,15 +169,16 @@ const CardPage = () => {
                     ? formatExpiry(field.value)
                     : "";
                   return (
-                    <InputText
+                    <input
                       type="text"
-                      fieldName="expiry"
+                      name="expiry"
                       placeholder="Fecha de vencimiento (MM/YY)*"
                       value={formattedValue}
                       onChange={(e) => {
                         const formattedInput = formatExpiry(e.target.value);
                         field.onChange(formattedInput);
                       }}
+                      className={`w-[300px] h-[50px] sm:w-[360px] sm:h-[64px] bg-white border border-gray-300 px-4 py-2 rounded-[10px] text-black text-[18px] mb-2`}
                     />
                   );
                 }}

@@ -34,7 +34,7 @@ const InputNumber = ({
       placeholder={placeholder}
       {...register(fieldName)}
       value={value}
-      onChange={handleChange} // Usar el manejador de cambio
+      onChange={handleChange}
       className={`w-[300px] h-[50px] sm:w-[360px] sm:h-[64px] bg-white border border-gray-300 px-4 py-2 rounded-[10px] text-black text-[18px] mb-2`}
     />
   );
