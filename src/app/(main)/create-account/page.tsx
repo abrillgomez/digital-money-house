@@ -14,7 +14,7 @@ import userApi from "@/services/users/users.service";
 const CreateAccountPage = () => {
   const methods = useForm({
     resolver: yupResolver(signUpScheme),
-    mode: "onChange",
+    mode: "onBlur",
   });
 
   const { handleSubmit, formState } = methods;
@@ -72,9 +72,18 @@ const CreateAccountPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    let start: number | null = null;
+    const delay = 200;
+    const animate = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+      if (elapsed < delay) {
+        requestAnimationFrame(animate);
+      } else {
+        setLoading(false);
+      }
+    };
+    requestAnimationFrame(animate);
   }, []);
 
   if (loading) {
@@ -116,16 +125,6 @@ const CreateAccountPage = () => {
           />
           <InputNumber type="number" placeholder="Teléfono" fieldName="phone" />
           <CreateAccountButton isEnabled={isFormValid} />
-          {formState.errors.email && (
-            <p className="text-red-500 col-span-1 sm:col-span-2">
-              {formState.errors.email.message}
-            </p>
-          )}
-          {formState.errors.password && (
-            <p className="text-red-500 col-span-1 sm:col-span-2">
-              {formState.errors.password.message}
-            </p>
-          )}
           {formState.errors.firstname && (
             <p className="text-red-500 col-span-1 sm:col-span-2">
               {formState.errors.firstname.message}
@@ -139,6 +138,16 @@ const CreateAccountPage = () => {
           {formState.errors.dni && (
             <p className="text-red-500 col-span-1 sm:col-span-2">
               {formState.errors.dni.message}
+            </p>
+          )}
+          {formState.errors.email && (
+            <p className="text-red-500 col-span-1 sm:col-span-2">
+              {formState.errors.email.message}
+            </p>
+          )}
+          {formState.errors.password && (
+            <p className="text-red-500 col-span-1 sm:col-span-2">
+              {formState.errors.password.message}
             </p>
           )}
           {formState.errors.passwordConfirmed && (

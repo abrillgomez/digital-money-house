@@ -7,6 +7,7 @@ import {
   faFilter,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
+import ClipLoader from "react-spinners/ClipLoader";
 import AccountAPI from "../../../services/account/account.service";
 import { transactionsAPI } from "../../../services/transactions/transactions.service";
 
@@ -27,6 +28,7 @@ const ActivityList: React.FC = () => {
   const [path, setPath] = useState<string>("");
   const [showFilterMenu, setShowFilterMenu] = useState<boolean>(false);
   const [selectedFilter, setSelectedFilter] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setIsClient(true);
@@ -113,6 +115,8 @@ const ActivityList: React.FC = () => {
         setFilteredActivities(transactions);
       } catch (error) {
         console.error("Error fetching activities:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchActivities();
@@ -164,6 +168,14 @@ const ActivityList: React.FC = () => {
     localStorage.setItem("selectedTransactionId", activityId.toString());
     window.location.href = "/detail-activity";
   };
+
+  if (loading) {
+    return (
+      <div className="flex bg-custom-white justify-center items-center min-h-screen">
+        <ClipLoader size={50} color={"#C1FD35"} loading={loading} />
+      </div>
+    );
+  }
 
   return (
     <div className="w-[350px] md:w-[511px] lg:w-[1006px]">

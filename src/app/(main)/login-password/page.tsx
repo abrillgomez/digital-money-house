@@ -10,7 +10,7 @@ import { passwordSchema } from "@/schemes/login.scheme";
 const LoginPasswordPage = () => {
   const methods = useForm({
     resolver: yupResolver(passwordSchema),
-    mode: "onChange",
+    mode: "onBlur",
   });
 
   const { formState, control } = methods;
@@ -20,9 +20,18 @@ const LoginPasswordPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    let start: number | null = null;
+    const delay = 200;
+    const animate = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+      if (elapsed < delay) {
+        requestAnimationFrame(animate);
+      } else {
+        setLoading(false);
+      }
+    };
+    requestAnimationFrame(animate);
   }, []);
 
   if (loading) {
@@ -39,7 +48,8 @@ const LoginPasswordPage = () => {
       <FormProvider {...methods}>
         <form
           className="flex flex-col space-y-4 py-4"
-          onSubmit={(e) => e.preventDefault()}>
+          onSubmit={(e) => e.preventDefault()}
+        >
           <InputText
             type="password"
             placeholder="Contraseña"

@@ -15,7 +15,7 @@ type FormData = {
 const LoginPage = () => {
   const methods = useForm({
     resolver: yupResolver(emailSchema),
-    mode: "onChange",
+    mode: "onBlur",
   });
 
   const { handleSubmit, formState, control } = methods;
@@ -31,9 +31,18 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    let start: number | null = null;
+    const delay = 200;
+    const animate = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+      if (elapsed < delay) {
+        requestAnimationFrame(animate);
+      } else {
+        setLoading(false);
+      }
+    };
+    requestAnimationFrame(animate);
   }, []);
 
   if (loading) {
@@ -59,9 +68,9 @@ const LoginPage = () => {
           {formState.errors.email && (
             <p className="text-red-500">{formState.errors.email.message}</p>
           )}
+          <ContinueButton isEnabled={isEmailValid} />
+          <CreateAccountGrayButton />
         </form>
-        <ContinueButton isEnabled={isEmailValid} />
-        <CreateAccountGrayButton />
       </FormProvider>
     </div>
   );

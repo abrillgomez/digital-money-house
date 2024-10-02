@@ -53,7 +53,10 @@ const CardPage = () => {
       const accountAPI = new AccountAPI();
       const accountInfo = await accountAPI.getAccountInfo(token);
       const accountId = accountInfo.id;
-      const existingCards = await cardService.getCardsByAccountId(accountId, token);
+      const existingCards = await cardService.getCardsByAccountId(
+        accountId,
+        token
+      );
       if (existingCards.length >= 10) {
         Swal.fire({
           icon: "warning",
@@ -91,9 +94,18 @@ const CardPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    let start: number | null = null;
+    const delay = 200;
+    const animate = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+      if (elapsed < delay) {
+        requestAnimationFrame(animate);
+      } else {
+        setLoading(false);
+      }
+    };
+    requestAnimationFrame(animate);
   }, []);
 
   if (loading) {
@@ -115,10 +127,16 @@ const CardPage = () => {
           <div className="mb-8 p-6 rounded-lg">
             <div className="flex flex-col items-center">
               <div className="relative w-full max-w-[330px] h-[180px] p-4 bg-custom-dark text-white rounded-lg shadow-md">
-                <div className="text-2xl text-white font-bold">{cardNumber}</div>
+                <div className="text-2xl text-white font-bold">
+                  {cardNumber}
+                </div>
                 <div className="flex justify-between wrap">
-                  <div className="text-lg text-white font-semibold mb-2 mt-2">{fullName}</div>
-                  <div className="text-xl text-white font-semibold mb-2 mt-2">{formatExpiry(expiry)}</div>
+                  <div className="text-lg text-white font-semibold mb-2 mt-2">
+                    {fullName}
+                  </div>
+                  <div className="text-xl text-white font-semibold mb-2 mt-2">
+                    {formatExpiry(expiry)}
+                  </div>
                 </div>
                 <div className="absolute text-white bottom-4 right-4 text-sm font-light">
                   {cvc}
@@ -129,8 +147,7 @@ const CardPage = () => {
           <FormProvider {...methods}>
             <form
               className="flex flex-wrap gap-4 py-4 justify-center"
-              onSubmit={handleSubmit(onSubmit)}
-            >
+              onSubmit={handleSubmit(onSubmit)}>
               <Controller
                 name="cardNumber"
                 control={control}
@@ -148,7 +165,9 @@ const CardPage = () => {
                 name="expiry"
                 control={control}
                 render={({ field }) => {
-                  const formattedValue = field.value ? formatExpiry(field.value) : "";
+                  const formattedValue = field.value
+                    ? formatExpiry(field.value)
+                    : "";
                   return (
                     <InputText
                       type="text"
@@ -180,12 +199,16 @@ const CardPage = () => {
                 name="cvc"
                 control={control}
                 render={({ field }) => (
-                  <InputText
+                  <input
                     type="text"
-                    fieldName="cvc"
                     placeholder="Código de seguridad*"
                     value={field.value}
-                    onChange={(e) => field.onChange(e.target.value)}
+                    onChange={(e) => {
+                      if (e.target.value.length <= 3) {
+                        field.onChange(e.target.value);
+                      }
+                    }}
+                    className={`w-[300px] h-[50px] sm:w-[360px] sm:h-[64px] bg-white border border-gray-300 px-4 py-2 rounded-[10px] text-black text-[18px] mb-2`}
                   />
                 )}
               />

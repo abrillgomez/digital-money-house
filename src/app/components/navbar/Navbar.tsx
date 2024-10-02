@@ -73,10 +73,13 @@ const Navbar = () => {
             <img src={logo} alt="Logo" className="h-7 w-auto" />
           </Link>
         </div>
-        {!isLoggedIn ? (
+        {!isLoggedIn ||
+        pathname === "/" ||
+        pathname === "/login" ||
+        pathname === "/create-account" ? (
           pathname !== "/login" &&
           pathname !== "/login-password" &&
-          pathname !== "/create-account" && (
+          pathname !== "/create-account" ? (
             <div className="flex space-x-4">
               <Link href="/login">
                 <div className="bg-custom-dark text-custom-lime px-4 py-2 rounded border border-custom-lime font-bold">
@@ -89,6 +92,14 @@ const Navbar = () => {
                 </button>
               </Link>
             </div>
+          ) : (
+            pathname === "/create-account" && (
+              <Link href="/login">
+                <button className="bg-custom-gray text-white px-4 py-2 rounded font-bold">
+                  Iniciar sesión
+                </button>
+              </Link>
+            )
           )
         ) : (
           <Link href="/home">

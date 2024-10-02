@@ -49,9 +49,18 @@ const DetailActivityPage = () => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    let start: number | null = null;
+    const delay = 200;
+    const animate = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+      if (elapsed < delay) {
+        requestAnimationFrame(animate);
+      } else {
+        setLoading(false);
+      }
+    };
+    requestAnimationFrame(animate);
   }, []);
 
   if (loading) {
@@ -70,9 +79,9 @@ const DetailActivityPage = () => {
           Actividad
         </h1>
         {loading ? (
-          <p className="text-custom-dark mt-2">
-            Cargando detalles de la transacción...
-          </p>
+          <div className="flex items-center justify-center min-h-screen">
+            <ClipLoader size={50} color={"#C1FD35"} loading={loading} />
+          </div>
         ) : transaction ? (
           <>
             <div className="bg-custom-dark rounded-lg shadow-lg p-6 sm:w-[350px] md:w-[511px] lg:w-[1006px]">
