@@ -2,7 +2,7 @@ import { UserLoginType } from "@/types/users.types";
 
 class AuthAPI {
   async login(data: UserLoginType) {
-    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/login`; 
+    const url = "https://digitalmoney.digitalhouse.com/api/login";
     try {
       const response = await fetch(url, {
         method: "POST",

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = "https://digitalmoney.digitalhouse.com/api/accounts";
 
 export class TransferencesService {
   private accountId: number;
@@ -14,7 +14,7 @@ export class TransferencesService {
   async getTransferences() {
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/accounts/${this.accountId}/transferences`,
+        `${BASE_URL}/${this.accountId}/transferences`,
         {
           headers: {
             Authorization: `${this.token}`,
@@ -34,7 +34,7 @@ export class TransferencesService {
   }) {
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/accounts/${this.accountId}/transferences`,
+        `${BASE_URL}/${this.accountId}/transferences`,
         transferenceData,
         {
           headers: {
@@ -57,7 +57,7 @@ export class TransferencesService {
   }) {
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/accounts/${this.accountId}/deposits`,
+        `${BASE_URL}/${this.accountId}/deposits`,
         depositData,
         {
           headers: {

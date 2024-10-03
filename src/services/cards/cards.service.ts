@@ -1,8 +1,8 @@
 class CardService {
   private apiBaseUrl: string;
 
-  constructor() {
-    this.apiBaseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+  constructor(apiBaseUrl: string) {
+    this.apiBaseUrl = apiBaseUrl;
   }
 
   async getCardsByAccountId(accountId: number, token: string) {
@@ -87,6 +87,6 @@ class CardService {
   }
 }
 
-const cardService = new CardService();
+const cardService = new CardService("https://digitalmoney.digitalhouse.com");
 
 export default cardService;

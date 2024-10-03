@@ -1,7 +1,7 @@
 class TransactionsAPI {
   baseURL: string;
 
-  constructor(baseURL: string = process.env.NEXT_PUBLIC_BASE_URL!) {
+  constructor(baseURL: string = "https://digitalmoney.digitalhouse.com") {
     this.baseURL = baseURL;
   }
 
