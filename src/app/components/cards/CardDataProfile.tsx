@@ -40,7 +40,7 @@ const CardDataProfile = () => {
     Swal.fire({
       icon: "success",
       title: "Copiado",
-      text: `Se ha copiado: ${text}`,
+      text: `Se ha copiado: ${text}.`,
       timer: 2000,
       showConfirmButton: false,
     });
@@ -68,7 +68,7 @@ const CardDataProfile = () => {
         Swal.fire({
           icon: "success",
           title: "Alias actualizado",
-          text: "El alias se ha actualizado correctamente",
+          text: "El alias se ha actualizado correctamente.",
           timer: 2000,
           showConfirmButton: false,
         });
@@ -77,7 +77,7 @@ const CardDataProfile = () => {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Hubo un problema actualizando el alias",
+          text: "Hubo un problema actualizando el alias.",
         });
       } finally {
         setIsUpdating(false);

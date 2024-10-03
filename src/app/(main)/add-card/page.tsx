@@ -68,7 +68,7 @@ const CardPage = () => {
   const onSubmit = async (data: CardFormData) => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) throw new Error("Token no encontrado");
+      if (!token) throw new Error("Token no encontrado.");
       const accountAPI = new AccountAPI();
       const accountInfo = await accountAPI.getAccountInfo(token);
       const accountId = accountInfo.id;

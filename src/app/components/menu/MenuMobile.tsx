@@ -53,7 +53,7 @@ const MenuMobile = ({ userInfo, isLoggedIn }: MenuMobileProps) => {
   const handleLogout = async () => {
     const result = await Swal.fire({
       title: "¿Estás seguro?",
-      text: "Quieres cerrar sesión",
+      text: "Quieres cerrar sesión.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",

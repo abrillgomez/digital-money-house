@@ -75,7 +75,7 @@ const CardTransactionCard = () => {
             if (response && response.id) {
               Swal.fire({
                 title: "Éxito",
-                text: "El pago del servicio se realizó correctamente",
+                text: "El pago del servicio se realizó correctamente.",
                 icon: "success",
                 confirmButtonText: "OK",
                 confirmButtonColor: "#4caf50",
@@ -92,7 +92,7 @@ const CardTransactionCard = () => {
             console.error("Hubo un problema con tu pago");
             Swal.fire({
               title: "Error",
-              text: "Puede deberse a fondos insuficientes. Comunicate con la entidad emisora de la tarjeta",
+              text: "Puede deberse a fondos insuficientes. Comunicate con la entidad emisora de la tarjeta.",
               icon: "error",
               confirmButtonText: "OK",
               confirmButtonColor: "#4caf50",
@@ -107,7 +107,7 @@ const CardTransactionCard = () => {
       } else {
         Swal.fire({
           title: "Error",
-          text: "Información de la tarjeta seleccionada no es válida",
+          text: "Información de la tarjeta seleccionada no es válida.",
           icon: "error",
           confirmButtonText: "OK",
           confirmButtonColor: "#4caf50",
@@ -116,7 +116,7 @@ const CardTransactionCard = () => {
     } else {
       Swal.fire({
         title: "Error",
-        text: "Por favor seleccione una tarjeta",
+        text: "Por favor seleccione una tarjeta.",
         icon: "error",
         confirmButtonText: "OK",
         confirmButtonColor: "#4caf50",

@@ -64,14 +64,14 @@ const CardUser: React.FC = () => {
     if (!editedUser || !user || !user.id) {
       Swal.fire(
         "Error",
-        "No se puede guardar sin un ID de usuario válido",
+        "No se puede guardar sin un ID de usuario válido.",
         "error"
       );
       return;
     }
     const token = localStorage.getItem("token");
     if (!token) {
-      Swal.fire("Error", "Token no encontrado", "error");
+      Swal.fire("Error", "Token no encontrado.", "error");
       return;
     }
     try {
@@ -80,13 +80,13 @@ const CardUser: React.FC = () => {
       setIsEditing(false);
       Swal.fire({
         title: "Actualizado",
-        text: "Tus datos han sido actualizados",
+        text: "Tus datos han sido actualizados.",
         icon: "success",
       }).then(() => {
         window.location.reload();
       });
     } catch (error) {
-      Swal.fire("Error", "No se pudieron actualizar los datos", "error");
+      Swal.fire("Error", "No se pudieron actualizar los datos.", "error");
     }
   };
 
