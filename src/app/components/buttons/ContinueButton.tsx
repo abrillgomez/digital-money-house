@@ -27,6 +27,7 @@ const ContinueButton = ({ isEnabled, handleSubmit }: ContinueButtonProps) => {
   }, []);
 
   const handleClick = async () => {
+    if (!isEnabled) return;
     if (typeof window !== "undefined") {
       const pathname = window.location.pathname;
       if (pathname === "/login") {

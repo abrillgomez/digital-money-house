@@ -1,9 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useForm, FormProvider, useWatch } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import InputText from "@/app/components/inputs/InputText";
 import ContinueButton from "../../components/buttons/ContinueButton";
 import CreateAccountGrayButton from "@/app/components/buttons/CreateAccountGrayButton";
 import { emailSchema } from "@/schemes/login.scheme";
@@ -13,15 +12,14 @@ type FormData = {
 };
 
 const LoginPage = () => {
-  const methods = useForm({
+  const methods = useForm<FormData>({
     resolver: yupResolver(emailSchema),
     mode: "onBlur",
   });
 
-  const { handleSubmit, formState, control } = methods;
-  const emailValue = useWatch({ control, name: "email" });
-  const isEmailValid =
-    !formState.errors.email && emailValue?.includes("@") && emailValue !== "";
+  const { handleSubmit, formState, getValues } = methods;
+  const emailValue = getValues("email");
+  const isEmailValid = !formState.errors.email && emailValue?.trim() !== "";
 
   const onSubmit = (data: FormData) => {
     sessionStorage.setItem("email", data.email);
@@ -60,10 +58,11 @@ const LoginPage = () => {
         <form
           className="flex flex-col space-y-4 py-4"
           onSubmit={handleSubmit(onSubmit)}>
-          <InputText
+          <input
             type="email"
             placeholder="Correo electrónico"
-            fieldName="email"
+            {...methods.register("email")}
+            className="w-[300px] h-[50px] sm:w-[360px] sm:h-[64px] bg-white border border-gray-300 px-4 py-2 rounded-[10px] text-black text-[18px] mb-2"
           />
           {formState.errors.email && (
             <p className="text-red-500">{formState.errors.email.message}</p>
