@@ -2,7 +2,7 @@ class AccountAPI {
   baseUrl: string;
 
   constructor() {
-    this.baseUrl = "https://digitalmoney.digitalhouse.com";
+    this.baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
   }
 
   async getAccountInfo(token: string) {

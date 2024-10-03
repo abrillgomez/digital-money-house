@@ -177,7 +177,12 @@ const CardPage = () => {
                     fieldName="cardNumber"
                     placeholder="Número de tarjeta*"
                     value={field.value}
-                    onChange={(e) => field.onChange(e.target.value)}
+                    onChange={(e) => {
+                      const cleanedValue = e.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 19);
+                      field.onChange(cleanedValue);
+                    }}
                   />
                 )}
               />

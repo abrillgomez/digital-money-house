@@ -1,7 +1,7 @@
 class TransactionsAPI {
   baseURL: string;
 
-  constructor(baseURL: string = "https://digitalmoney.digitalhouse.com") {
+  constructor(baseURL: string = process.env.NEXT_PUBLIC_BASE_URL!) {
     this.baseURL = baseURL;
   }
 
@@ -16,6 +16,9 @@ class TransactionsAPI {
         },
       }
     );
+    if (!response.ok) {
+      throw new Error(`Error fetching transactions: ${response.status}`);
+    }
     return response.json();
   }
 
@@ -31,6 +34,9 @@ class TransactionsAPI {
         body: JSON.stringify(transactionData),
       }
     );
+    if (!response.ok) {
+      throw new Error(`Error creating transaction: ${response.status}`);
+    }
     return response.json();
   }
 
@@ -45,6 +51,9 @@ class TransactionsAPI {
         },
       }
     );
+    if (!response.ok) {
+      throw new Error(`Error fetching transaction: ${response.status}`);
+    }
     return response.json();
   }
 }
