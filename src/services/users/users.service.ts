@@ -13,10 +13,12 @@ class UserAPI {
           body: JSON.stringify(data),
         }
       );
+
       if (!res.ok) {
         const errorDetails = await res.json();
         throw new Error(`Error ${res.status}: ${errorDetails.message}`);
       }
+
       return res.json();
     } catch (error) {
       console.error("Failed to create user:", error);
@@ -36,6 +38,12 @@ class UserAPI {
           },
         }
       );
+
+      if (!res.ok) {
+        const errorDetails = await res.json();
+        throw new Error(`Error ${res.status}: ${errorDetails.message}`);
+      }
+
       return res.json();
     } catch (error) {
       console.error("Failed to fetch user data:", error);
@@ -49,7 +57,7 @@ class UserAPI {
     data: object
   ): Promise<UserType> => {
     try {
-       const res = await fetch(
+      const res = await fetch(
         `https://digitalmoney.digitalhouse.com/api/users/${id}`,
         {
           method: "PATCH",
@@ -59,11 +67,13 @@ class UserAPI {
           },
           body: JSON.stringify(data),
         }
-      )
+      );
+
       if (!res.ok) {
         const errorDetails = await res.json();
         throw new Error(`Error ${res.status}: ${errorDetails.message}`);
       }
+
       return res.json();
     } catch (error) {
       console.error("Failed to update user data:", error);

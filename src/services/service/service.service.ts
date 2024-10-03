@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL + "/service";
+const API_URL = "https://digitalmoney.digitalhouse.com/service";
 
 export class ServiceAPI {
   static async getAllServiceIds() {
