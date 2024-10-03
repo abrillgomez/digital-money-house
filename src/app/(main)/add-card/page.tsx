@@ -32,6 +32,25 @@ const CardPage = () => {
   const expiry = watch("expiry", "");
   const fullName = watch("fullName", "");
   const cvc = watch("cvc", "");
+  const [cardType, setCardType] = useState<string>("");
+
+  const determineCardType = (number: string) => {
+    const firstDigit = number.charAt(0);
+    const firstTwoDigits = number.slice(0, 2);
+
+    if (firstDigit === "4") {
+      return "VISA";
+    } else if (["51", "52", "53", "54", "55"].includes(firstTwoDigits)) {
+      return "MasterCard";
+    } else if (["34", "37"].includes(firstTwoDigits)) {
+      return "Amex";
+    }
+    return "";
+  };
+
+  useEffect(() => {
+    setCardType(determineCardType(cardNumber));
+  }, [cardNumber]);
 
   const formatExpiry = (value: string) => {
     const cleanValue = value?.replace(/\D/g, "");
@@ -127,6 +146,7 @@ const CardPage = () => {
           <div className="mb-8 p-6 rounded-lg">
             <div className="flex flex-col items-center">
               <div className="relative w-full max-w-[330px] h-[180px] p-4 bg-custom-dark text-white rounded-lg shadow-md">
+                <div className="text-2xl text-white font-bold">{cardType}</div>
                 <div className="text-2xl text-white font-bold">
                   {cardNumber}
                 </div>
