@@ -14,12 +14,12 @@ import userApi from "@/services/users/users.service";
 const CreateAccountPage = () => {
   const methods = useForm({
     resolver: yupResolver(signUpScheme),
-    mode: "onBlur",
+    mode: "onTouched",
   });
-
-  const { handleSubmit, formState } = methods;
+  const { handleSubmit, formState, watch } = methods;
   const isFormValid = formState.isValid;
   const [apiError, setApiError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const onSubmit = async (data: UserType) => {
     try {
@@ -32,51 +32,40 @@ const CreateAccountPage = () => {
         phone: data.phone,
       });
       if (response.user_id) {
-        Swal.fire({
+        await Swal.fire({
           icon: "success",
           title: "¡Usuario creado exitosamente!",
           text: "Serás redirigido al login.",
           confirmButtonColor: "#3085d6",
-        }).then(() => {
-          window.location.href = "/login";
         });
+        window.location.href = "/login";
       } else {
         throw new Error("Error inesperado en la creación del usuario");
       }
     } catch (error) {
       let errorMessage = "Hubo un error inesperado.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
+      if (error instanceof Error && error.message.includes("409")) {
+        errorMessage = "El email ya está en uso.";
+        setApiError(errorMessage);
       } else if (typeof error === "string") {
         errorMessage = error;
       }
-      if (errorMessage.includes("409")) {
-        setApiError("El email ya está en uso.");
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "El email ya está en uso.",
-          confirmButtonColor: "#d33",
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Hubo un error al crear el usuario: " + errorMessage,
-          confirmButtonColor: "#d33",
-        });
-      }
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: errorMessage.includes("email ya está en uso")
+          ? "El email ya está en uso."
+          : `Hubo un error al crear el usuario: ${errorMessage}`,
+        confirmButtonColor: "#d33",
+      });
     }
   };
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    let start: number | null = null;
     const delay = 200;
+    const startTime = performance.now();
     const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
+      const elapsed = timestamp - startTime;
       if (elapsed < delay) {
         requestAnimationFrame(animate);
       } else {
@@ -84,6 +73,7 @@ const CreateAccountPage = () => {
       }
     };
     requestAnimationFrame(animate);
+    return () => setLoading(false);
   }, []);
 
   if (loading) {
@@ -125,37 +115,38 @@ const CreateAccountPage = () => {
           />
           <InputNumber type="number" placeholder="Teléfono" fieldName="phone" />
           <CreateAccountButton isEnabled={isFormValid} />
-          {formState.errors.firstname && (
+          {formState.touchedFields.firstname && formState.errors.firstname && (
             <p className="text-red-500 col-span-1 sm:col-span-2">
               {formState.errors.firstname.message}
             </p>
           )}
-          {formState.errors.lastname && (
+          {formState.touchedFields.lastname && formState.errors.lastname && (
             <p className="text-red-500 col-span-1 sm:col-span-2">
               {formState.errors.lastname.message}
             </p>
           )}
-          {formState.errors.dni && (
+          {formState.touchedFields.dni && formState.errors.dni && (
             <p className="text-red-500 col-span-1 sm:col-span-2">
               {formState.errors.dni.message}
             </p>
           )}
-          {formState.errors.email && (
+          {formState.touchedFields.email && formState.errors.email && (
             <p className="text-red-500 col-span-1 sm:col-span-2">
               {formState.errors.email.message}
             </p>
           )}
-          {formState.errors.password && (
+          {formState.touchedFields.password && formState.errors.password && (
             <p className="text-red-500 col-span-1 sm:col-span-2">
               {formState.errors.password.message}
             </p>
           )}
-          {formState.errors.passwordConfirmed && (
-            <p className="text-red-500 col-span-1 sm:col-span-2">
-              {formState.errors.passwordConfirmed.message}
-            </p>
-          )}
-          {formState.errors.phone && (
+          {formState.touchedFields.passwordConfirmed &&
+            formState.errors.passwordConfirmed && (
+              <p className="text-red-500 col-span-1 sm:col-span-2">
+                {formState.errors.passwordConfirmed.message}
+              </p>
+            )}
+          {formState.touchedFields.phone && formState.errors.phone && (
             <p className="text-red-500 col-span-1 sm:col-span-2">
               {formState.errors.phone.message}
             </p>

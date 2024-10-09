@@ -13,63 +13,43 @@ const CardsList = () => {
   const [cards, setCards] = useState<Card[]>([]);
   const [accountId, setAccountId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState<string | null>(null);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const storedToken: string | null = localStorage.getItem("token");
-    if (storedToken) {
-      setToken(storedToken);
-    }
-  }, []);
+    const fetchAccountData = async () => {
+      if (!token) return;
 
-  useEffect(() => {
-    if (token) {
-      const fetchAccountInfo = async () => {
-        const accountAPI = new AccountAPI();
-        try {
-          const accountData = await accountAPI.getAccountInfo(token);
-          setAccountId(accountData.id as number);
-        } catch (error) {
-          console.error("Error fetching account info:", error);
-        }
-      };
-      fetchAccountInfo();
-    }
+      const accountAPI = new AccountAPI();
+      try {
+        const accountData = await accountAPI.getAccountInfo(token);
+        setAccountId(accountData.id);
+
+        const response = await cardService.getCardsByAccountId(
+          accountData.id,
+          token
+        );
+        setCards(response);
+      } catch (error) {
+        console.error("Error fetching account/cards data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAccountData();
   }, [token]);
 
-  useEffect(() => {
-    if (accountId) {
-      const fetchCards = async () => {
-        try {
-          const response = await cardService.getCardsByAccountId(
-            accountId,
-            token as string
-          );
-          setCards(response);
-        } catch (error) {
-          console.error("Error fetching cards:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchCards();
-    }
-  }, [accountId, token]);
+  const handleDelete = async (cardId: number) => {
+    if (!accountId || !token) return;
 
-  const handleDelete = async (
-    accountId: number,
-    cardId: number,
-    token: string
-  ) => {
     try {
       await cardService.deleteCard(accountId, cardId, token);
-      setCards(cards.filter((card) => card.id !== cardId));
+      setCards((prevCards) => prevCards.filter((card) => card.id !== cardId));
     } catch (error) {
       console.error("Error deleting card:", error);
     }
   };
 
-  const confirmDelete = (accountId: number, cardId: number, token: string) => {
+  const confirmDelete = (cardId: number) => {
     Swal.fire({
       title: "¿Estás seguro?",
       text: "No podrás revertir esto.",
@@ -81,7 +61,7 @@ const CardsList = () => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        handleDelete(accountId, cardId, token);
+        handleDelete(cardId);
         Swal.fire("Eliminada", "La tarjeta ha sido eliminada.", "success");
       }
     });
@@ -98,18 +78,16 @@ const CardsList = () => {
         {cards.length > 0 ? (
           cards.map((card) => (
             <li
-              key={card?.id}
+              key={card.id}
               className="flex justify-between items-center border-b border-custom-gray-light py-4">
               <div className="flex items-center">
                 <div className="w-[32px] h-[32px] bg-custom-lime rounded-full mr-4"></div>
                 <p className="text-custom-dark text-[16px]">
-                  Terminada en {card?.number_id?.toString().slice(-4)}
+                  Terminada en {card.number_id.toString().slice(-4)}
                 </p>
               </div>
               <button
-                onClick={() =>
-                  confirmDelete(accountId as number, card.id, token as string)
-                }
+                onClick={() => confirmDelete(card.id)}
                 className="font-bold text-custom-dark hover:text-black">
                 <span className="ml-2">Eliminar</span>
               </button>

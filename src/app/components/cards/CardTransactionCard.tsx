@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Swal from "sweetalert2";
 import AccountAPI from "../../../services/account/account.service";
 import cardService from "../../../services/cards/cards.service";
@@ -7,10 +7,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { transactionsAPI } from "@/services/transactions/transactions.service";
 
-const CardTransactionCard = () => {
-  const [cards, setCards] = useState<any[]>([]);
-  const [selectedCard, setSelectedCard] = useState<any | null>(null);
+interface Card {
+  id: string;
+  number_id: number;
+}
+
+const CardTransactionCard= () => {
+  const [cards, setCards] = useState<Card[]>([]);
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerPage = 5;
   const accountService = new AccountAPI();
@@ -20,100 +26,35 @@ const CardTransactionCard = () => {
     const fetchCards = async () => {
       try {
         const token: string | null = localStorage.getItem("token");
-        if (token) {
-          const accountInfo = await accountService.getAccountInfo(token);
-          const accountId = accountInfo.id;
-          const cards = await cardService.getCardsByAccountId(accountId, token);
-          setCards(cards);
-        } else {
-          console.error("No se encontró el token en localStorage.");
-        }
+        if (!token) throw new Error("No se encontró el token en localStorage.");
+
+        const accountInfo = await accountService.getAccountInfo(token);
+        const accountId = accountInfo.id;
+        const fetchedCards = await cardService.getCardsByAccountId(
+          accountId,
+          token
+        );
+        setCards(fetchedCards);
       } catch (error) {
         console.error("Error fetching cards:", error);
+        setError("Error al cargar las tarjetas. Intente nuevamente.");
       } finally {
         setLoading(false);
       }
     };
     fetchCards();
-  }, []);
+  }, [accountService]);
 
-  const handleCardSelection = (card: any) => {
+  const handleCardSelection = useCallback((card: Card) => {
     setSelectedCard(card);
-  };
+  }, []);
 
   const handleNewCardClick = () => {
     window.location.href = "/add-card";
   };
 
-  const handleContinueClick = async () => {
-    if (selectedCard) {
-      const selectedCardInfo = selectedCard;
-      if (
-        selectedCardInfo &&
-        selectedCardInfo.id &&
-        selectedCardInfo.number_id
-      ) {
-        if (isServicesPage) {
-          const params = new URLSearchParams(window.location.search);
-          const serviceName = params.get("name") || "Servicio";
-          try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-              throw new Error("No se encontró el token en localStorage.");
-            }
-            const accountInfo = await accountService.getAccountInfo(token);
-            const accountId = accountInfo.id;
-            const transactionData = {
-              amount: -5547.25,
-              dated: new Date().toISOString(),
-              description: `Pagaste a ${serviceName}`,
-            };
-            const response = await transactionsAPI.createTransaction(
-              accountId,
-              transactionData
-            );
-            if (response && response.id) {
-              Swal.fire({
-                title: "Éxito",
-                text: "El pago del servicio se realizó correctamente.",
-                icon: "success",
-                confirmButtonText: "OK",
-                confirmButtonColor: "#4caf50",
-              }).then(() => {
-                const lastFourDigits = selectedCardInfo.number_id
-                  .toString()
-                  .slice(-4);
-                window.location.href = `/payment-confirmation?serviceName=${serviceName}&lastFourDigits=${lastFourDigits}`;
-              });
-            } else {
-              throw new Error("Error en la respuesta de la API");
-            }
-          } catch (error) {
-            console.error("Hubo un problema con tu pago");
-            Swal.fire({
-              title: "Error",
-              text: "Puede deberse a fondos insuficientes. Comunicate con la entidad emisora de la tarjeta.",
-              icon: "error",
-              confirmButtonText: "OK",
-              confirmButtonColor: "#4caf50",
-            });
-          }
-        } else {
-          const url = `/deposit-money?cardId=${
-            selectedCardInfo.id
-          }&lastFourDigits=${selectedCardInfo.number_id.toString().slice(-4)}`;
-          window.location.href = url;
-        }
-      } else {
-        Swal.fire({
-          title: "Error",
-          text: "Información de la tarjeta seleccionada no es válida.",
-          icon: "error",
-          confirmButtonText: "OK",
-          confirmButtonColor: "#4caf50",
-        });
-      }
-    } else {
+  const handleContinueClick = useCallback(async () => {
+    if (!selectedCard) {
       Swal.fire({
         title: "Error",
         text: "Por favor seleccione una tarjeta.",
@@ -121,8 +62,57 @@ const CardTransactionCard = () => {
         confirmButtonText: "OK",
         confirmButtonColor: "#4caf50",
       });
+      return;
     }
-  };
+
+    const { id, number_id } = selectedCard;
+
+    if (isServicesPage) {
+      const params = new URLSearchParams(window.location.search);
+      const serviceName = params.get("name") || "Servicio";
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("No se encontró el token en localStorage.");
+        const accountInfo = await accountService.getAccountInfo(token);
+        const accountId = accountInfo.id;
+        const transactionData = {
+          amount: -5547.25,
+          dated: new Date().toISOString(),
+          description: `Pagaste a ${serviceName}`,
+        };
+        const response = await transactionsAPI.createTransaction(
+          accountId,
+          transactionData
+        );
+        if (response && response.id) {
+          Swal.fire({
+            title: "Éxito",
+            text: "El pago del servicio se realizó correctamente.",
+            icon: "success",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#4caf50",
+          }).then(() => {
+            const lastFourDigits = number_id.toString().slice(-4);
+            window.location.href = `/payment-confirmation?serviceName=${serviceName}&lastFourDigits=${lastFourDigits}`;
+          });
+        } else {
+          throw new Error("Error en la respuesta de la API");
+        }
+      } catch (error) {
+        console.error("Hubo un problema con tu pago", error);
+        Swal.fire({
+          title: "Error",
+          text: "Puede deberse a fondos insuficientes. Comunicate con la entidad emisora de la tarjeta.",
+          icon: "error",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#4caf50",
+        });
+      }
+    } else {
+      const lastFourDigits = number_id.toString().slice(-4);
+      window.location.href = `/deposit-money?cardId=${id}&lastFourDigits=${lastFourDigits}`;
+    }
+  }, [selectedCard, accountService, isServicesPage]);
 
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
@@ -149,6 +139,8 @@ const CardTransactionCard = () => {
           </h3>
           {loading ? (
             <p className="text-custom-dark">Cargando tarjetas...</p>
+          ) : error ? (
+            <p className="text-custom-dark">{error}</p>
           ) : cards.length === 0 ? (
             <p className="text-custom-dark">
               Aún no tienes tarjetas asociadas.
@@ -171,7 +163,7 @@ const CardTransactionCard = () => {
                       size="lg"
                     />
                     <span className="text-custom-dark font-medium">
-                      Terminada en {card?.number_id?.toString().slice(-4)}
+                      Terminada en {card.number_id.toString().slice(-4)}
                     </span>
                   </div>
                   <input

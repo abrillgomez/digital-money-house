@@ -21,20 +21,35 @@ const DepositMoney: React.FC = () => {
   const [amount, setAmount] = useState<number | string>("");
   const [cvu, setCvu] = useState<string>("");
   const [accountId, setAccountId] = useState<number | null>(null);
-
+  const [loading, setLoading] = useState(true);
   const accountService = new AccountAPI();
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const cardId = searchParams.get("cardId");
-    const lastFourDigits = searchParams.get("lastFourDigits");
-    if (cardId && lastFourDigits) {
-      setCardInfo({
-        id: Number(cardId),
-        lastFourDigits: lastFourDigits,
-      });
-    }
-    const fetchAccountInfo = async () => {
+    const delay = 200;
+    const startTime = performance.now();
+    const animate = (timestamp: number) => {
+      const elapsed = timestamp - startTime;
+      if (elapsed < delay) {
+        requestAnimationFrame(animate);
+      } else {
+        setLoading(false);
+      }
+    };
+    requestAnimationFrame(animate);
+    return () => setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    const fetchCardInfoAndAccount = async () => {
+      const searchParams = new URLSearchParams(window.location.search);
+      const cardId = searchParams.get("cardId");
+      const lastFourDigits = searchParams.get("lastFourDigits");
+      if (cardId && lastFourDigits) {
+        setCardInfo({
+          id: Number(cardId),
+          lastFourDigits,
+        });
+      }
       try {
         const token = localStorage.getItem("token");
         if (token) {
@@ -44,87 +59,11 @@ const DepositMoney: React.FC = () => {
         }
       } catch (error) {
         console.error("Error fetching account info:", error);
-      }
-    };
-
-    fetchAccountInfo();
-  }, []);
-
-  const getArgentinaDate = () => {
-    const timeZone = "America/Argentina/Buenos_Aires";
-    const currentDate = new Date();
-    const zonedDate = toZonedTime(currentDate, timeZone);
-    return format(zonedDate, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", { timeZone });
-  };
-
-  const handleDeposit = async () => {
-    if (accountId && amount && cardInfo && cvu) {
-      const depositData = {
-        amount: Number(amount),
-        dated: getArgentinaDate(),
-        destination: cvu,
-        origin: cvu,
-      };
-      Swal.fire({
-        title: "Confirmar depósito",
-        text: `¿Estás seguro de que deseas depositar $${amount} de la tarjeta terminada en: ${cardInfo.lastFourDigits}?`,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Sí, depositar",
-        cancelButtonText: "Cancelar",
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          try {
-            const token = localStorage.getItem("token");
-            if (token) {
-              const transferService = new TransferencesService(
-                accountId,
-                token
-              );
-              await transferService.createDeposit(depositData);
-              const url = new URL(
-                "/confirmation-deposit",
-                window.location.origin
-              );
-              url.searchParams.append("amount", amount.toString());
-              url.searchParams.append("date", getArgentinaDate());
-              url.searchParams.append(
-                "lastFourDigits",
-                cardInfo.lastFourDigits
-              );
-              window.location.href = url.toString();
-            }
-          } catch (error) {
-            console.error("Error realizando el depósito:", error);
-            Swal.fire({
-              title: "Error",
-              text: "Hubo un problema realizando el depósito.",
-              icon: "error",
-              confirmButtonText: "OK",
-            });
-          }
-        }
-      });
-    }
-  };
-
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let start: number | null = null;
-    const delay = 200;
-    const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
-      if (elapsed < delay) {
-        requestAnimationFrame(animate);
-      } else {
+      } finally {
         setLoading(false);
       }
     };
-    requestAnimationFrame(animate);
+    fetchCardInfoAndAccount();
   }, []);
 
   if (loading) {
@@ -134,6 +73,55 @@ const DepositMoney: React.FC = () => {
       </div>
     );
   }
+
+  const getArgentinaDate = () => {
+    const timeZone = "America/Argentina/Buenos_Aires";
+    const currentDate = new Date();
+    const zonedDate = toZonedTime(currentDate, timeZone);
+    return format(zonedDate, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", { timeZone });
+  };
+
+  const handleDeposit = async () => {
+    if (!accountId || !amount || !cardInfo || !cvu) return;
+    const depositData = {
+      amount: Number(amount),
+      dated: getArgentinaDate(),
+      destination: cvu,
+      origin: cvu,
+    };
+    const confirmDeposit = await Swal.fire({
+      title: "Confirmar depósito",
+      text: `¿Estás seguro de que deseas depositar $${amount} de la tarjeta terminada en: ${cardInfo.lastFourDigits}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, depositar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    });
+    if (confirmDeposit.isConfirmed) {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const transferService = new TransferencesService(accountId, token);
+          await transferService.createDeposit(depositData);
+          const url = new URL("/confirmation-deposit", window.location.origin);
+          url.searchParams.append("amount", amount.toString());
+          url.searchParams.append("date", getArgentinaDate());
+          url.searchParams.append("lastFourDigits", cardInfo.lastFourDigits);
+          window.location.href = url.toString();
+        }
+      } catch (error) {
+        console.error("Error realizando el depósito:", error);
+        Swal.fire({
+          title: "Error",
+          text: "Hubo un problema realizando el depósito.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    }
+  };
 
   return (
     <div className="bg-custom-white flex">

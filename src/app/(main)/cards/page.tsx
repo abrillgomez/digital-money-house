@@ -9,11 +9,10 @@ const CardPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let start: number | null = null;
     const delay = 200;
+    const startTime = performance.now();
     const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
+      const elapsed = timestamp - startTime;
       if (elapsed < delay) {
         requestAnimationFrame(animate);
       } else {
@@ -21,6 +20,7 @@ const CardPage = () => {
       }
     };
     requestAnimationFrame(animate);
+    return () => setLoading(false);
   }, []);
 
   if (loading) {
@@ -35,7 +35,7 @@ const CardPage = () => {
     <div className="bg-custom-white flex">
       <Menu />
       <main className="flex-1 p-4 flex flex-col items-center mt-8 min-h-screen">
-        <h1 className="block text-2xl text-custom-dark font-bold sm:hidden">
+        <h1 className="block text-2xl pb-4 text-custom-dark font-bold sm:hidden">
           Tarjetas
         </h1>
         <AddCardButton />

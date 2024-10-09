@@ -12,11 +12,10 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let start: number | null = null;
     const delay = 200;
+    const startTime = performance.now();
     const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
+      const elapsed = timestamp - startTime;
       if (elapsed < delay) {
         requestAnimationFrame(animate);
       } else {
@@ -24,7 +23,16 @@ const Page = () => {
       }
     };
     requestAnimationFrame(animate);
+    return () => setLoading(false);
   }, []);
+
+  const handleBankTransferClick = () => {
+    window.location.href = "/bank-transfer";
+  };
+
+  const handleCardClick = () => {
+    window.location.href = "/card-transaction";
+  };
 
   if (loading) {
     return (
@@ -33,14 +41,6 @@ const Page = () => {
       </div>
     );
   }
-
-  const handleBankTransferBancariaClick = () => {
-    window.location.href = "/bank-transfer";
-  };
-
-  const handleCardClick = () => {
-    window.location.href = "/card-transaction";
-  };
 
   return (
     <div className="flex bg-custom-white">
@@ -52,7 +52,7 @@ const Page = () => {
         <TransactionCard
           icon={faMoneyBillTransfer}
           text="Transferencia bancaria"
-          onClick={handleBankTransferBancariaClick}
+          onClick={handleBankTransferClick}
         />
         <TransactionCard
           icon={faCreditCard}

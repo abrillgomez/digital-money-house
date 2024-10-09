@@ -11,9 +11,9 @@ const CreateAccountButton = ({ isEnabled }: CreateAccountProps) => {
       disabled={!isEnabled}
       className={`w-[300px] h-[50px] sm:w-[360px] sm:h-[64px] ${
         isEnabled
-          ? "bg-custom-lime text-black pt-2"
-          : "bg-custom-lime text-black cursor-not-allowed pt-2"
-      } px-4 py-2 rounded-[10px] font-bold text-center mb-2`}>
+          ? "bg-custom-lime text-black"
+          : "bg-custom-lime text-black cursor-not-allowed"
+      } px-4 rounded-[10px] font-bold text-center`}>
       Crear cuenta
     </button>
   );

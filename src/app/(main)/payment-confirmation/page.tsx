@@ -17,6 +17,8 @@ const PaymentConfirmation: React.FC = () => {
     date: "",
     lastFourDigits: "",
   });
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
@@ -51,14 +53,11 @@ const PaymentConfirmation: React.FC = () => {
     }
   }, []);
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    let start: number | null = null;
     const delay = 200;
+    const startTime = performance.now();
     const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
+      const elapsed = timestamp - startTime;
       if (elapsed < delay) {
         requestAnimationFrame(animate);
       } else {
@@ -66,6 +65,7 @@ const PaymentConfirmation: React.FC = () => {
       }
     };
     requestAnimationFrame(animate);
+    return () => setLoading(false);
   }, []);
 
   if (loading) {

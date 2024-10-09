@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import Menu from "@/app/components/menu/Menu";
 import { useForm, FormProvider } from "react-hook-form";
@@ -18,21 +18,20 @@ const AccountNumberPage = () => {
     handleSubmit,
     formState: { errors },
   } = methods;
+  const [loading, setLoading] = useState(true);
 
   const onSubmit = (data: any) => {
     const urlParams = new URLSearchParams(window.location.search);
     const name = urlParams.get("name");
-    window.location.href = `/pay-service?name=${name}&accountNumber=${data.accountNumber}`;
+    const accountNumber = data.accountNumber;
+    window.location.href = `/pay-service?name=${name}&accountNumber=${accountNumber}`;
   };
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    let start: number | null = null;
     const delay = 200;
+    const startTime = performance.now();
     const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
+      const elapsed = timestamp - startTime;
       if (elapsed < delay) {
         requestAnimationFrame(animate);
       } else {
@@ -40,6 +39,7 @@ const AccountNumberPage = () => {
       }
     };
     requestAnimationFrame(animate);
+    return () => setLoading(false);
   }, []);
 
   if (loading) {

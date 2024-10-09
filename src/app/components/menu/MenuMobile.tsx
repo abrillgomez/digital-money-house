@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-"use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { FaBars, FaTimes } from "react-icons/fa";
@@ -28,22 +26,16 @@ const MenuMobile = ({ userInfo, isLoggedIn }: MenuMobileProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSpecialStyle, setIsSpecialStyle] = useState(false);
 
-  const toggleMenu = () => setIsOpen(!isOpen);
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     const currentPath = window.location.pathname;
-    if (
+    setIsSpecialStyle(
       !token &&
-      (currentPath === "/login" ||
-        currentPath === "/create-account" ||
-        currentPath === "/login-password")
-    ) {
-      setIsSpecialStyle(true);
-    } else {
-      setIsSpecialStyle(false);
-    }
+        ["/login", "/create-account", "/login-password"].includes(currentPath)
+    );
   }, []);
+
+  const toggleMenu = () => setIsOpen((prev) => !prev);
 
   const getInitials = (firstname: string, lastname: string) => {
     if (!firstname && !lastname) return "NN";
@@ -61,7 +53,6 @@ const MenuMobile = ({ userInfo, isLoggedIn }: MenuMobileProps) => {
       confirmButtonText: "Sí, cerrar sesión",
       cancelButtonText: "Cancelar",
     });
-
     if (result.isConfirmed) {
       localStorage.clear();
       sessionStorage.clear();
@@ -70,24 +61,12 @@ const MenuMobile = ({ userInfo, isLoggedIn }: MenuMobileProps) => {
   };
 
   const handleNavigation = (href: string) => {
-    if (
-      href === "/login" ||
-      href === "/login-password" ||
-      href === "/create-account"
-    ) {
-      window.location.href = href;
-    } else {
-      setIsOpen(false);
-    }
+    window.location.href = href;
+    setIsOpen(false);
   };
 
   const handleLogoClick = () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      window.location.href = "/";
-    } else {
-      window.location.href = "/home";
-    }
+    window.location.href = localStorage.getItem("token") ? "/home" : "/";
   };
 
   return (
@@ -118,67 +97,83 @@ const MenuMobile = ({ userInfo, isLoggedIn }: MenuMobileProps) => {
           <button
             onClick={toggleMenu}
             className={`p-2 rounded-full focus:outline-none ${
-              isSpecialStyle
-                ? "text-custom-dark"
-                : "text-custom-lime"
+              isSpecialStyle ? "text-custom-dark" : "text-custom-lime"
             }`}>
             <FaBars className="w-6 h-6" />
           </button>
         </div>
       </div>
       {isOpen && (
-        <div className="absolute left-0 w-full bg-custom-dark text-custom-lime z-10">
-          <div className="flex justify-end p-4">
-            <button onClick={toggleMenu} className="text-custom-lime">
-              <FaTimes className="w-6 h-6" />
-            </button>
-          </div>
-          <div className="px-4 py-6">
-            {!isLoggedIn ? (
-              <>
-                <a
-                  href="/login"
-                  className="block px-4 py-2 text-lg hover:bg-custom-lime hover:text-custom-dark hover:font-bold"
-                  onClick={() => handleNavigation("/login")}>
-                  Ingresar
-                </a>
-                <a
-                  href="/create-account"
-                  className="block px-4 py-2 text-lg hover:bg-custom-lime hover:text-custom-dark hover:font-bold"
-                  onClick={() => handleNavigation("/create-account")}>
-                  Crear cuenta
-                </a>
-              </>
-            ) : (
-              <>
-                <div className="px-4 text-lg text-custom-white font-bold">
-                  <div className="flex flex-col items-start">
-                    <div className="text-lg text-custom-lime font-bold">
-                      Hola,
-                    </div>
-                    <div className="text-lg text-custom-lime font-bold">
-                      {userInfo.firstname} {userInfo.lastname}
-                    </div>
-                  </div>
+        <>
+          <div
+            onClick={toggleMenu}
+            className="fixed inset-0 bg-black opacity-50 z-20"
+          />
+          <div className="absolute left-0 top-0 w-full min-h-screen z-30 flex flex-col">
+            <div
+              className={`p-4 ${
+                isLoggedIn ? "bg-custom-dark" : "bg-custom-dark"
+              }`}>
+              <div className="flex justify-between items-start w-[100%]">
+                <div className="flex flex-col items-start mt-[40px] px-4 mb-2">
+                  {isLoggedIn && (
+                    <>
+                      <span className="text-lg font-bold text-custom-lime">
+                        Hola,
+                      </span>
+                      <span className="text-lg font-bold text-custom-lime">
+                        {`${userInfo.firstname} ${userInfo.lastname}`}
+                      </span>
+                    </>
+                  )}
                 </div>
-                {menuLinks.map((link) => (
+                {isLoggedIn && (
+                  <button onClick={toggleMenu} className="text-custom-lime">
+                    <FaTimes className="w-6 h-6" />
+                  </button>
+                )}
+              </div>
+              {!isLoggedIn && (
+                <div className="mt-4">
                   <Link
-                    key={link.href}
-                    href={link.href}
-                    className="block px-4 py-2 mt-2 text-lg hover:bg-custom-lime hover:text-custom-dark hover:font-bold"
-                    onClick={() => setIsOpen(false)}>
-                    {link.name}
+                    href="/login"
+                    className="block px-4 py-2 bg-custom-dark text-custom-lime text-lg font-semibold hover:bg-custom-lime hover:text-custom-dark rounded-md"
+                    onClick={() => handleNavigation("/login")}>
+                    Ingresar
+                  </Link>
+                  <Link
+                    href="/create-account"
+                    className="block mt-2 px-4 py-2 bg-custom-dark text-custom-lime text-lg font-semibold hover:bg-custom-lime hover:text-custom-dark rounded-md"
+                    onClick={() => handleNavigation("/create-account")}>
+                    Crear cuenta
+                  </Link>
+                </div>
+              )}
+            </div>
+            <div
+              className={`flex-1 p-4 text-custom-dark ${
+                isLoggedIn ? "bg-custom-lime" : "bg-custom-dark"
+              }`}>
+              {isLoggedIn &&
+                menuLinks.map(({ href, name }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className="block px-6 py-2 mt-2 text-lg font-semibold hover:font-bold rounded-md"
+                    onClick={() => handleNavigation(href)}>
+                    {name}
                   </Link>
                 ))}
+              {isLoggedIn && (
                 <button
                   onClick={handleLogout}
-                  className="w-[400px] text-left block px-4 py-2 mt-2 text-lg hover:bg-custom-lime hover:text-custom-dark hover:font-bold">
+                  className="w-full text-left block px-6 py-2 mt-2 text-lg font-semibold bg-custom-lime text-custom-dark hover:font-bold rounded-md">
                   Cerrar sesión
                 </button>
-              </>
-            )}
+              )}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

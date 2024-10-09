@@ -1,11 +1,12 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import Menu from "@/app/components/menu/Menu";
 import { transactionsAPI } from "../../../services/transactions/transactions.service";
 import AccountAPI from "../../../services/account/account.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+
 interface Transaction {
   id: number;
   dated: string;
@@ -21,39 +22,42 @@ const DetailActivityPage = () => {
   const [loading, setLoading] = useState(true);
   const accountAPI = new AccountAPI();
 
+  const fetchTransactionDetails = useCallback(async () => {
+    try {
+      const transactionId = localStorage.getItem("selectedTransactionId");
+      const token = localStorage.getItem("token");
+
+      if (!transactionId || !token) return;
+
+      const accountInfo = await accountAPI.getAccountInfo(token);
+      const accountId = accountInfo?.id;
+      if (!accountId) return;
+
+      const transactionData = await transactionsAPI.getTransaction(
+        accountId,
+        transactionId
+      );
+      setTransaction(transactionData);
+    } catch (error) {
+      console.error("Error fetching transaction details:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [accountAPI]);
+
   useEffect(() => {
-    const fetchTransactionDetails = async () => {
-      try {
-        const transactionId = localStorage.getItem("selectedTransactionId");
-        const token = localStorage.getItem("token");
-        if (transactionId && token) {
-          const accountInfo = await accountAPI.getAccountInfo(token);
-          const accountId = accountInfo.id;
-          const transactionData = await transactionsAPI.getTransaction(
-            accountId,
-            transactionId
-          );
-          setTransaction(transactionData);
-        }
-      } catch (error) {
-        console.error("Error fetching transaction details:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchTransactionDetails();
-  }, []);
+  }, [fetchTransactionDetails]);
 
   const handleGoHome = () => {
     window.location.href = "/home";
   };
 
   useEffect(() => {
-    let start: number | null = null;
     const delay = 200;
+    const startTime = performance.now();
     const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
+      const elapsed = timestamp - startTime;
       if (elapsed < delay) {
         requestAnimationFrame(animate);
       } else {
@@ -61,6 +65,7 @@ const DetailActivityPage = () => {
       }
     };
     requestAnimationFrame(animate);
+    return () => setLoading(false);
   }, []);
 
   if (loading) {
@@ -71,6 +76,21 @@ const DetailActivityPage = () => {
     );
   }
 
+  const formatDate = (date: string) =>
+    new Intl.DateTimeFormat("es-ES", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(new Date(date));
+
+  const formatTime = (date: string) =>
+    new Intl.DateTimeFormat("es-ES", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    }).format(new Date(date));
+
   return (
     <div className="flex min-h-screen bg-custom-white">
       <Menu />
@@ -78,11 +98,7 @@ const DetailActivityPage = () => {
         <h1 className="block text-2xl text-custom-dark font-bold mb-4 sm:hidden">
           Actividad
         </h1>
-        {loading ? (
-          <div className="flex items-center justify-center min-h-screen">
-            <ClipLoader size={50} color={"#C1FD35"} loading={loading} />
-          </div>
-        ) : transaction ? (
+        {transaction ? (
           <>
             <div className="bg-custom-dark rounded-lg shadow-lg p-6 sm:w-[350px] md:w-[511px] lg:w-[1006px]">
               <div className="flex items-center justify-between mb-4 flex-wrap">
@@ -94,20 +110,8 @@ const DetailActivityPage = () => {
                   Aprobada
                 </h2>
                 <span className="text-custom-gray w-[302px] mt-4 md:mt-0 flex-end">
-                  Creada el{" "}
-                  {new Intl.DateTimeFormat("es-ES", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  }).format(new Date(transaction.dated))}{" "}
-                  a las{" "}
-                  {new Intl.DateTimeFormat("es-ES", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                    hour12: false,
-                  }).format(new Date(transaction.dated))}{" "}
-                  hs
+                  Creada el {formatDate(transaction.dated)} a las{" "}
+                  {formatTime(transaction.dated)} hs
                 </span>
               </div>
               {transaction.type === "Deposit" ? (
@@ -183,26 +187,8 @@ const DetailActivityPage = () => {
                   </p>
                   <p className="mb-4">
                     <strong className="text-custom-lime">Fecha:</strong>{" "}
-                    {new Date(transaction.dated).toLocaleDateString()}
+                    {formatDate(transaction.dated)}
                   </p>
-                  {transaction.type !== "Deposit" && (
-                    <>
-                      {transaction.type !== "Transfer" ||
-                      transaction.amount >= 0 ? (
-                        <p className="mb-4">
-                          <strong className="text-custom-lime">Origen:</strong>{" "}
-                          {transaction.origin}
-                        </p>
-                      ) : null}
-                      {transaction.type !== "Transfer" ||
-                      transaction.amount <= 0 ? (
-                        <p className="mb-4">
-                          <strong className="text-custom-lime">Destino:</strong>{" "}
-                          {transaction.destination}
-                        </p>
-                      ) : null}
-                    </>
-                  )}
                   <p className="mb-4">
                     <strong className="text-custom-lime">Tipo:</strong>{" "}
                     {transaction.type}

@@ -7,22 +7,19 @@ import CardTransactionCard from "@/app/components/cards/CardTransactionCard";
 
 const PayServicePage = () => {
   const [serviceName, setServiceName] = useState<string | null>(null);
-  const totalToPay = 5547.25;
+  const [loading, setLoading] = useState(true);
+  const totalToPay = 7392.34;
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const name = urlParams.get("name");
-    setServiceName(name);
+    setServiceName(urlParams.get("name"));
   }, []);
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    let start: number | null = null;
     const delay = 200;
+    const startTime = performance.now();
     const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
+      const elapsed = timestamp - startTime;
       if (elapsed < delay) {
         requestAnimationFrame(animate);
       } else {
@@ -30,6 +27,7 @@ const PayServicePage = () => {
       }
     };
     requestAnimationFrame(animate);
+    return () => setLoading(false);
   }, []);
 
   if (loading) {

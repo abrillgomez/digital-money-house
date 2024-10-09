@@ -24,35 +24,38 @@ const CardUser: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const payload = token.split(".")[1];
-        const decodedPayload = JSON.parse(
-          atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
-        );
-        const username = decodedPayload.username || decodedPayload.id;
-        if (!username) {
-          setError("Username no encontrado en el token");
-          setLoading(false);
-          return;
-        }
-        UserAPI.getUserData(token, username)
-          .then((data) => {
-            setUser(data);
-            setEditedUser(data);
-            setLoading(false);
-          })
-          .catch((err) => {
-            setError("Error al obtener los datos del usuario");
-            setLoading(false);
-          });
-      } catch (err) {
-        setError("Error al decodificar el token");
-        setLoading(false);
-      }
-    } else {
+    if (!token) {
       setLoading(false);
       setError("Token no encontrado en el localStorage");
+      return;
+    }
+
+    try {
+      const payload = token.split(".")[1];
+      const decodedPayload = JSON.parse(
+        atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
+      );
+      const username = decodedPayload.username || decodedPayload.id;
+      if (!username) {
+        setError("Username no encontrado en el token");
+        setLoading(false);
+        return;
+      }
+
+      UserAPI.getUserData(token, username)
+        .then((data) => {
+          setUser(data);
+          setEditedUser(data);
+        })
+        .catch(() => {
+          setError("Error al obtener los datos del usuario");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } catch {
+      setError("Error al decodificar el token");
+      setLoading(false);
     }
   }, []);
 
@@ -61,7 +64,7 @@ const CardUser: React.FC = () => {
   };
 
   const handleSave = async () => {
-    if (!editedUser || !user || !user.id) {
+    if (!editedUser || !user?.id) {
       Swal.fire(
         "Error",
         "No se puede guardar sin un ID de usuario válido.",
@@ -69,11 +72,13 @@ const CardUser: React.FC = () => {
       );
       return;
     }
+
     const token = localStorage.getItem("token");
     if (!token) {
       Swal.fire("Error", "Token no encontrado.", "error");
       return;
     }
+
     try {
       await UserAPI.updateUserData(token, user.id, editedUser);
       setUser(editedUser);
@@ -85,8 +90,17 @@ const CardUser: React.FC = () => {
       }).then(() => {
         window.location.reload();
       });
-    } catch (error) {
+    } catch {
       Swal.fire("Error", "No se pudieron actualizar los datos.", "error");
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: keyof User
+  ) => {
+    if (editedUser) {
+      setEditedUser({ ...editedUser, [field]: e.target.value });
     }
   };
 
@@ -97,94 +111,32 @@ const CardUser: React.FC = () => {
     <div className="mx-auto bg-white rounded-lg shadow-lg p-6 w-full max-w-[350px] sm:max-w-[511px] lg:max-w-[1006px] border border-custom-gray">
       <h2 className="text-xl font-bold mb-4 text-custom-dark">Tus datos</h2>
       <div className="space-y-4">
-        <div className="flex items-center gap-x-2">
-          <label className="text-custom-dark w-[150px]">E-mail</label>
-          <div className="flex-1">
-            {isEditing ? (
-              <input
-                type="text"
-                className="border border-custom-gray p-2 rounded-lg w-full text-black-opacity-50"
-                value={editedUser?.email}
-                onChange={(e) =>
-                  setEditedUser({ ...editedUser!, email: e.target.value })
-                }
-              />
-            ) : (
-              <p className="text-black-opacity-50">{user?.email}</p>
-            )}
+        {["email", "firstname", "lastname", "phone"].map((field) => (
+          <div className="flex items-center gap-x-2" key={field}>
+            <label className="text-custom-dark w-[150px]">
+              {field.charAt(0).toUpperCase() + field.slice(1)}
+            </label>
+            <div className="flex-1">
+              {isEditing ? (
+                <input
+                  type="text"
+                  className="border border-custom-gray p-2 rounded-lg w-full text-black-opacity-50"
+                  value={editedUser?.[field as keyof User] || ""}
+                  onChange={(e) => handleChange(e, field as keyof User)}
+                />
+              ) : (
+                <p className="text-black-opacity-50">
+                  {user?.[field as keyof User]}
+                </p>
+              )}
+            </div>
+            <FontAwesomeIcon
+              icon={isEditing ? faSave : faPen}
+              className="text-custom-dark cursor-pointer"
+              onClick={isEditing ? handleSave : handleEdit}
+            />
           </div>
-          <FontAwesomeIcon
-            icon={isEditing ? faSave : faPen}
-            className="text-custom-dark cursor-pointer"
-            onClick={isEditing ? handleSave : handleEdit}
-          />
-        </div>
-        <div className="flex items-center gap-x-2">
-          <label className="text-custom-dark w-[150px]">Nombre</label>
-          <div className="flex-1">
-            {isEditing ? (
-              <input
-                type="text"
-                className="border border-custom-dark p-2 rounded-lg w-full text-black-opacity-50"
-                value={editedUser?.firstname}
-                onChange={(e) =>
-                  setEditedUser({ ...editedUser!, firstname: e.target.value })
-                }
-              />
-            ) : (
-              <p className="text-black-opacity-50">{user?.firstname}</p>
-            )}
-          </div>
-          <FontAwesomeIcon
-            icon={isEditing ? faSave : faPen}
-            className="text-custom-dark cursor-pointer"
-            onClick={isEditing ? handleSave : handleEdit}
-          />
-        </div>
-        <div className="flex items-center gap-x-2">
-          <label className="text-custom-dark w-[150px]">Apellido</label>
-          <div className="flex-1">
-            {isEditing ? (
-              <input
-                type="text"
-                className="border border-custom-dark p-2 rounded-lg w-full text-black-opacity-50"
-                value={editedUser?.lastname}
-                onChange={(e) =>
-                  setEditedUser({ ...editedUser!, lastname: e.target.value })
-                }
-              />
-            ) : (
-              <p className="text-black-opacity-50">{user?.lastname}</p>
-            )}
-          </div>
-          <FontAwesomeIcon
-            icon={isEditing ? faSave : faPen}
-            className="text-custom-dark cursor-pointer"
-            onClick={isEditing ? handleSave : handleEdit}
-          />
-        </div>
-        <div className="flex items-center gap-x-2">
-          <label className="text-custom-dark w-[150px]">Teléfono</label>
-          <div className="flex-1">
-            {isEditing ? (
-              <input
-                type="text"
-                className="border border-custom-gray p-2 rounded-lg w-full text-black-opacity-50"
-                value={editedUser?.phone}
-                onChange={(e) =>
-                  setEditedUser({ ...editedUser!, phone: e.target.value })
-                }
-              />
-            ) : (
-              <p className="text-black-opacity-50">{user?.phone}</p>
-            )}
-          </div>
-          <FontAwesomeIcon
-            icon={isEditing ? faSave : faPen}
-            className="text-custom-dark cursor-pointer"
-            onClick={isEditing ? handleSave : handleEdit}
-          />
-        </div>
+        ))}
         <div className="flex items-center gap-x-2">
           <label className="text-custom-dark w-[150px]">DNI</label>
           <div className="flex-1">

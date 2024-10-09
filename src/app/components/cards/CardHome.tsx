@@ -1,28 +1,28 @@
 "use client";
 import AccountAPI from "@/services/account/account.service";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 const CardHome = () => {
   const [availableAmount, setAvailableAmount] = useState<number | null>(null);
 
-  useEffect(() => {
-    const fetchAccountInfo = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.error("No se encontró el token");
-        return;
-      }
-      try {
-        const accountService = new AccountAPI();
-        const accountData = await accountService.getAccountInfo(token);
-        setAvailableAmount(accountData.available_amount);
-      } catch (error) {
-        console.error("Error al obtener los datos de la cuenta:", error);
-      }
-    };
-
-    fetchAccountInfo();
+  const fetchAccountInfo = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("No se encontró el token.");
+      return;
+    }
+    try {
+      const accountService = new AccountAPI();
+      const accountData = await accountService.getAccountInfo(token);
+      setAvailableAmount(accountData.available_amount);
+    } catch (error) {
+      console.error("Error al obtener los datos de la cuenta:", error);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchAccountInfo();
+  }, [fetchAccountInfo]);
 
   return (
     <div className="bg-custom-dark w-[350px] md:w-[511px] lg:w-[1006px] h-[230px] rounded-lg flex items-start justify-start p-6 relative">

@@ -27,12 +27,27 @@ const CardPage = () => {
 
   const { handleSubmit, formState, control, watch } = methods;
   const { isValid } = formState;
-
+  const [loading, setLoading] = useState(true);
   const cardNumber = watch("cardNumber", "");
   const expiry = watch("expiry", "");
   const fullName = watch("fullName", "");
   const cvc = watch("cvc", "");
   const [cardType, setCardType] = useState<string>("");
+
+  useEffect(() => {
+    const delay = 200;
+    const startTime = performance.now();
+    const animate = (timestamp: number) => {
+      const elapsed = timestamp - startTime;
+      if (elapsed < delay) {
+        requestAnimationFrame(animate);
+      } else {
+        setLoading(false);
+      }
+    };
+    requestAnimationFrame(animate);
+    return () => setLoading(false);
+  }, []);
 
   const determineCardType = (number: string) => {
     const firstDigit = number.charAt(0);
@@ -51,6 +66,14 @@ const CardPage = () => {
   useEffect(() => {
     setCardType(determineCardType(cardNumber));
   }, [cardNumber]);
+
+  if (loading) {
+    return (
+      <div className="flex bg-custom-dark justify-center items-center min-h-screen">
+        <ClipLoader size={50} color={"#C1FD35"} loading={loading} />
+      </div>
+    );
+  }
 
   const formatExpiry = (value: string) => {
     const cleanValue = value?.replace(/\D/g, "");
@@ -110,36 +133,11 @@ const CardPage = () => {
     }
   };
 
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let start: number | null = null;
-    const delay = 200;
-    const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
-      if (elapsed < delay) {
-        requestAnimationFrame(animate);
-      } else {
-        setLoading(false);
-      }
-    };
-    requestAnimationFrame(animate);
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex bg-custom-dark justify-center items-center min-h-screen">
-        <ClipLoader size={50} color={"#C1FD35"} loading={loading} />
-      </div>
-    );
-  }
-
   return (
     <div className="flex">
       <Menu />
       <main className="flex-1 p-4 flex flex-col justify-center items-center bg-gray-100 min-h-screen">
-        <h1 className="block text-2xl text-custom-dark font-bold mb-4 sm:hidden">
+        <h1 className="block text-2xl pb-4 text-custom-dark font-bold mb-4 sm:hidden">
           Tarjetas
         </h1>
         <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl">

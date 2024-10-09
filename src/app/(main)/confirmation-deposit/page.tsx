@@ -12,17 +12,20 @@ interface TransactionData {
 }
 
 const ConfirmationDepositPage: React.FC = () => {
+  const [loading, setLoading] = useState(true);
   const [transactionData, setTransactionData] = useState<TransactionData>({
     amount: "",
     date: "",
     lastFourDigits: "",
   });
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
-      const dateString = urlParams.get("date") ?? "";
+      const dateString = urlParams.get("date");
       const amount = urlParams.get("amount") ?? "";
       const lastFourDigits = urlParams.get("lastFourDigits") ?? "";
+
       const utcDate = dateString ? new Date(dateString) : new Date();
       const localDate = new Date(
         utcDate.toLocaleString("en-US", {
@@ -40,25 +43,23 @@ const ConfirmationDepositPage: React.FC = () => {
         second: "2-digit",
         hour12: false,
       };
-      const formattedDate = localDate.toLocaleDateString("es-AR", optionsDate);
-      const formattedTime = localDate.toLocaleTimeString("es-AR", optionsTime);
-
+      const formattedDate = `${localDate.toLocaleDateString(
+        "es-AR",
+        optionsDate
+      )}, ${localDate.toLocaleTimeString("es-AR", optionsTime)} hs.`;
       setTransactionData({
         amount,
-        date: `${formattedDate}, ${formattedTime} hs.`,
+        date: formattedDate,
         lastFourDigits,
       });
     }
   }, []);
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    let start: number | null = null;
     const delay = 200;
+    const startTime = performance.now();
     const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
+      const elapsed = timestamp - startTime;
       if (elapsed < delay) {
         requestAnimationFrame(animate);
       } else {
@@ -66,6 +67,7 @@ const ConfirmationDepositPage: React.FC = () => {
       }
     };
     requestAnimationFrame(animate);
+    return () => setLoading(false);
   }, []);
 
   if (loading) {

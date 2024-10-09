@@ -13,18 +13,19 @@ const LoginPasswordPage = () => {
     mode: "onBlur",
   });
 
-  const { formState, control } = methods;
+  const {
+    formState: { errors, isValid },
+    control,
+  } = methods;
   const passwordValue = useWatch({ control, name: "password" });
-  const isPasswordValid = formState.isValid && passwordValue !== "";
-
+  const isPasswordValid = isValid && passwordValue?.trim() !== "";
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let start: number | null = null;
     const delay = 200;
+    const startTime = performance.now();
     const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
+      const elapsed = timestamp - startTime;
       if (elapsed < delay) {
         requestAnimationFrame(animate);
       } else {
@@ -32,6 +33,7 @@ const LoginPasswordPage = () => {
       }
     };
     requestAnimationFrame(animate);
+    return () => setLoading(false);
   }, []);
 
   if (loading) {
@@ -48,16 +50,15 @@ const LoginPasswordPage = () => {
       <FormProvider {...methods}>
         <form
           className="flex flex-col space-y-4 py-4"
-          onSubmit={(e) => e.preventDefault()}
-        >
+          onSubmit={(e) => e.preventDefault()}>
           <InputText
             type="password"
             placeholder="Contraseña"
             fieldName="password"
           />
-          {formState.errors.password && (
+          {errors.password && (
             <p className="text-red-500 text-[15px] w-[360px]">
-              {formState.errors.password.message}
+              {errors.password.message}
             </p>
           )}
           <ContinueButton isEnabled={isPasswordValid} />

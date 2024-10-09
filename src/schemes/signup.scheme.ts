@@ -16,7 +16,7 @@ export const signUpScheme = yup
         "El campo debe contener solo letras."
       )
       .required("Completá los campos requeridos."),
-    dni: yup.number().required("Completá los campos requeridos."),
+    dni: yup.string().required("Completá los campos requeridos."),
     email: yup
       .string()
       .email("El formato del email es inválido.")

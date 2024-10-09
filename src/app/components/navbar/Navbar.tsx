@@ -17,18 +17,19 @@ const Navbar = () => {
     firstname: "",
     lastname: "",
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
+      setLoading(true);
       try {
         const payload = token.split(".")[1];
         const decodedPayload = JSON.parse(
           atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
         );
         const username = decodedPayload.username;
-
         userApi
           .getUserData(token, username)
           .then((userData) => {
@@ -39,19 +40,27 @@ const Navbar = () => {
           })
           .catch((error) => {
             console.error("Error al obtener los datos del usuario:", error);
+          })
+          .finally(() => {
+            setLoading(false);
           });
       } catch (error) {
         console.error("Error al decodificar el token:", error);
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
   }, []);
 
-  const bgColor =
-    pathname === "/login" ||
-    pathname === "/login-password" ||
-    pathname === "/create-account"
-      ? "bg-custom-lime-dark"
-      : "bg-custom-dark";
+  const bgColor = loading
+    ? "bg-custom-dark"
+    : pathname === "/login" ||
+      pathname === "/login-password" ||
+      pathname === "/create-account"
+    ? "bg-custom-lime-dark"
+    : "bg-custom-dark";
+
   const logo =
     pathname === "/login" ||
     pathname === "/login-password" ||
@@ -76,6 +85,7 @@ const Navbar = () => {
         {!isLoggedIn ||
         pathname === "/" ||
         pathname === "/login" ||
+        pathname === "/login-password" ||
         pathname === "/create-account" ? (
           pathname !== "/login" &&
           pathname !== "/login-password" &&

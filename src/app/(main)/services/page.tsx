@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ServiceAPI } from "../../../services/service/service.service";
@@ -10,11 +10,12 @@ import { Service } from "@/types/service.types";
 const ServicePage = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await ServiceAPI.getAllServiceIds() as Service[];
+        const response = (await ServiceAPI.getAllServiceIds()) as Service[];
         const sortedServices = response.sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
@@ -26,6 +27,29 @@ const ServicePage = () => {
     fetchServices();
   }, []);
 
+  useEffect(() => {
+    const delay = 200;
+    const startTime = performance.now();
+    const animate = (timestamp: number) => {
+      const elapsed = timestamp - startTime;
+      if (elapsed < delay) {
+        requestAnimationFrame(animate);
+      } else {
+        setLoading(false);
+      }
+    };
+    requestAnimationFrame(animate);
+    return () => setLoading(false);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex bg-custom-dark justify-center items-center min-h-screen">
+        <ClipLoader size={50} color={"#C1FD35"} loading={loading} />
+      </div>
+    );
+  }
+
   const filteredServices = services.filter((service) =>
     service?.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -34,30 +58,6 @@ const ServicePage = () => {
     const encodedServiceName = encodeURIComponent(serviceName);
     window.location.href = `/account-number?name=${encodedServiceName}`;
   };
-
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let start: number | null = null;
-    const delay = 200;
-    const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
-      if (elapsed < delay) {
-        requestAnimationFrame(animate);
-      } else {
-        setLoading(false);
-      }
-    };
-    requestAnimationFrame(animate);
-  }, []);
-  if (loading) {
-    return (
-      <div className="flex bg-custom-dark justify-center items-center min-h-screen">
-        <ClipLoader size={50} color={"#C1FD35"} loading={loading} />
-      </div>
-    );
-  }
 
   return (
     <div className="flex">

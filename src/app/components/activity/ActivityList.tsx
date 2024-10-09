@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSearch,
@@ -29,124 +29,104 @@ const ActivityList: React.FC = () => {
   const [showFilterMenu, setShowFilterMenu] = useState<boolean>(false);
   const [selectedFilter, setSelectedFilter] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
   useEffect(() => {
     setIsClient(true);
     setPath(window.location.pathname);
   }, []);
 
+  const fetchActivities = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Token no encontrado");
+      const accountAPI = new AccountAPI();
+      const accountData = await accountAPI.getAccountInfo(token);
+      const accountId = accountData.id;
+      let transactions = await transactionsAPI.getAllTransactions(accountId);
+      return transactions.sort(
+        (a: Activity, b: Activity) =>
+          new Date(b.dated).getTime() - new Date(a.dated).getTime()
+      );
+    } catch (error) {
+      console.error("Error fetching activities:", error);
+      return [];
+    }
+  }, []);
+
   useEffect(() => {
-    const fetchActivities = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) throw new Error("Token no encontrado");
-        const accountAPI = new AccountAPI();
-        const accountData = await accountAPI.getAccountInfo(token);
-        const accountId = accountData.id;
-        let transactions = await transactionsAPI.getAllTransactions(accountId);
-        transactions = transactions.sort(
-          (a: Activity, b: Activity) =>
-            new Date(b.dated).getTime() - new Date(a.dated).getTime()
-        );
-        if (selectedFilter) {
-          const now = new Date();
-          let startDate: Date;
-          let endDate: Date;
-          switch (selectedFilter) {
-            case "hoy":
-              startDate = new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                now.getDate()
-              );
-              endDate = new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                now.getDate() + 1
-              );
-              break;
-            case "ayer":
-              startDate = new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                now.getDate() - 1
-              );
-              endDate = new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                now.getDate()
-              );
-              break;
-            case "ultima-semana":
-              startDate = new Date(now.setDate(now.getDate() - 7));
-              endDate = new Date();
-              break;
-            case "ultimos-dias":
-              startDate = new Date(now.setDate(now.getDate() - 15));
-              endDate = new Date();
-              break;
-            case "ultimo-mes":
-              startDate = new Date(
-                now.getFullYear(),
-                now.getMonth() - 1,
-                now.getDate()
-              );
-              endDate = new Date();
-              break;
-            case "ultimo-ano":
-              startDate = new Date(
-                now.getFullYear() - 1,
-                now.getMonth(),
-                now.getDate()
-              );
-              endDate = new Date();
-              break;
-            default:
-              startDate = new Date(0);
-              endDate = new Date();
-          }
-          transactions = transactions.filter(
-            (activity: Activity) =>
-              new Date(activity.dated) >= startDate &&
-              new Date(activity.dated) < endDate
-          );
-        }
-        setActivities(transactions);
-        setFilteredActivities(transactions);
-      } catch (error) {
-        console.error("Error fetching activities:", error);
-      } finally {
-        setLoading(false);
-      }
+    const getActivities = async () => {
+      setLoading(true);
+      const data = await fetchActivities();
+      setActivities(data);
+      setFilteredActivities(data);
+      setLoading(false);
     };
-    fetchActivities();
-  }, [selectedFilter]);
+    getActivities();
+  }, [fetchActivities]);
 
-  useEffect(() => {
-    const filtered = activities.filter((activity) =>
-      activity?.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filterActivities = useCallback(
+    (activities: Activity[], filter: string) => {
+      if (!filter) return activities;
+      const now = new Date();
+      let startDate: Date;
+      let endDate: Date = new Date();
+      switch (filter) {
+        case "hoy":
+          startDate = new Date(now.setHours(0, 0, 0, 0));
+          break;
+        case "ayer":
+          startDate = new Date(now.setDate(now.getDate() - 1));
+          endDate = new Date(now.setHours(23, 59, 59, 999));
+          break;
+        case "ultima-semana":
+          startDate = new Date(now.setDate(now.getDate() - 7));
+          break;
+        case "ultimos-dias":
+          startDate = new Date(now.setDate(now.getDate() - 15));
+          break;
+        case "ultimo-mes":
+          startDate = new Date(now.setMonth(now.getMonth() - 1));
+          break;
+        case "ultimo-ano":
+          startDate = new Date(now.setFullYear(now.getFullYear() - 1));
+          break;
+        default:
+          startDate = new Date(0);
+      }
+      return activities.filter(
+        (activity) =>
+          new Date(activity.dated) >= startDate &&
+          new Date(activity.dated) <= endDate
+      );
+    },
+    []
+  );
+
+  const filteredAndSearchedActivities = useMemo(() => {
+    const filtered = filterActivities(activities, selectedFilter);
+    return filtered.filter((activity) =>
+      activity.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setFilteredActivities(filtered);
-    setCurrentPage(1);
-  }, [searchTerm, activities]);
+  }, [activities, selectedFilter, searchTerm, filterActivities]);
 
-  const indexOfLastActivity = currentPage * itemsPerPage;
-  const indexOfFirstActivity = indexOfLastActivity - itemsPerPage;
-  const currentActivities =
-    path === "/home"
-      ? filteredActivities.slice(0, itemsPerPage)
-      : filteredActivities.slice(indexOfFirstActivity, indexOfLastActivity);
+  const currentActivities = useMemo(() => {
+    const indexOfLastActivity = currentPage * itemsPerPage;
+    const indexOfFirstActivity = indexOfLastActivity - itemsPerPage;
+    return path === "/home"
+      ? filteredAndSearchedActivities.slice(0, itemsPerPage)
+      : filteredAndSearchedActivities.slice(
+          indexOfFirstActivity,
+          indexOfLastActivity
+        );
+  }, [filteredAndSearchedActivities, currentPage, itemsPerPage, path]);
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-  const totalPages = Math.ceil(filteredActivities.length / itemsPerPage);
+  const totalPages = useMemo(
+    () => Math.ceil(filteredAndSearchedActivities.length / itemsPerPage),
+    [filteredAndSearchedActivities]
+  );
 
   const goToActivityPage = () => {
     window.location.href = "/activity";
-  };
-
-  const toggleFilterMenu = () => {
-    setShowFilterMenu(!showFilterMenu);
   };
 
   const applyFilter = () => {
@@ -159,7 +139,6 @@ const ActivityList: React.FC = () => {
 
   const clearFilters = () => {
     setSelectedFilter("");
-    setFilteredActivities(activities);
     setSearchTerm("");
     setShowFilterMenu(false);
   };
@@ -192,9 +171,9 @@ const ActivityList: React.FC = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full rounded-[10px] pl-6 pr-4 text-custom-dark placeholder:text-[18px] pt-1"
           />
-          {isClient && path === "/activity" && (
+          {path === "/activity" && (
             <button
-              onClick={toggleFilterMenu}
+              onClick={() => setShowFilterMenu(!showFilterMenu)}
               className="ml-4 px-4 py-2 bg-custom-lime text-custom-dark rounded-[10px] flex items-center hover:bg-custom-lime-dark">
               <span className="mr-2 font-bold">Filtrar</span>
               <FontAwesomeIcon icon={faFilter} />
@@ -270,15 +249,15 @@ const ActivityList: React.FC = () => {
         <h2 className="text-lg font-bold mb-4 text-custom-dark ml-2">
           Tu actividad
         </h2>
-        {filteredActivities.length === 0 ? (
+        {filteredAndSearchedActivities.length === 0 ? (
           <p className="text-center text-custom-gray ml-2">
             No se encontró ninguna actividad
           </p>
         ) : (
           <ul className="space-y-4">
-            {currentActivities.map((activity, index) => (
+            {currentActivities.map((activity) => (
               <li
-                key={index}
+                key={activity.id}
                 className="flex justify-between items-center cursor-pointer ml-2"
                 onClick={() => handleActivityClick(activity.id)}>
                 <div className="flex items-center">

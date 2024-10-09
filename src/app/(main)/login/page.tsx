@@ -17,23 +17,25 @@ const LoginPage = () => {
     mode: "onBlur",
   });
 
-  const { handleSubmit, formState, getValues } = methods;
-  const emailValue = getValues("email");
-  const isEmailValid = !formState.errors.email && emailValue?.trim() !== "";
+  const {
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = methods;
+  const emailValue = watch("email");
+  const isEmailValid = !errors.email && emailValue?.trim() !== "";
+  const [loading, setLoading] = useState(true);
 
   const onSubmit = (data: FormData) => {
     sessionStorage.setItem("email", data.email);
     window.location.href = "/login-password";
   };
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    let start: number | null = null;
     const delay = 200;
+    const startTime = performance.now();
     const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
+      const elapsed = timestamp - startTime;
       if (elapsed < delay) {
         requestAnimationFrame(animate);
       } else {
@@ -41,6 +43,7 @@ const LoginPage = () => {
       }
     };
     requestAnimationFrame(animate);
+    return () => setLoading(false);
   }, []);
 
   if (loading) {
@@ -64,8 +67,8 @@ const LoginPage = () => {
             {...methods.register("email")}
             className="w-[300px] h-[50px] sm:w-[360px] sm:h-[64px] bg-white border border-gray-300 px-4 py-2 rounded-[10px] text-black text-[18px] mb-2"
           />
-          {formState.errors.email && (
-            <p className="text-red-500">{formState.errors.email.message}</p>
+          {errors.email && (
+            <p className="text-red-500">{errors.email.message}</p>
           )}
           <ContinueButton isEnabled={isEmailValid} />
           <CreateAccountGrayButton />
