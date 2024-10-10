@@ -76,7 +76,7 @@ const ContinueButton: React.FC<ContinueButtonProps> = ({
 
   return (
     <div
-      className={`w-[300px] h-[50px] sm:w-[360px] sm:h-[64px] bg-custom-lime text-black px-4 pt-3 rounded-[10px] font-bold text-center cursor-pointer mb-4 ${
+      className={`w-[300px] h-[50px] sm:w-[360px] sm:h-[64px] bg-custom-lime text-black px-4 pt-4 rounded-[10px] font-bold text-center cursor-pointer mb-4 ${
         !isEnabled && isCardPage ? "cursor-not-allowed pointer-events-none" : ""
       }`}
       onClick={handleClick}>

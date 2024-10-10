@@ -137,13 +137,13 @@ const MenuMobile = ({ userInfo, isLoggedIn }: MenuMobileProps) => {
                 <div className="mt-4">
                   <Link
                     href="/login"
-                    className="block px-4 py-2 bg-custom-dark text-custom-lime text-lg font-semibold hover:bg-custom-lime hover:text-custom-dark rounded-md"
+                    className="block px-4 py-2 bg-custom-dark text-custom-lime text-lg font-semibold hover:font-bold rounded-md"
                     onClick={() => handleNavigation("/login")}>
                     Ingresar
                   </Link>
                   <Link
                     href="/create-account"
-                    className="block mt-2 px-4 py-2 bg-custom-dark text-custom-lime text-lg font-semibold hover:bg-custom-lime hover:text-custom-dark rounded-md"
+                    className="block mt-2 px-4 py-2 bg-custom-dark text-custom-lime text-lg font-semibold hover:font-bold rounded-md"
                     onClick={() => handleNavigation("/create-account")}>
                     Crear cuenta
                   </Link>
