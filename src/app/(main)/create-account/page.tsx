@@ -21,16 +21,13 @@ const CreateAccountPage = () => {
   const [apiError, setApiError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const onSubmit = async (data: UserType) => {
+  const onSubmit = async (data: any) => {
     try {
-      const response = await userApi.newUser({
-        dni: data.dni,
-        email: data.email,
-        firstname: data.firstname,
-        lastname: data.lastname,
-        password: data.password,
-        phone: data.phone,
-      });
+      const formattedData: UserType = {
+        ...data,
+        dni: Number(data.dni),
+      };
+      const response = await userApi.newUser(formattedData);
       if (response.user_id) {
         await Swal.fire({
           icon: "success",
@@ -115,45 +112,44 @@ const CreateAccountPage = () => {
           />
           <InputNumber type="number" placeholder="Teléfono" fieldName="phone" />
           <CreateAccountButton isEnabled={isFormValid} />
-          {formState.touchedFields.firstname && formState.errors.firstname && (
-            <p className="text-red-500 col-span-1 sm:col-span-2">
-              {formState.errors.firstname.message}
-            </p>
-          )}
-          {formState.touchedFields.lastname && formState.errors.lastname && (
-            <p className="text-red-500 col-span-1 sm:col-span-2">
-              {formState.errors.lastname.message}
-            </p>
-          )}
-          {formState.touchedFields.dni && formState.errors.dni && (
-            <p className="text-red-500 col-span-1 sm:col-span-2">
-              {formState.errors.dni.message}
-            </p>
-          )}
-          {formState.touchedFields.email && formState.errors.email && (
-            <p className="text-red-500 col-span-1 sm:col-span-2">
-              {formState.errors.email.message}
-            </p>
-          )}
-          {formState.touchedFields.password && formState.errors.password && (
-            <p className="text-red-500 col-span-1 sm:col-span-2">
-              {formState.errors.password.message}
-            </p>
-          )}
-          {formState.touchedFields.passwordConfirmed &&
-            formState.errors.passwordConfirmed && (
-              <p className="text-red-500 col-span-1 sm:col-span-2">
-                {formState.errors.passwordConfirmed.message}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 col-span-1 sm:col-span-2">
+            {formState.touchedFields.firstname &&
+              formState.errors.firstname && (
+                <p className="text-red-500">
+                  {formState.errors.firstname.message}
+                </p>
+              )}
+            {formState.touchedFields.lastname && formState.errors.lastname && (
+              <p className="text-red-500">
+                {formState.errors.lastname.message}
               </p>
             )}
-          {formState.touchedFields.phone && formState.errors.phone && (
-            <p className="text-red-500 col-span-1 sm:col-span-2">
-              {formState.errors.phone.message}
-            </p>
-          )}
-          {apiError && (
-            <p className="text-red-500 col-span-1 sm:col-span-2">{apiError}</p>
-          )}
+            {formState.touchedFields.dni && formState.errors.dni && (
+              <p className="text-red-500">{formState.errors.dni.message}</p>
+            )}
+            {formState.touchedFields.email && formState.errors.email && (
+              <p className="text-red-500">{formState.errors.email.message}</p>
+            )}
+            {formState.touchedFields.password && formState.errors.password && (
+              <p className="text-red-500">
+                {formState.errors.password.message}
+              </p>
+            )}
+            {formState.touchedFields.passwordConfirmed &&
+              formState.errors.passwordConfirmed && (
+                <p className="text-red-500">
+                  {formState.errors.passwordConfirmed.message}
+                </p>
+              )}
+            {formState.touchedFields.phone && formState.errors.phone && (
+              <p className="text-red-500">{formState.errors.phone.message}</p>
+            )}
+            {apiError && (
+              <p className="text-red-500 col-span-1 sm:col-span-2">
+                {apiError}
+              </p>
+            )}
+          </div>
         </form>
       </FormProvider>
     </div>

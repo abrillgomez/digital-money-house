@@ -251,7 +251,7 @@ const ActivityList: React.FC = () => {
         </h2>
         {filteredAndSearchedActivities.length === 0 ? (
           <p className="text-center text-custom-gray ml-2">
-            No se encontró ninguna actividad
+            No se encontró ninguna actividad.
           </p>
         ) : (
           <ul className="space-y-4">

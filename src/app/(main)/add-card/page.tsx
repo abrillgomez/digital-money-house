@@ -4,7 +4,6 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { useForm, FormProvider, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputText from "@/app/components/inputs/InputText";
-import InputNumber from "@/app/components/inputs/InputNumber";
 import Menu from "@/app/components/menu/Menu";
 import { cardScheme } from "@/schemes/card.scheme";
 import ContinueButton from "@/app/components/buttons/ContinueButton";
@@ -90,6 +89,7 @@ const CardPage = () => {
 
   const onSubmit = async (data: CardFormData) => {
     try {
+      const cleanedCardNumber = data.cardNumber.replace(/\D/g, "").slice(0, 16);
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token no encontrado.");
       const accountAPI = new AccountAPI();
@@ -112,7 +112,7 @@ const CardPage = () => {
         cod: parseInt(data.cvc, 10),
         expiration_date: convertExpiryToFullYear(data.expiry),
         first_last_name: data.fullName,
-        number_id: parseInt(data.cardNumber),
+        number_id: Number(cleanedCardNumber),
       };
       await cardService.createCard(accountId, cardData, token);
       Swal.fire({
@@ -170,9 +170,8 @@ const CardPage = () => {
                 name="cardNumber"
                 control={control}
                 render={({ field }) => (
-                  <InputNumber
+                  <input
                     type="text"
-                    fieldName="cardNumber"
                     placeholder="Número de tarjeta*"
                     value={field.value}
                     onChange={(e) => {
@@ -181,6 +180,8 @@ const CardPage = () => {
                         .slice(0, 19);
                       field.onChange(cleanedValue);
                     }}
+                    maxLength={19}
+                    className="w-[300px] h-[50px] sm:w-[360px] sm:h-[64px] bg-white border border-gray-300 px-4 py-2 rounded-[10px] text-black text-[18px] mb-2"
                   />
                 )}
               />
