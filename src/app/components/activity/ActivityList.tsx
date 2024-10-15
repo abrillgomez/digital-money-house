@@ -122,7 +122,7 @@ const ActivityList: React.FC = () => {
 
   const totalPages = useMemo(
     () => Math.ceil(filteredAndSearchedActivities.length / itemsPerPage),
-    [filteredAndSearchedActivities]
+    [filteredAndSearchedActivities, itemsPerPage]
   );
 
   const goToActivityPage = () => {

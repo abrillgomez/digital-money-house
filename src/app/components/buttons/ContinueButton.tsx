@@ -18,7 +18,6 @@ const ContinueButton: React.FC<ContinueButtonProps> = ({
 
   useEffect(() => {
     const pathname = window.location.pathname;
-
     if (pathname === "/add-card") {
       setIsCardPage(true);
     } else if (pathname === "/login-password") {
@@ -30,9 +29,7 @@ const ContinueButton: React.FC<ContinueButtonProps> = ({
 
   const handleClick = async () => {
     if (!isEnabled) return;
-
     const pathname = window.location.pathname;
-
     if (pathname === "/login") {
       const email = getValues("email");
       if (email) {

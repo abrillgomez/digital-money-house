@@ -18,7 +18,6 @@ const CardsList = () => {
   useEffect(() => {
     const fetchAccountData = async () => {
       if (!token) return;
-
       const accountAPI = new AccountAPI();
       try {
         const accountData = await accountAPI.getAccountInfo(token);

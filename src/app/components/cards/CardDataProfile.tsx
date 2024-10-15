@@ -31,7 +31,6 @@ const CardDataProfile = () => {
         console.error("Error al obtener información de la cuenta:", error);
       }
     };
-
     fetchAccountInfo();
   }, [token]);
 

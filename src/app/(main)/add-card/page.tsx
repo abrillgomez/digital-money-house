@@ -51,7 +51,6 @@ const CardPage = () => {
   const determineCardType = (number: string) => {
     const firstDigit = number.charAt(0);
     const firstTwoDigits = number.slice(0, 2);
-
     if (firstDigit === "4") {
       return "VISA";
     } else if (["51", "52", "53", "54", "55"].includes(firstTwoDigits)) {

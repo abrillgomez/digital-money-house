@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import Menu from "@/app/components/menu/Menu";
 import { transactionsAPI } from "../../../services/transactions/transactions.service";
@@ -20,7 +20,7 @@ interface Transaction {
 const DetailActivityPage = () => {
   const [transaction, setTransaction] = useState<Transaction | null>(null);
   const [loading, setLoading] = useState(true);
-  const accountAPI = new AccountAPI();
+  const accountAPI = useMemo(() => new AccountAPI(), []);
 
   const fetchTransactionDetails = useCallback(async () => {
     try {

@@ -29,7 +29,6 @@ const CardUser: React.FC = () => {
       setError("Token no encontrado en el localStorage");
       return;
     }
-
     try {
       const payload = token.split(".")[1];
       const decodedPayload = JSON.parse(
@@ -41,7 +40,6 @@ const CardUser: React.FC = () => {
         setLoading(false);
         return;
       }
-
       UserAPI.getUserData(token, username)
         .then((data) => {
           setUser(data);
@@ -72,13 +70,11 @@ const CardUser: React.FC = () => {
       );
       return;
     }
-
     const token = localStorage.getItem("token");
     if (!token) {
       Swal.fire("Error", "Token no encontrado.", "error");
       return;
     }
-
     try {
       await UserAPI.updateUserData(token, user.id, editedUser);
       setUser(editedUser);
@@ -107,6 +103,13 @@ const CardUser: React.FC = () => {
   if (loading) return <p className="text-custom-dark">Cargando...</p>;
   if (error) return <p className="text-custom-dark">Error: {error}.</p>;
 
+  const labelTranslations: Record<string, string> = {
+    email: "Email",
+    firstname: "Nombre",
+    lastname: "Apellido",
+    phone: "Teléfono",
+  };
+
   return (
     <div className="mx-auto bg-white rounded-lg shadow-lg p-6 w-full max-w-[350px] sm:max-w-[511px] lg:max-w-[1006px] border border-custom-gray">
       <h2 className="text-xl font-bold mb-4 text-custom-dark">Tus datos</h2>
@@ -114,7 +117,7 @@ const CardUser: React.FC = () => {
         {["email", "firstname", "lastname", "phone"].map((field) => (
           <div className="flex items-center gap-x-2" key={field}>
             <label className="text-custom-dark w-[150px]">
-              {field.charAt(0).toUpperCase() + field.slice(1)}
+              {labelTranslations[field]}
             </label>
             <div className="flex-1">
               {isEditing ? (

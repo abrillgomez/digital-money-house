@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import Swal from "sweetalert2";
 import AccountAPI from "../../../services/account/account.service";
 import cardService from "../../../services/cards/cards.service";
@@ -12,14 +12,14 @@ interface Card {
   number_id: number;
 }
 
-const CardTransactionCard= () => {
+const CardTransactionCard = () => {
   const [cards, setCards] = useState<Card[]>([]);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerPage = 5;
-  const accountService = new AccountAPI();
+  const accountService = useMemo(() => new AccountAPI(), []);
   const isServicesPage = window.location.pathname === "/pay-service";
 
   useEffect(() => {
@@ -27,7 +27,6 @@ const CardTransactionCard= () => {
       try {
         const token: string | null = localStorage.getItem("token");
         if (!token) throw new Error("No se encontró el token en localStorage.");
-
         const accountInfo = await accountService.getAccountInfo(token);
         const accountId = accountInfo.id;
         const fetchedCards = await cardService.getCardsByAccountId(
