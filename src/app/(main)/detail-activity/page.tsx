@@ -26,13 +26,10 @@ const DetailActivityPage = () => {
     try {
       const transactionId = localStorage.getItem("selectedTransactionId");
       const token = localStorage.getItem("token");
-
       if (!transactionId || !token) return;
-
       const accountInfo = await accountAPI.getAccountInfo(token);
       const accountId = accountInfo?.id;
       if (!accountId) return;
-
       const transactionData = await transactionsAPI.getTransaction(
         accountId,
         transactionId
@@ -111,7 +108,7 @@ const DetailActivityPage = () => {
                 </h2>
                 <span className="text-custom-gray w-[302px] mt-4 md:mt-0 flex-end">
                   Creada el {formatDate(transaction.dated)} a las{" "}
-                  {formatTime(transaction.dated)} hs
+                  {formatTime(transaction.dated)} hs.
                 </span>
               </div>
               {transaction.type === "Deposit" ? (
@@ -202,7 +199,7 @@ const DetailActivityPage = () => {
                 onClick={handleGoHome}>
                 Ir al inicio
               </button>
-              <button className="bg-custom-lime text-custom-dark px-4 py-2 rounded font-bold">
+              <button className="bg-custom-lime font-bold text-custom-dark w-full max-w-[350px] md:max-w-[233px] h-[64px] px-4 py-2 rounded-md cursor-default">
                 Descargar comprobante
               </button>
             </div>

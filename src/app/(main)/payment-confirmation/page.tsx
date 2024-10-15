@@ -18,7 +18,7 @@ const PaymentConfirmation: React.FC = () => {
     lastFourDigits: "",
   });
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
@@ -94,15 +94,19 @@ const PaymentConfirmation: React.FC = () => {
           </div>
           <div className="bg-custom-dark w-full p-6 rounded-lg text-white mt-4">
             <p className="mb-4">{paymentData.date}</p>
-            <p className="text-custom-white">
-              Vas a pagar a {paymentData.serviceName}
+            <p className="text-custom-white text-[17px]">
+              Vas a pagar
+              <span className="font-semibold mt-2 text-custom-lime">
+                {" "}
+                $5547.25{" "}
+              </span>
+              a {paymentData.serviceName}
             </p>
-            <p className="text-[20px] font-semibold mt-2 text-custom-lime">
-              $5547.25
-            </p>
-            <p className="text-custom-white mt-4">Tarjeta terminada en:</p>
-            <p className="text-[20px] font-semibold mt-2 text-custom-lime">
-              {paymentData.lastFourDigits}
+            <p className="text-custom-white mt-4 text-[17px]">
+              Tarjeta terminada en:{" "}
+              <span className="font-semibold mt-2 text-custom-lime">
+                {paymentData.lastFourDigits}
+              </span>
             </p>
           </div>
           <div className="flex justify-between md:justify-end space-x-4 mt-6 w-full">
@@ -111,7 +115,7 @@ const PaymentConfirmation: React.FC = () => {
               onClick={() => (window.location.href = "/home")}>
               Ir al inicio
             </button>
-            <button className="bg-custom-lime font-bold text-custom-dark w-full max-w-[350px] md:max-w-[233px] h-[64px] px-4 py-2 rounded-md">
+            <button className="bg-custom-lime font-bold text-custom-dark w-full max-w-[350px] md:max-w-[233px] h-[64px] px-4 py-2 rounded-md cursor-default">
               Descargar comprobante
             </button>
           </div>

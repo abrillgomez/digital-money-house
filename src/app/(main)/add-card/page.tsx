@@ -117,7 +117,7 @@ const CardPage = () => {
       await cardService.createCard(accountId, cardData, token);
       Swal.fire({
         icon: "success",
-        title: "Tarjeta creada con éxito",
+        title: "Tarjeta añadida con éxito",
         confirmButtonText: "Aceptar",
       }).then(() => {
         window.location.href = "/cards";

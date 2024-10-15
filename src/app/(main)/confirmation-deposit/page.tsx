@@ -99,17 +99,26 @@ const ConfirmationDepositPage: React.FC = () => {
               Revisá que esté todo bien
             </h2>
             <p className="mb-4">{transactionData.date}</p>
-            <p className="text-custom-white">Vas a cargar</p>
-            <p className="text-[20px] font-semibold mt-2 text-custom-lime">
-              ${transactionData.amount}
+            <p className="text-custom-white text-[17px]">
+              Vas a cargar
+              <span className="font-semibold mt-2 text-custom-lime">
+                {" "}
+                ${transactionData.amount}{" "}
+              </span>
             </p>
-            <p className="mt-4">de</p>
-            <p className="text-[20px] font-semibold mt-2 text-custom-lime">
-              Cuenta propia
+            <p className="text-custom-white text-[17px] mt-2">
+              de
+              <span className="font-semibold mt-2 text-custom-lime">
+                {" "}
+                Cuenta propia{" "}
+              </span>
             </p>
-            <p className="text-custom-white mt-4">Tarjeta terminada en:</p>
-            <p className="text-[20px] font-semibold mt-2 text-custom-lime">
-              {transactionData.lastFourDigits}
+            <p className="text-custom-white text-[17px] mt-2">
+              Tarjeta terminada en:
+              <span className="font-semibold mt-2 text-custom-lime">
+                {" "}
+                {transactionData.lastFourDigits}{" "}
+              </span>
             </p>
           </div>
           <div className="flex justify-between md:justify-end space-x-4 mt-6 w-full">
@@ -118,7 +127,7 @@ const ConfirmationDepositPage: React.FC = () => {
               onClick={() => (window.location.href = "/home")}>
               Ir al inicio
             </button>
-            <button className="bg-custom-lime font-bold text-custom-dark w-full max-w-[350px] md:max-w-[233px] h-[64px] px-4 py-2 rounded-md">
+            <button className="bg-custom-lime font-bold text-custom-dark w-full max-w-[350px] md:max-w-[233px] h-[64px] px-4 py-2 rounded-md cursor-default">
               Descargar comprobante
             </button>
           </div>
