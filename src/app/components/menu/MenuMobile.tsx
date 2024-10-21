@@ -25,13 +25,13 @@ const menuLinks = [
 const MenuMobile = ({ userInfo, isLoggedIn }: MenuMobileProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSpecialStyle, setIsSpecialStyle] = useState(false);
+  const [currentPath, setCurrentPath] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const currentPath = window.location.pathname;
+    const path = window.location.pathname;
+    setCurrentPath(path);
     setIsSpecialStyle(
-      !token &&
-        ["/login", "/create-account", "/login-password"].includes(currentPath)
+      ["/login", "/create-account", "/login-password"].includes(path)
     );
   }, []);
 
@@ -73,7 +73,7 @@ const MenuMobile = ({ userInfo, isLoggedIn }: MenuMobileProps) => {
     <div className="block md:hidden">
       <div
         className={`h-16 flex justify-between items-center px-4 relative ${
-          isSpecialStyle ? "bg-custom-lime-dark" : "bg-custom-dark"
+          isSpecialStyle ? "bg-custom-lime" : "bg-custom-dark"
         }`}>
         <div className="text-custom-white font-bold">
           <button onClick={handleLogoClick}>
@@ -89,11 +89,14 @@ const MenuMobile = ({ userInfo, isLoggedIn }: MenuMobileProps) => {
           </button>
         </div>
         <div className="flex items-center space-x-2">
-          {isLoggedIn && (
-            <div className="bg-custom-lime text-custom-dark font-bold rounded-full w-10 h-10 flex items-center justify-center">
-              {getInitials(userInfo.firstname, userInfo.lastname)}
-            </div>
-          )}
+          {isLoggedIn &&
+            !["/login", "/create-account", "/login-password", "/"].includes(
+              currentPath
+            ) && (
+              <div className="bg-custom-lime text-custom-dark font-bold rounded-full w-10 h-10 flex items-center justify-center">
+                {getInitials(userInfo.firstname, userInfo.lastname)}
+              </div>
+            )}
           <button
             onClick={toggleMenu}
             className={`p-2 rounded-full focus:outline-none ${

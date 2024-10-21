@@ -195,8 +195,8 @@ const DetailActivityPage = () => {
             </div>
             <div className="flex justify-end sm:w-[350px] md:w-[511px] lg:w-[1006px] mt-4">
               <button
-                className="font-bold bg-custom-gray-light text-custom-dark px-4 py-2 rounded mr-2"
-                onClick={handleGoHome}>
+                className="bg-custom-gray-light font-bold text-custom-dark w-full max-w-[350px] md:max-w-[233px] h-[64px] px-4 py-2 rounded-md mr-4"
+                onClick={() => (window.location.href = "/home")}>
                 Ir al inicio
               </button>
               <button className="bg-custom-lime font-bold text-custom-dark w-full max-w-[350px] md:max-w-[233px] h-[64px] px-4 py-2 rounded-md cursor-default">
