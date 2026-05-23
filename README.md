@@ -32,8 +32,6 @@ Digital Money House es una **billetera virtual** desarrollada con Next.js 14 que
 
 Abrir [http://localhost:3000](http://localhost:3000) en el navegador.
 
-> **Importante:** al momento de crear una cuenta, el código de verificación es `000`. También podés recargar la página si el registro fue exitoso para luego iniciar sesión.
-
 ---
 
 ## Tecnologías Utilizadas
