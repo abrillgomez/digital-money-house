@@ -51,10 +51,11 @@ Abrir [http://localhost:3000](http://localhost:3000) en el navegador.
 **HTTP y autenticación**
 - **Axios** — Cliente HTTP para llamadas a la API.
 - **JWT Decode** — Decodificación de tokens JWT para manejo de sesión.
+- **Swagger** — Documentación de la API consumida durante el desarrollo.
 
 **UI / Componentes**
 - **Headless UI** — Componentes accesibles sin estilos predefinidos.
-- **React Icons / FontAwesome / Heroicons** — Íconos para la interfaz.
+- **React Icons / FontAwesome** — Íconos para la interfaz.
 - **SweetAlert2** — Modales y alertas estilizadas.
 - **React Payment Inputs** — Inputs especializados para datos de tarjetas.
 - **React Spinners** — Indicadores de carga.
